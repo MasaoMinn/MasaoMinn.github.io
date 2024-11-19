@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链接管理页</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mainstyle.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="clock">
+        <div class="hand hour-hand"></div>
+        <div class="hand minute-hand"></div>
+        <div class="hand second-hand"></div>
+        <div class="center-circle"></div>
+        <div class="center-text" id="clock-text"></div>
+    </div>
+
+    <div class ="header">
+        <h1>链接管理页</h1>
+    </div>
+    <div class="intro">
+        <h3>主要链接</h3>
+    </div>
+
+    <ul id="linkList">
+        <a></a>
+        <li><a href="https://www.luogu.com/" target="_blank" title="Luogu"><img src="/pic_src/luogu.png" alt="Luogu"></a></li>
+        <li><a href="https://codeforces.com/" target="_blank" title="Codeforces"><img src="/pic_src/codeforces.png" alt="Codeforces"></a></li>
+        <li><a href="https://www.bilibili.com/" target="_blank" title="Bilibili"><img src="/pic_src/bilibili.png" alt="Bilibili"></a></li>
+        <li><a href="https://vjudge.net/" target="_blank" title="vjudge"><img src="/pic_src/vj.ico" alt="vjudge"></a></li>
+        <li><a href="https://sso.scut.edu.cn/" target="_blank" title="scut"><img src="/pic_src/SCUT.png" alt="SCUT SSO"></a></li>
+        <li><a href="https://github.com/" target="_blank" title="github"><img src="/pic_src/github.png" alt="Github"></a></li>
+      </ul>
+
+      <div class="intro">
+        <h3>自定义链接</h3>
+      </div>
+      <div id="linkContainer">
+        <!-- 这里用来显示已添加的链接 -->
+      </div>
+    
+      <input type="text" id="urlInput" placeholder="请输入网址">
+      <button id="addButton">添加链接</button>
+      <button id="deleteButton">删除链接</button>
+
+      <script src="linkControl.js"></script>
+    <script>
+        updateClockHands();// 初始更新指针角度
+        setInterval(updateClockHands, 1000);// 每隔1秒更新一次时钟指针
+    </script>
+</body>
+
+</html>
