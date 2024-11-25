@@ -23,7 +23,17 @@ function restartGame() {
 
 function generateRandomGrid() {
     const colors = ['white', 'black'];
-    return Array.from({ length: 64 }, () => colors[Math.floor(Math.random() * 2)]);
+    // 生成初始网格
+    let initialGrid = Array(64).fill('white');
+    
+    // 随机进行若干次翻转操作
+    const numFlips = Math.floor(Math.random() * 10) + 5; // 随机进行5-14次翻转
+    for (let i = 0; i < numFlips; i++) {
+        const index = Math.floor(Math.random() * 64);
+        toggleCellColor(initialGrid, index,false);
+    }
+    
+    return initialGrid;
 }
 
 function renderGrids() {
@@ -37,24 +47,26 @@ function renderGrids() {
     rightGridColors.forEach((color, index) => {
         const cell = document.createElement('div');
         cell.style.backgroundColor = color;
-        cell.addEventListener('click', () => toggleCellColor(index));
+        cell.addEventListener('click', () => toggleCellColor(rightGridColors, index,true));
         rightGrid.appendChild(cell);
     });
 }
 
-function toggleCellColor(index) {
+function toggleCellColor(Grid,index,ingame) {
     const row = Math.floor(index / 8);
     const col = index % 8;
     for (let i = row - 1; i <= row + 1; i++) {
         for (let j = col - 1; j <= col + 1; j++) {
             if (i >= 0 && i < 8 && j >= 0 && j < 8 &&(row+col-i-j<2)&&(row+col-i-j>-2)&&(row+col-i-j!=0||i==row)) {
                 const cellIndex = i * 8 + j;
-                rightGridColors[cellIndex] = rightGridColors[cellIndex] === 'white'? 'black' : 'white';
+                Grid[cellIndex] = Grid[cellIndex] === 'white'? 'black' : 'white';
             }
         }
     }
     renderGrids();
-    checkWin();
+    setTimeout(() => {
+        checkWin();
+    }, 0);
 }
 
 function checkWin() {
