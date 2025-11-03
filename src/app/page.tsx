@@ -3,7 +3,7 @@ import { Button, Col, Image, Row, Stack } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider";
 import { useTranslation } from 'react-i18next'
-import React, { useEffect } from "react";
+import React from "react";
 import Experience from "@/components/layout/Experience";
 import { useModalStore } from "./store/ModalStore";
 import { MyToast } from "@/components/boxed/Toast";
@@ -36,7 +36,6 @@ const Main = () => {
     { key: 'Developper', label: t('mainpage.developper.label') },
     { key: 'Language', label: t('mainpage.language.label') }
   ];
-  const { showModal } = useModalStore();
   const [hasStorageAccess, setHasStorageAccess] = React.useState<boolean>(false);
 
   // Check if localStorage/cookie access is available
