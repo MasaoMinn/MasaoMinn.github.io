@@ -7,6 +7,7 @@ import React from "react";
 import Experience from "@/components/layout/Experience";
 import { useModalStore } from "./store/ModalStore";
 import { MyToast } from "@/components/boxed/Toast";
+import Warning from "@/components/boxed/Warning";
 const Introduction = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -59,6 +60,10 @@ const Main = () => {
 
   return (
     <Container className="" style={theme === 'light' ? { ...lightTheme } : { ...darkTheme }} fluid>
+      <Row className="justify-content-center align-items-center" >
+        <Col xs={6} md={6}>
+          <Warning /></Col>
+      </Row>
       <Row className="justify-content-center align-items-center" style={{ minHeight: "260px", marginBottom: "2rem" }}>
         <Col xs={12} md={4} className="d-flex justify-content-center align-items-center">
           <Image
@@ -143,7 +148,7 @@ const Main = () => {
         </Col>
       </Row>
       <Row><MyToast {...toast} /></Row>
-    </Container>
+    </Container >
   );
 }
 export default Main;

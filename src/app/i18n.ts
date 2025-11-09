@@ -8,7 +8,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: 'zh',
     supportedLngs: ['en', 'zh', 'jp'],
     debug: false,
     detection: {
@@ -54,6 +54,7 @@ i18n
             about: 'About',
             seeme: 'See me on Github',
             theme: 'Theme',
+            warning: 'The page is a simplier version for Chinese users, and it is no longer maintained. To view the full version, please go to ',
             minigame: {
               title: 'Minigame',
               description: 'H5 games written in JS .',
@@ -169,6 +170,7 @@ i18n
             about: '关于',
             seeme: '我的 Github',
             theme: '主题',
+            warning: '该页面是我的简化版网站，仅用于中国大陆用户，且已不再更新。若需查看完整版本，请使用VPN前往：',
             minigame: {
               title: '小游戏',
               description: '这里是我写的一些H5小游戏。',
@@ -284,6 +286,7 @@ i18n
             about: '私について',
             seeme: 'Github',
             theme: '色気',
+            warning: 'このページは中国本土のユーザー向けの簡易版で、もう維持されないでいく。完全版を表示するには、ここです',
             minigame: {
               title: 'ゲーム',
               description: 'ここは私が書いたゲームです。',
