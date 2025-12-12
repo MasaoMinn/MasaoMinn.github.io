@@ -41,28 +41,34 @@ export const darkTheme = [{
   backgroundColor: '#1C1C1C',
   color: '#EEEEFE',
   borderColor: '#000274ff',
+  extraColor: '#d7f5edff',
 }, {
   backgroundColor: "#003c11ff",
   color: "#e8ffe1ff",
   borderColor: "#260048ff",
+  extraColor: '#cccfffff',
 }, {
   backgroundColor: "#540000ff",
   color: "#dffff5ff",
   borderColor: "#002139ff",
+  extraColor: '#fff5ccff',
 }];
 
 export const lightTheme = [{
   backgroundColor: '#EEEEEE',
   color: '#000000',
-  borderColor: '#FF0000',
+  borderColor: '#b68989ff',
+  extraColor: '#863030ff',
 }, {
   backgroundColor: "#e6ff80ff",
   color: "#260048ff",
-  borderColor: "#044f19ff",
+  borderColor: "#61b879ff",
+  extraColor: '#292993ff',
 }, {
   backgroundColor: "#c5ffd5ff",
   color: "#2d0028ff",
-  borderColor: "#87872aff",
+  borderColor: "#d0d063ff",
+  extraColor: '#184b88ff',
 }];
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {

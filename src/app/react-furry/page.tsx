@@ -27,14 +27,14 @@ export default function ReactImgPage() {
         <Row className="mb-12">
           <Col>
             <h1 className="lead" style={{ maxWidth: '50vw', margin: '0 auto', fontFamily: 'var(--font-playpen-sans), sans-serif' }}>
-              {t('react_furry.title')}
+              {t('mainpage.react_furry.title')}
             </h1>
           </Col>
         </Row>
 
         <Row className="justify-content-center mb-8">
           <Col xs={12} md={9} lg={8}>
-            <div className="border rounded-lg p-4 shadow-lg position-relative" style={{ backgroundColor: theme === 'dark' ? '#1a1a1a' : '#f8f9fa' }}>
+            <div className="border rounded-lg p-4 shadow-lg position-relative mt-4" style={{ backgroundColor: theme === 'dark' ? '#1a1a1a' : '#f8f9fa', height: '30vw' }}>
               <Image
                 src="/react-furry/React.png"
                 alt="React Furry Persona"

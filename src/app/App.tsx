@@ -15,15 +15,10 @@ const App = () => {
   const stackStyles = {
     borderRadius: "12px",
     border: "2px solid",
-    boxShadow: theme === "light"
-      ? "0 0 20px rgba(138, 43, 226, 0.5)"
-      : "0 0 20px rgba(138, 43, 226, 0.7)",
+    borderColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
+    boxShadow: theme === 'light' ? `0 0 20px ${lightTheme[currentTheme].borderColor}80` : `0 0 20px ${darkTheme[currentTheme].borderColor}80`,
     transition: "all 0.3s ease",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
     backdropFilter: "blur(10px)",
-    borderColor: theme === "light"
-      ? "rgba(138, 43, 226, 0.5)"
-      : "rgba(138, 43, 226, 0.7)",
   };
 
   // 定义统一的按钮样式
@@ -32,23 +27,26 @@ const App = () => {
     fontWeight: 500,
     transition: "all 0.3s ease",
     borderWidth: "2px",
+    backgroundColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
+    transform: "translateY(0)",
+    boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
   };
 
   // 定义悬停效果的样式
   const stackHoverStyles = {
     transform: "translateY(-5px)",
-    boxShadow: "0 10px 25px rgba(138, 43, 226, 0.7)",
   };
 
   // 定义按钮悬停效果
   const buttonHoverStyles = {
     transform: "translateY(-2px)",
-    boxShadow: "0 5px 15px rgba(138, 43, 226, 0.5)",
+    boxShadow: "0 5px 15px rgba(208, 194, 221, 0.5)",
+    backgroundColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
   };
 
   return (
     <Container className="min-vh-100 text-center" style={theme === 'light' ? { ...lightTheme[currentTheme] } : { ...darkTheme[currentTheme] }} fluid>
-      <Row className="mb-4 justify-content-center">
+      <Row className="mb-4 justify-content-center pt-5">
         <Col sm={6}>
           <Stack gap={0} style={stackStyles} onMouseEnter={(e) => {
             Object.assign(e.currentTarget.style, stackHoverStyles);
@@ -59,7 +57,6 @@ const App = () => {
             <div className="p-2 text-primary">{t('mainpage.react_furry.description')}</div>
             <div style={{
               height: "1px",
-              background: "linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.5), transparent)",
               margin: "0.5rem 0"
             }} />
             <div className="p-2">

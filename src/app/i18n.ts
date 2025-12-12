@@ -29,6 +29,7 @@ i18n
             seeme: 'See me on Github',
             theme: 'Theme',
             theme_variant: 'Theme Variant',
+            back: 'Back',
             react_furry: {
               title: 'React & Furry',
               description: 'Furry-react persona and react-furry-error for react developpers',
@@ -65,6 +66,7 @@ i18n
             seeme: '我的 Github',
             theme: '主题',
             theme_variant: '主题变体',
+            back: '返回',
             react_furry: {
               title: 'React 拟兽兽设',
               description: 'React拟兽兽设说明,与react-furry-error包的使用说明',
@@ -102,6 +104,7 @@ i18n
             seeme: 'Github',
             theme: '色気',
             theme_variant: 'テーマバリエーション',
+            back: '戻る',
             react_furry: {
               title: 'リアクト ファーソナ',
               description: 'Reactのファー(擬獣)設定説明とreact-furry-error パッケージの使用説明',

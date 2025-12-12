@@ -4,7 +4,7 @@ const introStyle = {
   border: '2px solid blue',
   padding: '10px',
   borderRadius: '10px',
-  fontSize: '2vw',
+  fontSize: '1.5vw',
 };
 
 export { introStyle }

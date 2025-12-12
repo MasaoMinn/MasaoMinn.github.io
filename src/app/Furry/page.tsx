@@ -13,7 +13,8 @@ const QQProfileLink: React.FC = () => {
 
   const { t } = useTranslation();
   return (
-    <Container fluid className="text-center px-3" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
+    <Container fluid className=" px-3" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
+      <Button variant={theme} onClick={() => window.history.back()}>{t('mainpage.back')}</Button>
       <Row className="justify-content-center g-1">
         <Col
           xs={12}
@@ -27,7 +28,7 @@ const QQProfileLink: React.FC = () => {
       </Row>
       <Row className="justify-content-center g-1">
         <Col xs={10} md={9} lg={8} className="d-flex justify-content-center">
-          <p style={introStyle}>{t('furry.intro')}</p>
+          <p style={introStyle}>{t('mainpage.furry.intro')}</p>
         </Col>
       </Row>
 

@@ -13,8 +13,7 @@ export default function ReactFurryErrorPage() {
       style={theme === 'light' ? lightTheme[currentTheme] : darkTheme[currentTheme]}
       fluid
     >
-      <h1>{t('error.title')}</h1>
-      <p>{t('error.description')}</p>
+      <h1><b>{t('under_construction')}</b></h1>
       <Button href="/" variant={theme} className="mt-3">
         {t('error.back_to_home')}
       </Button>
