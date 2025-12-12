@@ -1,14 +1,14 @@
 "use client";
-import type { ToastPayload } from '@/app/store/ModalStore';
+import type { ToastPayload } from '@/store/ModalStore';
 import { useEffect, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useModalStore } from '@/app/store/ModalStore';
+import { useModalStore } from '@/store/ModalStore';
 import { useTheme, darkTheme, lightTheme } from './ThemeProvider';
 export const MyToast = (props: ToastPayload) => {
   const { t } = useTranslation();
   const hideModal = useModalStore(s => s.hideModal);
-  const { theme } = useTheme();
+  const { theme, currentTheme } = useTheme();
   const [show, setShow] = useState(true);
   const { type, title: pTitle, message: pMessage } = props ?? { type: null, title: null, message: null };
   useEffect(() => {
@@ -42,7 +42,7 @@ export const MyToast = (props: ToastPayload) => {
         onClose={handleClose}
         delay={2500}
         autohide
-        style={theme === 'light' ? { ...lightTheme } : { ...darkTheme }}
+        style={theme === 'light' ? { ...lightTheme[currentTheme] } : { ...darkTheme[currentTheme] }}
       >
         <Toast.Header>
           <strong className="me-auto">{finalTitle}</strong>

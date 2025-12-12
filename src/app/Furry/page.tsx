@@ -9,11 +9,11 @@ import { useTheme, darkTheme, lightTheme } from '@/components/boxed/ThemeProvide
 const QQProfileLink: React.FC = () => {
   const qqNumber = '2134361910'; // QQ号
   const QQUrl = `https://qm.qq.com/q/QTfus78dqe`;// QQ主页URL
-  const { theme } = useTheme();
+  const { theme, currentTheme } = useTheme();
 
   const { t } = useTranslation();
   return (
-    <Container fluid className="text-center px-3" style={theme === 'dark' ? darkTheme : lightTheme}>
+    <Container fluid className="text-center px-3" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
       <Row className="justify-content-center g-1">
         <Col
           xs={12}

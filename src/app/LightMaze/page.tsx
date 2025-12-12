@@ -2,8 +2,10 @@
 import { Container, Row, Col } from "react-bootstrap"
 import { Button } from "react-bootstrap"
 import { useState } from "react";
+import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider";
 
 const LightMaze = () => {
+  const { theme, currentTheme } = useTheme();
   const [status, setStatus] = useState(0);
   const [size, setSize] = useState(10);
   const WIDTH: number = 1200;
@@ -160,7 +162,7 @@ const LightMaze = () => {
 
   return (
     <>
-      <Container style={{ width: '100%' }} className="d-flex flex-column justify-content-center text-center align-items-center" fluid>
+      <Container style={{ width: '100%', ...(theme === 'light' ? lightTheme[currentTheme] : darkTheme[currentTheme]) }} className="d-flex flex-column justify-content-center text-center align-items-center" fluid>
 
         <div style={{ backgroundColor: 'gray', width: '40%', color: 'red' }} className="">
           <Row style={{ userSelect: 'none' }}>

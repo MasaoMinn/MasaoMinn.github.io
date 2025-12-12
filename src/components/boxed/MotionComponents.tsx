@@ -1,0 +1,65 @@
+import { motion } from "motion/react";
+
+export const RotateDiv = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <motion.div
+      animate={{
+        rotate: 360
+      }}
+      whileHover={{
+        rotate: -180
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+export const DefaultDiv = ({ children }: { children: React.ReactNode }) => {
+  const rand: boolean = Math.random() > 0.5;
+  return (
+    <motion.div
+      whileHover={{
+        rotate: rand ? +12 : -12,
+        scale: 1.05,
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+export const BoldDiv = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <motion.div
+      whileHover={{
+        textShadow: "0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4)",
+        scale: 1.05
+      }}
+      transition={{
+        duration: 0.3,
+        ease: "easeOut"
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+export const BababoiDiv = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <motion.div
+      whileHover={{
+        scale: [1, 1.1, 0.9, 1.05, 0.95, 1.02, 0.98, 1]
+      }}
+      transition={{
+        duration: 0.5,
+        ease: "easeOut"
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
