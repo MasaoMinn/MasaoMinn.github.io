@@ -1,26 +1,31 @@
 "use client";
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useTheme, darkTheme, lightTheme } from '@/components/boxed/ThemeProvider';
 // import Picture from '@/components/boxed/Picture';
 // import GradientText from '@/components/GradientText';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
+import { BoldDiv } from '@/components/boxed/MotionComponents';
 
 export default function ReactImgPage() {
   const { theme, currentTheme } = useTheme();
   const { t } = useTranslation();
+  const iconSize: number = 20;
   return (
     <Container fluid className="min-vh-100 text-center py-8" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
       <Container>
         <Row className="mb-8 justify-content-center" style={{ height: '10vw' }}>
           <Col>
-            <Image
-              src="/react-furry/avater.svg"
-              alt="React Furry Persona"
-              height={100}
-              width={600}
-            />
+            <div className="position-relative">
+              <Image
+                src="/react-furry/avater.svg"
+                alt="React Furry Persona"
+                height={100}
+                width={600}
+              />
+
+            </div>
           </Col>
         </Row>
 
@@ -40,11 +45,50 @@ export default function ReactImgPage() {
                 alt="React Furry Persona"
                 fill
               />
-              <div className="mt-4">
-                <h3 className="mb-2" style={{ fontFamily: 'var(--font-kiwi-maru), serif' }}>React Logo</h3>
-                <p className="text-muted" style={{ fontFamily: 'var(--font-kiwi-maru), serif' }}>The iconic React logo displayed using the custom Picture component.</p>
-              </div>
             </div>
+          </Col>
+        </Row>
+
+        <Row className='mt-5'>
+          <Col>
+            <BoldDiv>
+              <Button
+                as="a"
+                href="/react-furry/avater.svg"
+                download="react-furry-avatar.svg"
+                variant={theme}
+                style={{
+                  backgroundColor: theme === 'dark' ? darkTheme[currentTheme].borderColor : lightTheme[currentTheme].borderColor,
+                  borderColor: theme === 'dark' ? darkTheme[currentTheme].borderColor : lightTheme[currentTheme].borderColor
+                }}
+              >
+                {t('react_furry.download')}{' SVG'}
+              </Button>
+            </BoldDiv>
+          </Col>
+          <Col>
+            <BoldDiv>
+              <Button
+                as="a"
+                href="/react-furry/avater.png"
+                download="react-furry-avatar.png"
+                variant={theme}
+                style={{
+                  backgroundColor: theme === 'dark' ? darkTheme[currentTheme].borderColor : lightTheme[currentTheme].borderColor,
+                  borderColor: theme === 'dark' ? darkTheme[currentTheme].borderColor : lightTheme[currentTheme].borderColor
+                }}
+              >
+                {t('react_furry.download')}{' PNG'}
+              </Button>
+            </BoldDiv>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <a href="https://masaominn.github.io/react-furry">React in Furry</a> © 2025 by <a href="https://masaominn.github.io/furry">Sunny_Tangetsu</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="CC" height={iconSize} width={iconSize} style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '0.2em', display: 'inline-block', verticalAlign: 'middle' }} />
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="BY" height={iconSize} width={iconSize} style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '0.2em', display: 'inline-block', verticalAlign: 'middle' }} />
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="NC" height={iconSize} width={iconSize} style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '0.2em', display: 'inline-block', verticalAlign: 'middle' }} />
           </Col>
         </Row>
       </Container>

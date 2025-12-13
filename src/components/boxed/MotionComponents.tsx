@@ -32,9 +32,10 @@ export const DefaultDiv = ({ children }: { children: React.ReactNode }) => {
     </motion.div>
   )
 }
-export const BoldDiv = ({ children }: { children: React.ReactNode }) => {
+export const BoldDiv = ({ children, className }: { children: React.ReactNode, className?: string }) => {
   return (
     <motion.div
+      className={className}
       whileHover={{
         textShadow: "0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4)",
         scale: 1.05

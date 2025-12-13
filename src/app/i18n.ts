@@ -53,6 +53,9 @@ i18n
               intro: "Hello! This is Kino Tsuki, a blue furry fox, living in Guangzhou China.I'm excited to connect with you here! Feel free to reach out to add me as a friend. Looking forward to chatting and sharing our furry interests!"
             },
           },
+          react_furry: {
+            download: 'Download'
+          }
 
         }
       },
@@ -91,6 +94,9 @@ i18n
             },
 
           },
+          react_furry: {
+            download: '下载'
+          }
 
         }
       },
@@ -123,11 +129,14 @@ i18n
               description: '役に立つ工具',
               tobe: '乞うご期待',
               furry: '連絡先'
-            }
+            },
+            furry: {
+              intro: "こんにちは！私はキノツキ、広州に住む青いケモノの狐です。ここであなたとつながることができてうれしいです！友達追加のためにいつでも連絡してください。お話ししたり、ケモノの興味を共有したりするのを楽しみにしています！"
+            },
           },
-          furry: {
-            intro: "こんにちは！私はキノツキ、広州に住む青いケモノの狐です。ここであなたとつながることができてうれしいです！友達追加のためにいつでも連絡してください。お話ししたり、ケモノの興味を共有したりするのを楽しみにしています！"
-          },
+          react_furry: {
+            download: 'ダウンロード'
+          }
         }
       }
     }

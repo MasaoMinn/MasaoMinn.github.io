@@ -1,5 +1,10 @@
 import Link from 'next/link';
 
+// 添加generateStaticParams函数以支持静态导出
+export function generateStaticParams() {
+  return []; // 返回空数组，因为这是一个404页面的catch-all路由
+}
+
 export default function NotFound() {
   return (
     <div className="container mx-auto px-4 py-16 text-center">
