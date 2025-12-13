@@ -1,8 +1,13 @@
 import Link from 'next/link';
 
-// 添加generateStaticParams函数以支持静态导出
+// 为catch-all路由生成静态参数，支持静态导出
 export function generateStaticParams() {
-  return []; // 返回空数组，因为这是一个404页面的catch-all路由
+  // 返回一个包含可能的slug组合的数组
+  // 由于这是一个404页面的catch-all路由，我们只需要提供一个基本的路径
+  return [
+    { slug: ['404'] },
+    { slug: [] } // 空slug情况
+  ];
 }
 
 export default function NotFound() {
