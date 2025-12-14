@@ -13,6 +13,7 @@ import {
   ReactNode,
   useCallback,
 } from "react";
+import { useLocalStorageStore } from '@/store/LocalStorageStore';
 
 // 类型定义
 type Theme = "light" | "dark";
@@ -24,6 +25,8 @@ type ThemeContextType = {
   prevTheme: () => void;
   setThemeIndex: (index: number) => void;
 };
+
+// Cookie相关操作已移至CookieStore中管理
 
 // Context 定义
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -72,14 +75,16 @@ export const lightTheme = [{
 }];
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  // 获取初始主题（优先 localStorage > 系统主题 > 默认 light）
+
+  // 获取初始主题
   const getInitialTheme = useCallback((): Theme => {
     try {
-      // 优先从 localStorage 获取
-      const storedTheme = localStorage.getItem("theme") as Theme | null;
-      if (storedTheme === "light" || storedTheme === "dark") {
-        return storedTheme;
+      // 优先从localStorage获取
+      const localStorageTheme = useLocalStorageStore.getState().getThemeCookie();
+      if (localStorageTheme === "light" || localStorageTheme === "dark") {
+        return localStorageTheme;
       }
+
       // 检测系统主题
       const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       return systemDark ? "dark" : "light";
@@ -93,11 +98,19 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // 获取初始主题索引（优先 localStorage > 默认 0）
   const getInitialThemeIndex = useCallback((): number => {
     try {
-      const storedIndex = localStorage.getItem("themeIndex");
-      const index = parseInt(storedIndex || "0", 10);
-      // 确保索引在有效范围内
-      const currentThemeArray = getInitialTheme() === "dark" ? darkTheme : lightTheme;
-      return Math.min(Math.max(0, index), currentThemeArray.length - 1);
+      // 优先从localStorage获取
+      const localStorageIndex = useLocalStorageStore.getState().getThemeIndexCookie();
+      if (localStorageIndex) {
+        const index = parseInt(localStorageIndex, 10);
+        if (!isNaN(index)) {
+          // 确保索引在有效范围内
+          const currentThemeArray = getInitialTheme() === "dark" ? darkTheme : lightTheme;
+          return Math.min(Math.max(0, index), currentThemeArray.length - 1);
+        }
+      }
+
+      // 如果没有localStorage，则返回默认值0
+      return 0;
     } catch (e) {
       // 回退
       console.log(e);
@@ -115,7 +128,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     setTheme((prev) => {
       const newTheme = prev === "light" ? "dark" : "light";
       try {
-        localStorage.setItem("theme", newTheme);
+        // 使用LocalStorageStore的方法设置主题localStorage
+        useLocalStorageStore.getState().setThemeCookie(newTheme);
       } catch (e) {
         console.warn(e);
       }
@@ -129,7 +143,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       const currentThemeArray = theme === "dark" ? darkTheme : lightTheme;
       const newIndex = (prevIndex + 1) % currentThemeArray.length;
       try {
-        localStorage.setItem("themeIndex", newIndex.toString());
+        // 使用LocalStorageStore的方法设置主题索引localStorage
+        useLocalStorageStore.getState().setThemeIndexCookie(newIndex.toString());
       } catch (e) {
         console.warn(e);
       }
@@ -143,7 +158,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       const currentThemeArray = theme === "dark" ? darkTheme : lightTheme;
       const newIndex = (prevIndex - 1 + currentThemeArray.length) % currentThemeArray.length;
       try {
-        localStorage.setItem("themeIndex", newIndex.toString());
+        // 使用LocalStorageStore的方法设置主题索引localStorage
+        useLocalStorageStore.getState().setThemeIndexCookie(newIndex.toString());
       } catch (e) {
         console.warn(e);
       }
@@ -157,7 +173,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const validIndex = Math.min(Math.max(0, index), currentThemeArray.length - 1);
     setCurrentTheme(validIndex);
     try {
-      localStorage.setItem("themeIndex", validIndex.toString());
+      // 使用LocalStorageStore的方法设置主题索引localStorage
+      useLocalStorageStore.getState().setThemeIndexCookie(validIndex.toString());
     } catch (e) {
       console.warn(e);
     }
@@ -175,13 +192,16 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
       try {
-        // 如果 localStorage 中不存在手动设置的主题，则跟随系统
-        if (!localStorage.getItem("theme")) {
-          setTheme(e.matches ? "dark" : "light");
+        // 如果localStorage中不存在手动设置的主题，则跟随系统
+        if (!useLocalStorageStore.getState().getThemeCookie()) {
+          const newTheme = e.matches ? "dark" : "light";
+          setTheme(newTheme);
+          // 使用LocalStorageStore的方法设置主题localStorage
+          useLocalStorageStore.getState().setThemeCookie(newTheme);
         }
       } catch (e) {
         console.log(e);
-        // 忽略 localStorage 错误
+        // 忽略错误
       }
     };
 
@@ -189,7 +209,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       mediaQuery.removeEventListener("change", handleSystemThemeChange);
     };
-  });
+  }, []);
 
   // 同步主题到 DOM（可结合 CSS 自定义属性使用）
   useEffect(() => {

@@ -1,13 +1,13 @@
 "use client";
-import type { ToastPayload } from '@/store/ModalStore';
+import type { ToastPayload } from '@/store/ToastStore';
 import { useEffect, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useModalStore } from '@/store/ModalStore';
+import { useToastStore } from '@/store/ToastStore';
 import { useTheme, darkTheme, lightTheme } from './ThemeProvider';
 export const MyToast = (props: ToastPayload) => {
   const { t } = useTranslation();
-  const hideModal = useModalStore(s => s.hideModal);
+  const hideToast = useToastStore(s => s.hideToast);
   const { theme, currentTheme } = useTheme();
   const [show, setShow] = useState(true);
   const { type, title: pTitle, message: pMessage } = props ?? { type: null, title: null, message: null };
@@ -20,10 +20,10 @@ export const MyToast = (props: ToastPayload) => {
     if (!type) return;
     const timer = setTimeout(() => {
       setShow(false);
-      hideModal();
+      hideToast();
     }, delay + 50);
     return () => clearTimeout(timer);
-  }, [type, pTitle, pMessage, hideModal]);
+  }, [type, pTitle, pMessage, hideToast]);
 
   if (!props || !props.type) return null;
 
@@ -32,7 +32,7 @@ export const MyToast = (props: ToastPayload) => {
 
   const handleClose = () => {
     setShow(false);
-    hideModal();
+    hideToast();
   };
 
   return (

@@ -3,6 +3,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import { reactFurryErrorI18n } from './react-furry-error/i18n';
 
 i18n
   .use(LanguageDetector)
@@ -12,8 +13,9 @@ i18n
     supportedLngs: ['en', 'zh', 'jp'],
     debug: false,
     detection: {
-      order: ['cookie', 'navigator'],
-      caches: ['cookie'],
+      order: ['localStorage', 'cookie', 'navigator'],
+      caches: ['localStorage', 'cookie'],
+      lookupLocalStorage: 'language',
     },
     interpolation: {
       escapeValue: false,
@@ -55,6 +57,15 @@ i18n
           },
           react_furry: {
             download: 'Download'
+          },
+          reactFurryError: {
+            ...reactFurryErrorI18n.en,
+          },
+          cookie: {
+            title: 'Would You Accpet My Cookies ?',
+            content: 'If you reject, I will ask you again next session. If you accept, nothing happens because this is a static website and I`ve no cookie for you. I just want to show you how cute I am.',
+            accept: 'Accept',
+            reject: 'Reject',
           }
 
         }
@@ -96,6 +107,15 @@ i18n
           },
           react_furry: {
             download: '下载'
+          },
+          reactFurryError: {
+            ...reactFurryErrorI18n.zh
+          },
+          cookie: {
+            title: '是否接受我的Cookie ?',
+            content: '如果你拒绝,我会在下次会话中再次询问。如果您接受,我也没有cookie给你,因为这是个静态网站。我只是想让你看看我有多可爱。',
+            accept: '接受',
+            reject: '拒绝',
           }
 
         }
@@ -136,6 +156,15 @@ i18n
           },
           react_furry: {
             download: 'ダウンロード'
+          },
+          reactFurryError: {
+            ...reactFurryErrorI18n.jp
+          },
+          cookie: {
+            title: 'Cookieを受け入れますか？',
+            content: 'もし拒否した場合は、次のセッションで再度質問します。受け入れた場合は、これは静的サイトであるため、Cookieを与えられないということだ. 私は、あなたが私をどのくらい好きであるかを示すために、このサイトを訪れたことを願っています。',
+            accept: '受け入れる',
+            reject: '拒否する',
           }
         }
       }

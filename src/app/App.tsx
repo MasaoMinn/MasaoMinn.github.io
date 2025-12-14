@@ -3,13 +3,28 @@ import { Button, Col, Row, Stack } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider";
 import { useTranslation } from 'react-i18next'
-import React from "react";
+import React, { useEffect } from "react";
 import { useModalStore } from "@/store/ModalStore";
-import { MyToast } from "@/components/boxed/Toast";
+import { useLocalStorageStore } from "@/store/LocalStorageStore";
+import { CookieModal } from "@/components/layout/modals/CookieModal";
 const App = () => {
   const { t } = useTranslation();
   const { theme, currentTheme } = useTheme();
-  const { toast } = useModalStore();
+  const { modal, showModal } = useModalStore();
+
+  // 检查并显示cookie同意弹窗
+  useEffect(() => {
+    const { cookiePermission, cookieQueryShown, setCookieQueryShown } = useLocalStorageStore.getState();
+    // 只有当用户没有同意cookie且弹窗还没有显示过时，才显示弹窗
+    if (!cookiePermission && !cookieQueryShown) {
+      // 标记弹窗已显示
+      setCookieQueryShown();
+      // 显示弹窗
+      showModal({ type: "cookie", title: "Cookie 同意", message: "本网站使用cookie来提升您的浏览体验。" });
+    }
+  }, [showModal]);
+
+  const isCookieModalVisible = modal.type === "cookie";
 
   // 定义统一的Stack样式
   const stackStyles = {
@@ -60,14 +75,14 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <Button href="/react-furry" target="_blank" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/react-furry" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
               }}>{t('mainpage.react_furry.persona')}</Button>
             </div>
             <div className="p-2">
-              <Button href="/react-furry-error" target="_blank" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/react-furry-error" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
@@ -143,7 +158,7 @@ const App = () => {
           </Stack>
         </Col>
       </Row>
-      <Row><MyToast {...toast} /></Row>
+      <CookieModal show={isCookieModalVisible} />
     </Container>
   );
 }

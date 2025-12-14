@@ -7,6 +7,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useTheme } from "@/components/boxed/ThemeProvider";
 import { useTranslation } from 'react-i18next';
 import i18n from '@/app/i18n';
+import { useLocalStorageStore } from "@/store/LocalStorageStore";
 function BasicExample() {
   const { theme, toggleTheme, currentTheme, nextTheme, prevTheme } = useTheme();
   const { t } = useTranslation();
@@ -20,9 +21,9 @@ function BasicExample() {
           <Nav className="me-auto">
           </Nav><Nav>
             <NavDropdown title={t('lang')} id='lang'>
-              <NavDropdown.Item onClick={() => i18n.changeLanguage('en')}>{'English'}</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => i18n.changeLanguage('zh')}>{'简体中文'}</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => i18n.changeLanguage('jp')}>{'日本語'}</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { i18n.changeLanguage('en'); useLocalStorageStore.getState().setLanguageCookie('en'); }}>{'English'}</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { i18n.changeLanguage('zh'); useLocalStorageStore.getState().setLanguageCookie('zh'); }}>{'简体中文'}</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { i18n.changeLanguage('jp'); useLocalStorageStore.getState().setLanguageCookie('jp'); }}>{'日本語'}</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title={t('mainpage.dropdown')} id="basic-nav-dropdown">
               <NavDropdown.Item>

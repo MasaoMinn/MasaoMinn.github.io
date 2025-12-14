@@ -1,22 +1,13 @@
 "use client";
-import { Container, Button } from 'react-bootstrap';
-import { useTheme, lightTheme, darkTheme } from '@/components/boxed/ThemeProvider';
-import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function ReactFurryErrorPage() {
-  const { theme, currentTheme } = useTheme();
-  const { t } = useTranslation();
+export default function ReactFurryErrorDefaultPage() {
+  const router = useRouter();
 
-  return (
-    <Container
-      className="min-vh-100 d-flex flex-column justify-content-center align-items-center"
-      style={theme === 'light' ? lightTheme[currentTheme] : darkTheme[currentTheme]}
-      fluid
-    >
-      <h1><b>{t('under_construction')}</b></h1>
-      <Button href="/" variant={theme} className="mt-3">
-        {t('error.back_to_home')}
-      </Button>
-    </Container>
-  );
+  useEffect(() => {
+    router.push('/react-furry-error/introduction');
+  }, [router]);
+
+  return null;
 }

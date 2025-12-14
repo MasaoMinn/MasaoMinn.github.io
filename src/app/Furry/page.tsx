@@ -35,7 +35,7 @@ const QQProfileLink: React.FC = () => {
       <Row className="justify-content-center g-1">
         <Col xs={9} md={6} className="d-flex justify-content-center">
           <Button variant="info" href={QQUrl} aria-label={`访问QQ：${qqNumber}`} className="px-4 py-2" >
-            <Image src='QQicon.png' alt="QQ图标" width="20" height="20" className="me-2" />
+            <Image src='/LXFS/QQicon.png' alt="QQ图标" width="20" height="20" className="me-2" />
             点击跳转我的QQ
           </Button>
         </Col>
@@ -51,7 +51,7 @@ const QQProfileLink: React.FC = () => {
                 查看QQ二维码
               </Accordion.Header>
               <Accordion.Body>
-                <Image src="QQ.jpg" alt="QQ二维码" fluid className="img-thumbnail hover-shadow"
+                <Image src="/LXFS/QQ.jpg" alt="QQ二维码" fluid className="img-thumbnail hover-shadow"
                   style={{ height: 'auto', transform: 'scale(0.98)', transition: 'transform 0.3s ease' }}
                   onLoad={(e) => { e.currentTarget.style.transform = 'scale(1)' }} />
               </Accordion.Body>
@@ -62,7 +62,7 @@ const QQProfileLink: React.FC = () => {
       <Row className="justify-content-center g-1">
         <Col xs={9} md={6} className="d-flex justify-content-center">
           <Button variant="info" href="https://www.xiaohongshu.com/user/profile/649132e3000000000f004dc5?xhsshare=userQrCode" aria-label={`访问小红书：5514710200`} className="px-4 py-2" >
-            <Image src='xiaohongshuicon.png' alt="小红书图标" width="20" height="20" className="me-2" />
+            <Image src='/LXFS/xiaohongshuicon.png' alt="小红书图标" width="20" height="20" className="me-2" />
             点击跳转我的小红书
           </Button>
         </Col>
@@ -78,7 +78,7 @@ const QQProfileLink: React.FC = () => {
                 查看小红书二维码
               </Accordion.Header>
               <Accordion.Body>
-                <Image src="xiaohongshu.jpg" alt="小红书二维码" fluid className="img-thumbnail hover-shadow"
+                <Image src="/LXFS/xiaohongshu.jpg" alt="小红书二维码" fluid className="img-thumbnail hover-shadow"
                   style={{ height: 'auto', transform: 'scale(0.98)', transition: 'transform 0.3s ease' }}
                   onLoad={(e) => { e.currentTarget.style.transform = 'scale(1)' }} />
               </Accordion.Body>
@@ -89,7 +89,7 @@ const QQProfileLink: React.FC = () => {
       <Row className="justify-content-center g-0">
         <Col xs={9} md={6} className="d-flex justify-content-center">
           <Button variant="info" href="https://www.douyin.com/user/MS4wLjABAAAA3ZnB6dr1lknUupJiF0XZrWZ1mUtsvpRJfuSgmT94WRJpfkvO5S4Jja5h4yFo9vyM?from_tab_name=main" aria-label={`访问小红书：5514710200`} className="px-4 py-2" >
-            <Image src='douyinicon.png' alt="抖音图标" width="20" height="20" className="me-2" />
+            <Image src='/LXFS/douyinicon.png' alt="抖音图标" width="20" height="20" className="me-2" />
             点击跳转我的抖音
           </Button>
         </Col>
@@ -105,7 +105,7 @@ const QQProfileLink: React.FC = () => {
                 查看抖音二维码
               </Accordion.Header>
               <Accordion.Body>
-                <Image src="douyin.png" alt="抖音二维码" fluid className="img-thumbnail hover-shadow"
+                <Image src="/LXFS/douyin.png" alt="抖音二维码" fluid className="img-thumbnail hover-shadow"
                   style={{ height: 'auto', transform: 'scale(0.98)', transition: 'transform 0.3s ease' }}
                   onLoad={(e) => { e.currentTarget.style.transform = 'scale(1)' }} />
               </Accordion.Body>
