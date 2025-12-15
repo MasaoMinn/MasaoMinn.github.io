@@ -12,7 +12,7 @@ When your application encounters errors during development, instead of just show
 Of course, cuteness doesn't mean missing information ——  
 All **original error information (message, stack, file location) is fully preserved and displayed**.
 
-### What makes this project different?
+## What makes this project different?
 
 - 🐾 "Visually categorize" errors
 - 🔍 Doesn't swallow any original error information

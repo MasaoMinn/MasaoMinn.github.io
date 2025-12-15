@@ -43,6 +43,7 @@ const App = () => {
     transition: "all 0.3s ease",
     borderWidth: "2px",
     backgroundColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
+    color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color,
     transform: "translateY(0)",
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
   };
@@ -75,14 +76,14 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <Button href="/react-furry" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/react-furry" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
               }}>{t('mainpage.react_furry.persona')}</Button>
             </div>
             <div className="p-2">
-              <Button href="/react-furry-error" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/react-furry-error" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
@@ -106,21 +107,21 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <Button href="/BWIte/index.html" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/BWIte/index.html" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
               }}>{t('mainpage.minigame.bwite')}</Button>
             </div>
             <div className="p-2">
-              <Button href="/Color/index.html" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/Color/index.html" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
               }}>{t('mainpage.minigame.color')}</Button>
             </div>
             <div className="p-2">
-              <Button href="/LightMaze" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/LightMaze" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
@@ -142,14 +143,14 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <Button href="/" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);
               }}>{t('mainpage.tools.tobe')}</Button>
             </div>
             <div className="p-2">
-              <Button href="/Furry" variant={theme} style={buttonStyles} onMouseEnter={(e) => {
+              <Button href="/Furry" style={buttonStyles} onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, buttonHoverStyles);
               }} onMouseLeave={(e) => {
                 Object.assign(e.currentTarget.style, buttonStyles);

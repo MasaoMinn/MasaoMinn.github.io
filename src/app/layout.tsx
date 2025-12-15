@@ -39,15 +39,14 @@ export default function RootLayout({
 }>) {
 
   return (
-    <ThemeProvider>
-      <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <body className={`${playpenSans.className} ${kiwiMaru.className}`}>
+    <html lang="en">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <body className={`${playpenSans.className} ${kiwiMaru.className}`}>
+        <ThemeProvider>
           <Header />
           {children}
-
-        </body>
-      </html>
-    </ThemeProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

@@ -58,8 +58,8 @@ export default function MarkdownComponent({
         style={{
           backgroundColor:
             theme === "dark"
-              ? "rgba(17,17,17,0.95)"
-              : "rgba(245,245,245,0.95)",
+              ? "rgba(30, 98, 19, 0.95)"
+              : "rgba(172, 206, 231, 0.95)",
           border:
             theme === "dark"
               ? "1px solid rgba(255,255,255,0.12)"

@@ -1,8 +1,3 @@
-/*
-  封装的ThemeContext组件，提供主题，实现主题切换功能
-  2025-04-07
-  by MasaoMinn
-*/
 "use client";
 
 import {
@@ -10,13 +5,16 @@ import {
   useContext,
   useState,
   useEffect,
+  useLayoutEffect,
   ReactNode,
   useCallback,
 } from "react";
-import { useLocalStorageStore } from '@/store/LocalStorageStore';
+import { useLocalStorageStore } from "@/store/LocalStorageStore";
 
-// 类型定义
+/* ================= types ================= */
+
 type Theme = "light" | "dark";
+
 type ThemeContextType = {
   theme: Theme;
   currentTheme: number;
@@ -26,198 +24,123 @@ type ThemeContextType = {
   setThemeIndex: (index: number) => void;
 };
 
-// Cookie相关操作已移至CookieStore中管理
+/* ================= theme data ================= */
 
-// Context 定义
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export const darkTheme = [
+  { backgroundColor: "#1f1f1fff", color: "#EEEEFE", borderColor: "#000274ff", extraColor: "#d7f5edff" },
+  { backgroundColor: "#003c11ff", color: "#e8ffe1ff", borderColor: "#260048ff", extraColor: "#cccfffff" },
+  { backgroundColor: "#540000ff", color: "#dffff5ff", borderColor: "#002139ff", extraColor: "#fff5ccff" },
+];
 
-// 自定义 Hook 确保使用安全
+export const lightTheme = [
+  { backgroundColor: "#EEEEEE", color: "#000000", borderColor: "#b68989ff", extraColor: "#863030ff" },
+  { backgroundColor: "#e6ff80ff", color: "#260048ff", borderColor: "#61b879ff", extraColor: "#292993ff" },
+  { backgroundColor: "#c5ffd5ff", color: "#2d0028ff", borderColor: "#d0d063ff", extraColor: "#184b88ff" },
+];
+
+/* ================= context ================= */
+
+const ThemeContext = createContext<ThemeContextType | null>(null);
+
 export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+  const ctx = useContext(ThemeContext);
+  if (!ctx) {
+    throw new Error("useTheme must be used within ThemeProvider");
   }
-  return context;
+  return ctx;
 };
 
-export const darkTheme = [{
-  backgroundColor: '#1f1f1fff',
-  color: '#EEEEFE',
-  borderColor: '#000274ff',
-  extraColor: '#d7f5edff',
-}, {
-  backgroundColor: "#003c11ff",
-  color: "#e8ffe1ff",
-  borderColor: "#260048ff",
-  extraColor: '#cccfffff',
-}, {
-  backgroundColor: "#540000ff",
-  color: "#dffff5ff",
-  borderColor: "#002139ff",
-  extraColor: '#fff5ccff',
-}];
-
-export const lightTheme = [{
-  backgroundColor: '#EEEEEE',
-  color: '#000000',
-  borderColor: '#b68989ff',
-  extraColor: '#863030ff',
-}, {
-  backgroundColor: "#e6ff80ff",
-  color: "#260048ff",
-  borderColor: "#61b879ff",
-  extraColor: '#292993ff',
-}, {
-  backgroundColor: "#c5ffd5ff",
-  color: "#2d0028ff",
-  borderColor: "#d0d063ff",
-  extraColor: '#184b88ff',
-}];
+/* ================= provider ================= */
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  /** ⚠️ 初始值不要读 localStorage */
+  const [theme, setTheme] = useState<Theme>("light");
+  const [currentTheme, setCurrentTheme] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
 
-  // 获取初始主题
-  const getInitialTheme = useCallback((): Theme => {
-    try {
-      // 优先从localStorage获取
-      const localStorageTheme = useLocalStorageStore.getState().getThemeCookie();
-      if (localStorageTheme === "light" || localStorageTheme === "dark") {
-        return localStorageTheme;
-      }
+  /* ===== 首次 hydration：统一初始化 ===== */
+  useEffect(() => {
+    const store = useLocalStorageStore.getState();
 
-      // 检测系统主题
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      return systemDark ? "dark" : "light";
-    } catch (e) {
-      // 回退
-      console.log(e);
-      return "light";
-    }
+    const storedTheme = store.getThemeCookie();
+    const resolvedTheme: Theme =
+      storedTheme === "dark" || storedTheme === "light" ? storedTheme : "light";
+
+    const storedIndex = parseInt(store.getThemeIndexCookie() ?? "0", 10);
+    const themeArray = resolvedTheme === "dark" ? darkTheme : lightTheme;
+
+    setTheme(resolvedTheme);
+    setCurrentTheme(
+      Number.isNaN(storedIndex)
+        ? 0
+        : Math.min(Math.max(0, storedIndex), themeArray.length - 1)
+    );
+
+    setHydrated(true);
   }, []);
 
-  // 获取初始主题索引（优先 localStorage > 默认 0）
-  const getInitialThemeIndex = useCallback((): number => {
-    try {
-      // 优先从localStorage获取
-      const localStorageIndex = useLocalStorageStore.getState().getThemeIndexCookie();
-      if (localStorageIndex) {
-        const index = parseInt(localStorageIndex, 10);
-        if (!isNaN(index)) {
-          // 确保索引在有效范围内
-          const currentThemeArray = getInitialTheme() === "dark" ? darkTheme : lightTheme;
-          return Math.min(Math.max(0, index), currentThemeArray.length - 1);
-        }
-      }
+  /* ===== DOM 同步（避免闪屏） ===== */
+  useLayoutEffect(() => {
+    if (!hydrated) return;
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme, hydrated]);
 
-      // 如果没有localStorage，则返回默认值0
-      return 0;
-    } catch (e) {
-      // 回退
-      console.log(e);
-      return 0;
-    }
-  }, [getInitialTheme]);
+  /* ================= actions ================= */
 
-  const [theme, setTheme] = useState<Theme>(getInitialTheme());
-  const [currentTheme, setCurrentTheme] = useState<number>(getInitialThemeIndex());
-
-  // 不再从 cookie 同步 theme
-
-  // 切换主题方法（明暗切换）
   const toggleTheme = useCallback(() => {
     setTheme((prev) => {
-      const newTheme = prev === "light" ? "dark" : "light";
-      try {
-        // 使用LocalStorageStore的方法设置主题localStorage
-        useLocalStorageStore.getState().setThemeCookie(newTheme);
-      } catch (e) {
-        console.warn(e);
-      }
-      return newTheme;
+      const next = prev === "light" ? "dark" : "light";
+      useLocalStorageStore.getState().setThemeCookie(next);
+      return next;
     });
+    setCurrentTheme(0);
   }, []);
 
-  // 切换到下一个主题变体
   const nextTheme = useCallback(() => {
-    setCurrentTheme((prevIndex) => {
-      const currentThemeArray = theme === "dark" ? darkTheme : lightTheme;
-      const newIndex = (prevIndex + 1) % currentThemeArray.length;
-      try {
-        // 使用LocalStorageStore的方法设置主题索引localStorage
-        useLocalStorageStore.getState().setThemeIndexCookie(newIndex.toString());
-      } catch (e) {
-        console.warn(e);
-      }
-      return newIndex;
+    setCurrentTheme((prev) => {
+      const arr = theme === "dark" ? darkTheme : lightTheme;
+      const next = (prev + 1) % arr.length;
+      useLocalStorageStore.getState().setThemeIndexCookie(String(next));
+      return next;
     });
   }, [theme]);
 
-  // 切换到上一个主题变体
   const prevTheme = useCallback(() => {
-    setCurrentTheme((prevIndex) => {
-      const currentThemeArray = theme === "dark" ? darkTheme : lightTheme;
-      const newIndex = (prevIndex - 1 + currentThemeArray.length) % currentThemeArray.length;
-      try {
-        // 使用LocalStorageStore的方法设置主题索引localStorage
-        useLocalStorageStore.getState().setThemeIndexCookie(newIndex.toString());
-      } catch (e) {
-        console.warn(e);
-      }
-      return newIndex;
+    setCurrentTheme((prev) => {
+      const arr = theme === "dark" ? darkTheme : lightTheme;
+      const next = (prev - 1 + arr.length) % arr.length;
+      useLocalStorageStore.getState().setThemeIndexCookie(String(next));
+      return next;
     });
   }, [theme]);
 
-  // 直接设置主题变体索引
-  const setThemeIndex = useCallback((index: number) => {
-    const currentThemeArray = theme === "dark" ? darkTheme : lightTheme;
-    const validIndex = Math.min(Math.max(0, index), currentThemeArray.length - 1);
-    setCurrentTheme(validIndex);
-    try {
-      // 使用LocalStorageStore的方法设置主题索引localStorage
-      useLocalStorageStore.getState().setThemeIndexCookie(validIndex.toString());
-    } catch (e) {
-      console.warn(e);
-    }
-  }, [theme]);
+  const setThemeIndex = useCallback(
+    (index: number) => {
+      const arr = theme === "dark" ? darkTheme : lightTheme;
+      const safe = Math.min(Math.max(0, index), arr.length - 1);
+      setCurrentTheme(safe);
+      useLocalStorageStore.getState().setThemeIndexCookie(String(safe));
+    },
+    [theme]
+  );
 
-  // 当主题（明暗）变化时，重置主题索引
-  useEffect(() => {
-    const initialIndex = getInitialThemeIndex();
-    setCurrentTheme(initialIndex);
-  }, [theme, getInitialThemeIndex]);
+  /* ================= render ================= */
 
-  // 监听系统主题变化（仅在未手动设置时响应）
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      try {
-        // 如果localStorage中不存在手动设置的主题，则跟随系统
-        if (!useLocalStorageStore.getState().getThemeCookie()) {
-          const newTheme = e.matches ? "dark" : "light";
-          setTheme(newTheme);
-          // 使用LocalStorageStore的方法设置主题localStorage
-          useLocalStorageStore.getState().setThemeCookie(newTheme);
-        }
-      } catch (e) {
-        console.log(e);
-        // 忽略错误
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-    return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
-    };
-  }, []);
-
-  // 同步主题到 DOM（可结合 CSS 自定义属性使用）
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+  if (!hydrated) {
+    return null; // 或 Skeleton，彻底避免不一致
+  }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, currentTheme, nextTheme, prevTheme, setThemeIndex }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        currentTheme,
+        toggleTheme,
+        nextTheme,
+        prevTheme,
+        setThemeIndex,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
