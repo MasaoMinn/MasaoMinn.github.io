@@ -41,7 +41,7 @@ export const useTheme = () => {
 };
 
 export const darkTheme = [{
-  backgroundColor: '#1C1C1C',
+  backgroundColor: '#1f1f1fff',
   color: '#EEEEFE',
   borderColor: '#000274ff',
   extraColor: '#d7f5edff',

@@ -4,6 +4,7 @@ import { useTheme, lightTheme, darkTheme } from '@/components/boxed/ThemeProvide
 import { useTranslation } from 'react-i18next';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import "highlight.js/styles/github.css";
 
 export default function ReactFurryErrorLayout({ children }: { children: React.ReactNode }) {
   const { theme, currentTheme } = useTheme();
