@@ -7,18 +7,19 @@
 Using npm:
 
 ```bash
-npm install react-furry-error
+npm install react-furry-error --save-dev
 ```
 
 Or with pnpm / yarn:
 
 ```bash
-pnpm add react-furry-error
+pnpm add react-furry-error --save-dev
 # or
-yarn add react-furry-error
+yarn add react-furry-error --dev
 ```
 
 ### 2. Enable the overlay
+
 In your application entry file (for example main.tsx or index.tsx):
 
 ```tsx
@@ -29,10 +30,22 @@ if (import.meta.env.MODE === "development") {
 }
 ```
 
+If you are using **Next.js** or some other frameworks that triggers error on the code above, you may try this code:
+
+```javascript
+import { initFurryDevOverlay } from "react-furry-error";
+
+if (process.env.NODE_ENV === "development") {
+  initFurryDevOverlay();
+}
+```
+
 That’s it.
 Once enabled, runtime errors will automatically trigger the furry error overlay.
 
 ### 3. Test your environment using ErrorTest (Optional)
+
+The component `<ErrorTest />` is writen to check if react-furry-error works well. Here is an example :
 
 ```tsx
 import { StrictMode } from 'react'
@@ -52,7 +65,9 @@ createRoot(document.getElementById('root')).render(
 ```
 
 ### 4. What errors can it catch?
+
 react-furry-error can detect and display:
+
 - Runtime JavaScript errors
 - React render errors
 - Hook misuse errors

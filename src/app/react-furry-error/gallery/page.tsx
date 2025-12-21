@@ -1,14 +1,10 @@
 "use client";
+import { useTranslation } from "react-i18next";
+import DocumentComponent from "../Doc";
 
-import { useTranslation } from 'react-i18next';
-
-export default function GalleryPage() {
-  const { t } = useTranslation();
-
+export default function Page() {
+  const { i18n } = useTranslation();
   return (
-    <div>
-      <h1>{t('reactFurryError.gallery')}</h1>
-      <div>{t('reactFurryError.galleryContent')}</div>
-    </div>
+    <DocumentComponent slug="gallery" lang={i18n.language} />
   );
 }

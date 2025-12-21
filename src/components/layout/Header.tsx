@@ -22,7 +22,7 @@ function BasicExample() {
       data-bs-theme={theme}
     >
       <Container>
-        <Navbar.Brand href="./">{t("mainpage.title")}</Navbar.Brand>
+        <Navbar.Brand href="/">{t("mainpage.title")}</Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 

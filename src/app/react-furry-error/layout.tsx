@@ -22,10 +22,11 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
       <Row className='min-vh-100'>
         <Col xs={2}>
           <Stack
-            className='min-vh-100 p-3 mt-2 rounded border-2'
+            className='min-vh-100 p-3 mt-2 fixed border border-2 rounded'
             gap={3}
             style={{
               width: '10vw',
+              // fontSize: '1vw',
               borderColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
               backgroundColor: theme === 'light' ? lightTheme[currentTheme].backgroundColor : darkTheme[currentTheme].backgroundColor
             }}
