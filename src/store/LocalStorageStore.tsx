@@ -43,12 +43,16 @@ export interface LocalStorageState {
 // 初始化时从localStorage读取cookie_permission设置
 const getInitialCookiePermission = (): boolean => {
   try {
-    const itemStr = localStorage.getItem("cookie_permission");
-    if (!itemStr) {
-      return false;
+    // 仅在浏览器环境中访问localStorage
+    if (typeof window !== 'undefined') {
+      const itemStr = localStorage.getItem("cookie_permission");
+      if (!itemStr) {
+        return false;
+      }
+      const item: StorageItem = JSON.parse(itemStr);
+      return item.value === "true";
     }
-    const item: StorageItem = JSON.parse(itemStr);
-    return item.value === "true";
+    return false;
   } catch (error) {
     console.error("Error getting initial cookie permission:", error);
     return false;
@@ -58,12 +62,16 @@ const getInitialCookiePermission = (): boolean => {
 // 初始化时从sessionStorage读取cookie_query_shown设置
 const getInitialCookieQueryShown = (): boolean => {
   try {
-    const itemStr = sessionStorage.getItem("cookie_query_shown");
-    if (!itemStr) {
-      return false;
+    // 仅在浏览器环境中访问sessionStorage
+    if (typeof window !== 'undefined') {
+      const itemStr = sessionStorage.getItem("cookie_query_shown");
+      if (!itemStr) {
+        return false;
+      }
+      const item: StorageItem = JSON.parse(itemStr);
+      return item.value === "true";
     }
-    const item: StorageItem = JSON.parse(itemStr);
-    return item.value === "true";
+    return false;
   } catch (error) {
     console.error("Error getting initial cookie query shown:", error);
     return false;
