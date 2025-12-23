@@ -54,6 +54,13 @@ i18n
             furry: {
               intro: "Hello! This is Kino Tsuki, a blue furry fox, living in Guangzhou China.I'm excited to connect with you here! Feel free to reach out to add me as a friend. Looking forward to chatting and sharing our furry interests!"
             },
+            vercel: {
+              title: 'My websites on Vercel',
+              description: 'My sites on Vercel enable back-end actions.I use it to host my full-stack sites.',
+              mirror: 'Mirror Site of this',
+              personal: 'My Personal Website',
+              make_your_oc_alive: 'Make Your OC Alive',
+            },
           },
           react_furry: {
             download: 'Download'
@@ -102,6 +109,13 @@ i18n
             },
             furry: {
               intro: "你好！我是湛月，一只生活在中国广州的蓝色兽设狐狸。很高兴能在这里与你联系！欢迎随时联系我加为好友。期待与你聊天并分享furry的乐趣！"
+            },
+            vercel: {
+              title: '我的 Vercel 网站',
+              description: '我的 Vercel 网站启用后端操作。我用它来托管我的全栈网站。',
+              mirror: '这个网站的镜像',
+              personal: '我的个人网站',
+              make_your_oc_alive: 'Make Your OC Alive',
             },
 
           },
@@ -152,6 +166,13 @@ i18n
             },
             furry: {
               intro: "こんにちは！私はキノツキ、広州に住む青いケモノの狐です。ここであなたとつながることができてうれしいです！友達追加のためにいつでも連絡してください。お話ししたり、ケモノの興味を共有したりするのを楽しみにしています！"
+            },
+            vercel: {
+              title: '私の Vercel サイト',
+              description: 'Vercel サイトはバックエンド操作を有効にしていて、それを使って私のフルスタックサイトをホストしております。',
+              mirror: 'このサイトのミラー',
+              personal: '私の個人サイト',
+              make_your_oc_alive: 'Make Your OC Alive',
             },
           },
           react_furry: {
