@@ -1,4 +1,4 @@
-name: Deploy Next.js site to Pages (pnpm)
+name: Deploy Next.js site to Pages (pnpm via corepack)
 
 on:
   push:
@@ -22,48 +22,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1️⃣ 必须先装 Node
+      # 1️⃣ 安装 Node（Node 16+ 自带 corepack）
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
 
-      # 2️⃣ 必须显式安装 pnpm（关键）
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
+      # 2️⃣ 显式启用 pnpm（关键！！）
+      - name: Enable pnpm via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@9 --activate
+          pnpm --version
 
-      # 3️⃣ 验证 pnpm 是否真的存在（防御性）
-      - name: Verify pnpm
-        run: pnpm --version
-
-      # 4️⃣ Pages 配置（会注入 basePath）
+      # 3️⃣ 配置 Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           static_site_generator: next
 
-      # 5️⃣ Next.js 构建缓存
-      - name: Restore Next.js cache
-        uses: actions/cache@v4
-        with:
-          path: .next/cache
-          key: ${{ runner.os }}-nextjs-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-
-
-      # 6️⃣ 安装依赖
+      # 4️⃣ 安装依赖
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 7️⃣ 构建
+      # 5️⃣ 构建
       - name: Build with Next.js
         run: pnpm next build
 
-      # 8️⃣ 上传 out/
+      # 6️⃣ 上传产物
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
