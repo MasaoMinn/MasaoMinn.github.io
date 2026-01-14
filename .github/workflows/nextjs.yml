@@ -1,4 +1,4 @@
-name: Deploy Next.js site to Pages (pnpm via corepack)
+name: Deploy Next.js site to Pages (pnpm hard install)
 
 on:
   push:
@@ -19,38 +19,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 1️⃣ 安装 Node（Node 16+ 自带 corepack）
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
 
-      # 2️⃣ 显式启用 pnpm（关键！！）
-      - name: Enable pnpm via corepack
+      # 🔥 关键：强制安装 pnpm 到全局
+      - name: Install pnpm
         run: |
-          corepack enable
-          corepack prepare pnpm@9 --activate
+          npm install -g pnpm
           pnpm --version
 
-      # 3️⃣ 配置 Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           static_site_generator: next
 
-      # 4️⃣ 安装依赖
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5️⃣ 构建
-      - name: Build with Next.js
+      - name: Build
         run: pnpm next build
 
-      # 6️⃣ 上传产物
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -64,6 +56,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
