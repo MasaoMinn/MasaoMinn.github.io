@@ -63,7 +63,8 @@ i18n
             },
           },
           react_furry: {
-            download: 'Download'
+            download: 'Download',
+            get: 'get persona'
           },
           reactFurryError: {
             ...reactFurryErrorI18n.en,
@@ -120,7 +121,8 @@ i18n
 
           },
           react_furry: {
-            download: '下载'
+            download: '下载',
+            get: '获取兽设',
           },
           reactFurryError: {
             ...reactFurryErrorI18n.zh
@@ -176,7 +178,8 @@ i18n
             },
           },
           react_furry: {
-            download: 'ダウンロード'
+            download: 'ダウンロード',
+            get: '擬獣設定を取得する',
           },
           reactFurryError: {
             ...reactFurryErrorI18n.jp

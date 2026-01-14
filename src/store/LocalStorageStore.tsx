@@ -1,10 +1,6 @@
 import { create } from "zustand";
 
-// LocalStorage/SessionStorage存储项的有效期接口
-interface StorageItem {
-  value: string;
-  expiry?: number; // 过期时间戳（毫秒）
-}
+// 不再使用StorageItem接口，改为直接存储原始字符串
 
 // LocalStorageStore接口
 export interface LocalStorageState {
@@ -45,12 +41,8 @@ const getInitialCookiePermission = (): boolean => {
   try {
     // 仅在浏览器环境中访问localStorage
     if (typeof window !== 'undefined') {
-      const itemStr = localStorage.getItem("cookie_permission");
-      if (!itemStr) {
-        return false;
-      }
-      const item: StorageItem = JSON.parse(itemStr);
-      return item.value === "true";
+      const value = localStorage.getItem("cookie_permission");
+      return value === "true";
     }
     return false;
   } catch (error) {
@@ -64,12 +56,8 @@ const getInitialCookieQueryShown = (): boolean => {
   try {
     // 仅在浏览器环境中访问sessionStorage
     if (typeof window !== 'undefined') {
-      const itemStr = sessionStorage.getItem("cookie_query_shown");
-      if (!itemStr) {
-        return false;
-      }
-      const item: StorageItem = JSON.parse(itemStr);
-      return item.value === "true";
+      const value = sessionStorage.getItem("cookie_query_shown");
+      return value === "true";
     }
     return false;
   } catch (error) {
@@ -90,14 +78,19 @@ export const useLocalStorageStore = create<LocalStorageState>()(
     // 基本localStorage操作方法
     setItem: (name: string, value: string, expiryMs?: number) => {
       try {
-        const item: StorageItem = { value };
+        // 直接存储原始字符串
+        localStorage.setItem(name, value);
 
-        // 如果设置了过期时间，则添加到item中
+        // 如果设置了过期时间，单独存储过期信息
         if (expiryMs) {
-          item.expiry = Date.now() + expiryMs;
+          const expiryKey = `${name}_expiry`;
+          const expiryTime = Date.now() + expiryMs;
+          localStorage.setItem(expiryKey, expiryTime.toString());
+        } else {
+          // 如果没有设置过期时间，移除可能存在的过期信息
+          const expiryKey = `${name}_expiry`;
+          localStorage.removeItem(expiryKey);
         }
-
-        localStorage.setItem(name, JSON.stringify(item));
       } catch (error) {
         console.error(`Error setting localStorage item ${name}:`, error);
       }
@@ -105,21 +98,21 @@ export const useLocalStorageStore = create<LocalStorageState>()(
 
     getItem: (name: string) => {
       try {
-        const itemStr = localStorage.getItem(name);
-
-        if (!itemStr) {
-          return null;
-        }
-
-        const item: StorageItem = JSON.parse(itemStr);
-
         // 检查是否过期
-        if (item.expiry && Date.now() > item.expiry) {
-          localStorage.removeItem(name);
-          return null;
+        const expiryKey = `${name}_expiry`;
+        const expiryStr = localStorage.getItem(expiryKey);
+
+        if (expiryStr) {
+          const expiryTime = parseInt(expiryStr, 10);
+          if (Date.now() > expiryTime) {
+            localStorage.removeItem(name);
+            localStorage.removeItem(expiryKey);
+            return null;
+          }
         }
 
-        return item.value;
+        // 直接返回原始字符串
+        return localStorage.getItem(name);
       } catch (error) {
         console.error(`Error getting localStorage item ${name}:`, error);
         return null;
@@ -145,14 +138,19 @@ export const useLocalStorageStore = create<LocalStorageState>()(
     // SessionStorage操作方法
     setSessionItem: (name: string, value: string, expiryMs?: number) => {
       try {
-        const item: StorageItem = { value };
+        // 直接存储原始字符串
+        sessionStorage.setItem(name, value);
 
-        // 如果设置了过期时间，则添加到item中
+        // 如果设置了过期时间，单独存储过期信息
         if (expiryMs) {
-          item.expiry = Date.now() + expiryMs;
+          const expiryKey = `${name}_expiry`;
+          const expiryTime = Date.now() + expiryMs;
+          sessionStorage.setItem(expiryKey, expiryTime.toString());
+        } else {
+          // 如果没有设置过期时间，移除可能存在的过期信息
+          const expiryKey = `${name}_expiry`;
+          sessionStorage.removeItem(expiryKey);
         }
-
-        sessionStorage.setItem(name, JSON.stringify(item));
       } catch (error) {
         console.error(`Error setting sessionStorage item ${name}:`, error);
       }
@@ -160,21 +158,21 @@ export const useLocalStorageStore = create<LocalStorageState>()(
 
     getSessionItem: (name: string) => {
       try {
-        const itemStr = sessionStorage.getItem(name);
-
-        if (!itemStr) {
-          return null;
-        }
-
-        const item: StorageItem = JSON.parse(itemStr);
-
         // 检查是否过期
-        if (item.expiry && Date.now() > item.expiry) {
-          sessionStorage.removeItem(name);
-          return null;
+        const expiryKey = `${name}_expiry`;
+        const expiryStr = sessionStorage.getItem(expiryKey);
+
+        if (expiryStr) {
+          const expiryTime = parseInt(expiryStr, 10);
+          if (Date.now() > expiryTime) {
+            sessionStorage.removeItem(name);
+            sessionStorage.removeItem(expiryKey);
+            return null;
+          }
         }
 
-        return item.value;
+        // 直接返回原始字符串
+        return sessionStorage.getItem(name);
       } catch (error) {
         console.error(`Error getting sessionStorage item ${name}:`, error);
         return null;
