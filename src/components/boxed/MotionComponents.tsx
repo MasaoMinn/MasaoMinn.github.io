@@ -1,5 +1,5 @@
 import { motion, MotionProps } from "motion/react";
-
+// import { ImageProps } from "next/image";
 export const RotateDiv = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.div
@@ -19,10 +19,11 @@ export const RotateDiv = ({ children }: { children: React.ReactNode }) => {
     </motion.div>
   )
 }
-export const DefaultDiv = ({ children }: { children: React.ReactNode }) => {
+export const DefaultDiv = ({ children, className }: { children: React.ReactNode, className?: string }) => {
   const rand: boolean = Math.random() > 0.5;
   return (
     <motion.div
+      className={className}
       whileHover={{
         rotate: rand ? +12 : -12,
         scale: 1.05,
@@ -84,3 +85,19 @@ export const BoldButton = ({ children, ...rest }: BoldButtonProps) => {
     </motion.button>
   );
 };
+
+// export interface MotionCardProps extends ImageProps {
+//   children: React.ReactNode;
+//   focusable?: boolean;
+//   active?: boolean;
+//   onClick?: () => void;
+//   className?: string;
+// }
+
+// export function ShowcaseDiv({
+
+// }: MotionCardProps) {
+//   return (
+    
+//   );
+// }
