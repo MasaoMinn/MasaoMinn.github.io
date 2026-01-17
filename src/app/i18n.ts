@@ -38,6 +38,12 @@ i18n
               persona: 'Furry-react persona',
               error: 'react-furry-error'
             },
+            cookie: {
+              title: 'Would You Accpet My Cookies ?',
+              content: 'If you reject, I will ask you again next session. If you accept, nothing happens because this is a static website and I`ve no cookie for you. I just want to show you how cute I am.',
+              accept: 'Accept',
+              reject: 'Reject',
+            },
             minigame: {
               title: 'Minigame',
               description: 'H5 games written in JS .',
@@ -69,13 +75,6 @@ i18n
           reactFurryError: {
             ...reactFurryErrorI18n.en,
           },
-          cookie: {
-            title: 'Would You Accpet My Cookies ?',
-            content: 'If you reject, I will ask you again next session. If you accept, nothing happens because this is a static website and I`ve no cookie for you. I just want to show you how cute I am.',
-            accept: 'Accept',
-            reject: 'Reject',
-          }
-
         }
       },
       zh: {

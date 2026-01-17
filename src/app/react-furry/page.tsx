@@ -1,5 +1,5 @@
 "use client";
-import { BoldButton } from '@/components/boxed/MotionComponents';
+import ThemedButton from '@/components/boxed/ThemedButton';
 import { useTheme, darkTheme, lightTheme } from '@/components/boxed/ThemeProvider';
 import Masonry from '@/components/Masonry';
 import React from 'react';
@@ -46,13 +46,14 @@ export default function ReactFurryRootPage() {
   ];
   return (
     <Container fluid className="min-vh-100 text-center py-8" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
-      <Row>
-        <Col>
-          <BoldButton
+      <Row className='justify-content-center p-3'>
+        <Col xs={6} lg={4} style={{ height: '3vw' }}>
+          <ThemedButton
+            className='w-100 h-100'
             onClick={() => {
               window.location.href = '/react-furry/fursona';
             }}
-          >{t('react_furry.get')}</BoldButton>
+          >{t('react_furry.get')}</ThemedButton>
         </Col>
       </Row>
       <Masonry

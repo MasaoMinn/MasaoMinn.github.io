@@ -1,4 +1,4 @@
-import { motion, MotionProps } from "motion/react";
+import { motion, MotionProps, type HTMLMotionProps } from "motion/react";
 // import { ImageProps } from "next/image";
 export const RotateDiv = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -66,25 +66,29 @@ export const BababoiDiv = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-type BoldButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps;
+type BoldButtonProps = HTMLMotionProps<"button">;
 
-export const BoldButton = ({ children, ...rest }: BoldButtonProps) => {
+export const BoldButton = ({
+  children,
+  ...rest
+}: BoldButtonProps) => {
   return (
     <motion.button
-      {...rest} // 同时传递 button 原生属性和 motion 属性
+      {...rest}
       whileHover={{
         scale: 1.1,
-        y: -5
+        y: -5,
       }}
       transition={{
         duration: 0,
-        ease: "easeOut"
+        ease: "easeOut",
       }}
     >
       {children}
     </motion.button>
   );
 };
+
 
 // export interface MotionCardProps extends ImageProps {
 //   children: React.ReactNode;

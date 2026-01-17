@@ -38,6 +38,7 @@ export const lightTheme = [
   { backgroundColor: "#c5ffd5ff", color: "#2d0028ff", borderColor: "#d0d063ff", extraColor: "#184b88ff" },
 ];
 
+
 /* ================= context ================= */
 
 const ThemeContext = createContext<ThemeContextType | null>(null);

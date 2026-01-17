@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
 import { CookieModal } from "@/components/layout/modals/CookieModal";
-import { BoldButton } from "@/components/boxed/MotionComponents";
+import ThemedButton from "@/components/boxed/ThemedButton";
 const App = () => {
   const { t } = useTranslation();
   const { theme, currentTheme } = useTheme();
@@ -38,18 +38,6 @@ const App = () => {
 
   };
 
-  // 定义统一的按钮样式
-  const buttonStyles = {
-    borderRadius: "12px",
-    fontWeight: 500,
-    transition: "all 0.3s ease",
-    borderWidth: "2px",
-    backgroundColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
-    color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color,
-    transform: "translateY(0)",
-    boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-  };
-
   return (
     <Container className="min-vh-100 text-center" style={theme === 'light' ? { ...lightTheme[currentTheme] } : { ...darkTheme[currentTheme] }} fluid>
       <Row className="mb-4 justify-content-center pt-5">
@@ -62,14 +50,14 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/react-furry";
-              }} style={buttonStyles}>{t('mainpage.react_furry.persona')}</BoldButton>
+              }}>{t('mainpage.react_furry.persona')}</ThemedButton>
             </div>
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/react-furry-error";
-              }} style={buttonStyles}>{t('mainpage.react_furry.error')}</BoldButton>
+              }}>{t('mainpage.react_furry.error')}</ThemedButton>
             </div>
           </Stack>
         </Col>
@@ -85,19 +73,19 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/BWIte/index.html";
-              }} style={buttonStyles}>{t('mainpage.minigame.bwite')}</BoldButton>
+              }}>{t('mainpage.minigame.bwite')}</ThemedButton>
             </div>
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/Color/index.html";
-              }} style={buttonStyles}>{t('mainpage.minigame.color')}</BoldButton>
+              }}>{t('mainpage.minigame.color')}</ThemedButton>
             </div>
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/LightMaze";
-              }} style={buttonStyles}>{t('mainpage.minigame.light')}</BoldButton>
+              }}>{t('mainpage.minigame.light')}</ThemedButton>
             </div>
           </Stack>
         </Col>
@@ -111,14 +99,14 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/";
-              }} style={buttonStyles}>{t('mainpage.tools.tobe')}</BoldButton>
+              }}>{t('mainpage.tools.tobe')}</ThemedButton>
             </div>
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.location.href = "/Furry";
-              }} style={buttonStyles}>{t('mainpage.tools.furry')}</BoldButton>
+              }}>{t('mainpage.tools.furry')}</ThemedButton>
             </div>
           </Stack>
         </Col>
@@ -134,19 +122,19 @@ const App = () => {
               margin: "0.5rem 0"
             }} />
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.open("https://masaominn.vercel.app/", "_blank");
-              }} style={buttonStyles}>{t('mainpage.vercel.mirror')}</BoldButton>
+              }}>{t('mainpage.vercel.mirror')}</ThemedButton>
             </div>
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.open("https://kinotsuki.vercel.app/", "_blank");
-              }} style={buttonStyles}>{t('mainpage.vercel.personal')}</BoldButton>
+              }}>{t('mainpage.vercel.personal')}</ThemedButton>
             </div>
             <div className="p-2">
-              <BoldButton onClick={() => {
+              <ThemedButton onClick={() => {
                 window.open("https://make-your-oc-alive.vercel.app/", "_blank");
-              }} style={buttonStyles}>{t('mainpage.vercel.make_your_oc_alive')}</BoldButton>
+              }}>{t('mainpage.vercel.make_your_oc_alive')}</ThemedButton>
             </div>
           </Stack>
         </Col>
