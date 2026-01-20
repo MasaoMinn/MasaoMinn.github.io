@@ -1,5 +1,5 @@
 "use client";
-import { Container, Row, Col, Stack, Button } from 'react-bootstrap';
+import { Container, Row, Col, Stack, Button, Alert } from 'react-bootstrap';
 import { useTheme, lightTheme, darkTheme } from '@/components/boxed/ThemeProvider';
 import { useTranslation } from 'react-i18next';
 import { usePathname } from 'next/navigation';
@@ -13,6 +13,7 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [initialNotice, setInitialNotice] = useState<boolean>(true);
 
   const isActive = (path: string) => pathname === `/react-furry-error/${path}`;
 
@@ -48,6 +49,23 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
       style={theme === 'light' ? lightTheme[currentTheme] : darkTheme[currentTheme]}
       fluid
     >
+      <Row>
+        <Col xs={12} lg={8} className="mx-auto">
+          <Alert show={initialNotice} variant="warning" style={{ background: 'transparent' }}>
+            <Alert.Heading>{t('reactFurryError.notice.title')}</Alert.Heading>
+            <p>
+              {t('reactFurryError.notice.content')}
+            </p>
+            <a target="_blank" rel="noopener noreferrer" href='https://kcnhl2uub4k0.feishu.cn/wiki/WkOUwdykxiXjx8kLNH3chhpQn0c'>Link</a>
+            <hr />
+            <div className="d-flex justify-content-end">
+              <Button onClick={() => setInitialNotice(false)} variant="outline-success">
+                {t('reactFurryError.notice.close')}
+              </Button>
+            </div>
+          </Alert>
+        </Col>
+      </Row>
       <Row className='min-vh-100 d-flex flex-nowrap'>
         {/* 移动端汉堡菜单按钮 */}
         <div className="d-block d-md-none fixed top-2 right-2 z-50">

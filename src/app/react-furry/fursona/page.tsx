@@ -14,7 +14,6 @@ export default function ReactImgPage() {
   const iconSize: number = 20;
   return (
     <Container fluid className="min-vh-100 text-center py-8" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
-
       <Row className="justify-content-center mb-8">
         <Col xs={12} md={9} lg={8}>
           <BoldDiv className="border rounded-lg p-4 shadow-lg position-relative mt-4">

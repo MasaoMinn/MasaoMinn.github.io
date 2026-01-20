@@ -6,6 +6,7 @@ import { useTheme, darkTheme, lightTheme } from '@/components/boxed/ThemeProvide
 // import GradientText from '@/components/GradientText';
 import { Image } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import ThemedButton from '@/components/boxed/ThemedButton';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { theme, currentTheme } = useTheme();
@@ -13,6 +14,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Container fluid className="min-vh-100 text-center py-8" style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}>
       <Row className="mb-8 justify-content-center">
+        <Col xs={1}>
+          <ThemedButton onClick={() => window.history.back()}>
+            {t('mainpage.back')}
+          </ThemedButton>
+        </Col>
         <Col>
           <div className="position-relative">
             <Image
