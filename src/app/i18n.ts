@@ -68,6 +68,12 @@ i18n
               make_your_oc_alive: 'Make Your OC Alive',
             },
           },
+          cookie: {
+            title: 'Would You Accpet My Cookies ?',
+            content: 'If you reject, I will ask you again next session. If you accept, nothing happens because this is a static website and I`ve no cookie for you. I just want to show you how cute I am.',
+            accept: 'Accept',
+            reject: 'Reject',
+          },
           react_furry: {
             download: 'Download',
             get: 'get persona'

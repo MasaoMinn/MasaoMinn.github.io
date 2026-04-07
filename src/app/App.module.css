@@ -1,0 +1,172 @@
+.appShell {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 0 0.9rem 2.6rem;
+  transition: background-color 0.24s ease, color 0.24s ease;
+}
+
+.appShell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 48%),
+    linear-gradient(300deg, rgba(255, 255, 255, 0.08), transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambientOne,
+.ambientTwo,
+.texture {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambientOne {
+  width: 38rem;
+  height: 38rem;
+  top: -14rem;
+  left: -13rem;
+  background: radial-gradient(circle at center, var(--app-border) 0%, transparent 68%);
+  opacity: 0.2;
+  filter: blur(10px);
+  animation: drift 18s ease-in-out infinite;
+}
+
+.ambientTwo {
+  width: 34rem;
+  height: 34rem;
+  right: -10rem;
+  bottom: -12rem;
+  background: radial-gradient(circle at center, var(--app-accent) 0%, transparent 70%);
+  opacity: 0.2;
+  filter: blur(16px);
+  animation: drift 20s ease-in-out infinite reverse;
+}
+
+.texture {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.1;
+}
+
+.appCard {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1.5px solid var(--app-border);
+  border-radius: 1.15rem;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(7px);
+  animation: riseIn 0.54s ease both;
+}
+
+.heroCard {
+  padding-top: clamp(1.2rem, 2.4vw, 1.75rem);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: 0.02em;
+  font-family: var(--font-playpen-sans), var(--font-kiwi-maru), cursive;
+}
+
+.cardDescription {
+  margin: 0.65rem 0 0;
+  font-size: 0.98rem;
+  opacity: 0.9;
+  line-height: 1.55;
+}
+
+.cardDivider {
+  height: 1px;
+  margin: 1rem 0;
+  background: linear-gradient(90deg, transparent, var(--app-border), transparent);
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+  gap: 0.7rem;
+}
+
+.heroCard .actionGrid {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.appShell[data-theme-mode="dark"] .appCard {
+  background: linear-gradient(155deg, rgba(16, 16, 26, 0.86), rgba(16, 16, 26, 0.56));
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.appShell[data-theme-mode="dark"] .texture {
+  opacity: 0.16;
+}
+
+@media (max-width: 992px) {
+  .ambientOne {
+    width: 26rem;
+    height: 26rem;
+    left: -12rem;
+  }
+
+  .ambientTwo {
+    width: 23rem;
+    height: 23rem;
+    right: -8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .appShell {
+    padding: 0 0.6rem 2rem;
+  }
+
+  .appCard {
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+
+  .actionGrid,
+  .heroCard .actionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(12px, 16px, 0);
+  }
+}
