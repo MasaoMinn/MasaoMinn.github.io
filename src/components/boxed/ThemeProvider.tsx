@@ -27,15 +27,63 @@ type ThemeContextType = {
 /* ================= theme data ================= */
 
 export const darkTheme = [
-  { backgroundColor: "#1f1f1fff", color: "#EEEEFE", borderColor: "#000274ff", extraColor: "#d7f5edff" },
-  { backgroundColor: "#003c11ff", color: "#e8ffe1ff", borderColor: "#260048ff", extraColor: "#cccfffff" },
-  { backgroundColor: "#540000ff", color: "#dffff5ff", borderColor: "#002139ff", extraColor: "#fff5ccff" },
+  {
+    backgroundColor: "#1f1f1fff",
+    color: "#EEEEFE",
+    borderColor: "#000274ff",
+    extraColor: "#d7f5edff",
+    backgroundColor2: "#2d2d3d",
+    color2: "#cfd6ff",
+    extraColor2: "#7fa8ff",
+  },
+  {
+    backgroundColor: "#003c11ff",
+    color: "#e8ffe1ff",
+    borderColor: "#260048ff",
+    extraColor: "#cccfffff",
+    backgroundColor2: "#0b5a24",
+    color2: "#d9ffe8",
+    extraColor2: "#8ec6ff",
+  },
+  {
+    backgroundColor: "#540000ff",
+    color: "#dffff5ff",
+    borderColor: "#002139ff",
+    extraColor: "#fff5ccff",
+    backgroundColor2: "#6e1a1a",
+    color2: "#ffe9e0",
+    extraColor2: "#ffd39b",
+  },
 ];
 
 export const lightTheme = [
-  { backgroundColor: "#EEEEEE", color: "#000000", borderColor: "#b68989ff", extraColor: "#863030ff" },
-  { backgroundColor: "#e6ff80ff", color: "#260048ff", borderColor: "#61b879ff", extraColor: "#292993ff" },
-  { backgroundColor: "#c5ffd5ff", color: "#2d0028ff", borderColor: "#d0d063ff", extraColor: "#184b88ff" },
+  {
+    backgroundColor: "#EEEEEE",
+    color: "#000000",
+    borderColor: "#b68989ff",
+    extraColor: "#863030ff",
+    backgroundColor2: "#ffffff",
+    color2: "#1f1f1f",
+    extraColor2: "#cfa6a6",
+  },
+  {
+    backgroundColor: "#e6ff80ff",
+    color: "#260048ff",
+    borderColor: "#61b879ff",
+    extraColor: "#292993ff",
+    backgroundColor2: "#f7ffd1",
+    color2: "#1d1848",
+    extraColor2: "#7b7be0",
+  },
+  {
+    backgroundColor: "#c5ffd5ff",
+    color: "#2d0028ff",
+    borderColor: "#d0d063ff",
+    extraColor: "#184b88ff",
+    backgroundColor2: "#e8fff0",
+    color2: "#15324f",
+    extraColor2: "#6fa6d8",
+  },
 ];
 
 

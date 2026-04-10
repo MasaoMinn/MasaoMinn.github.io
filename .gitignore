@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/explain/
+/design*
 
 # next.js
 /.next/
@@ -42,3 +44,5 @@ next-env.d.ts
 
 # trae files
 .trae/
+leaf_model.json
+project_meta.json

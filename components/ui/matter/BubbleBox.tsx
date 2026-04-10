@@ -29,12 +29,12 @@ const BUBBLE_COLORS = [
   "#a78bfa",
 ];
 
-type Vertex2D = {
+export type Vertex2D = {
   x: number;
   y: number;
 };
 
-type BubbleShapeBuiltIn =
+export type BubbleShape =
   | "circle"
   | "triangle"
   | "rectangle"
@@ -45,15 +45,14 @@ type BubbleShapeBuiltIn =
   | "polygon"
   | "starshape";
 
-export type BubbleContentItem = {
-  label?: string;
-  lable?: string;
+export type BubbleProps = {
+  label: string;
   textColor?: string;
   backgroundColor?: string;
-  shape?: string;
+  shape?: BubbleShape;
   polygonSides?: number;
   trapezoidSlope?: number;
-  vertices?: Vertex2D[];
+  vertices?: Vertex2D[] | null;
   rotate?: number;
   scale?: number;
   textRotate?: boolean;
@@ -63,7 +62,7 @@ type NormalizedBubble = {
   label: string;
   textColor: string;
   backgroundColor: string;
-  shape: BubbleShapeBuiltIn;
+  shape: BubbleShape;
   polygonSides: number;
   trapezoidSlope: number;
   vertices: Vertex2D[] | null;
@@ -91,7 +90,7 @@ export type BubbleBoxProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children" | "content"
 > & {
-  content: Array<string | BubbleContentItem>;
+  content: BubbleProps[];
   temperature?: number;
   draggable?: boolean;
   fill?: boolean;
@@ -114,7 +113,7 @@ export function BubbleBox({
   const [autoSize, setAutoSize] = useState({ width: 0, height: 0 });
 
   const normalizedContent = useMemo<NormalizedBubble[]>(
-    () => content.map((item, index) => normalizeBubbleItem(item, index)),
+    () => content.map((item) => normalizeBubbleProps(item)),
     [content],
   );
   const normalizedTemperature = clamp(temperature, 0, 100);
@@ -720,7 +719,9 @@ function getFittedFontSize(
   return best;
 }
 
-function normalizeConvexVertices(vertices: Vertex2D[] | undefined): Vertex2D[] | null {
+function normalizeConvexVertices(
+  vertices: Vertex2D[] | null | undefined,
+): Vertex2D[] | null {
   if (!vertices || vertices.length < 3) {
     return null;
   }
@@ -808,35 +809,16 @@ function cross(a: Vertex2D, b: Vertex2D, c: Vertex2D) {
   return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
-function normalizeBubbleItem(
-  item: string | BubbleContentItem,
-  index: number,
-): NormalizedBubble {
-  if (typeof item === "string") {
-    return {
-      label: item,
-      textColor: DEFAULT_TEXT_COLOR,
-      backgroundColor: BUBBLE_COLORS[index % BUBBLE_COLORS.length],
-      shape: "circle",
-      polygonSides: 6,
-      trapezoidSlope: 0.25,
-      vertices: null,
-      rotate: 0,
-      scale: DEFAULT_SCALE,
-      textRotate: false,
-    };
-  }
-
+function normalizeBubbleProps(item: BubbleProps): NormalizedBubble {
   const shape = normalizeShape(item.shape);
   const polygonSides = clampInt(item.polygonSides ?? 6, 3, 12);
   const normalizedVertices = normalizeConvexVertices(item.vertices);
+  const normalizedLabel = String(item.label ?? "").trim();
 
   return {
-    label: String(item.label ?? item.lable ?? ""),
-    textColor: item.textColor ?? DEFAULT_TEXT_COLOR,
-    backgroundColor:
-      item.backgroundColor ??
-      BUBBLE_COLORS[index % BUBBLE_COLORS.length],
+    label: normalizedLabel,
+    textColor: item.textColor || DEFAULT_TEXT_COLOR,
+    backgroundColor: item.backgroundColor || BUBBLE_COLORS[0],
     shape,
     polygonSides,
     trapezoidSlope: clamp(item.trapezoidSlope ?? 0.25, 0.1, 0.45),
@@ -847,7 +829,7 @@ function normalizeBubbleItem(
   };
 }
 
-function normalizeShape(input: string | undefined): BubbleShapeBuiltIn {
+function normalizeShape(input: string | undefined): BubbleShape {
   const value = String(input ?? "circle").trim().toLowerCase();
   if (value === "triangle") {
     return "triangle";

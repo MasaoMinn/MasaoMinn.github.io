@@ -4,8 +4,14 @@ export type SunnyUiRoute = {
 };
 
 export const componentRouters: SunnyUiRoute[] = [
-  { name: "Home", segments: [] },
-  { name: "BubbleBox", segments: ["matter", "bubble-box"] },
+  {
+    name: "Matter",
+    segments: ["matter"],
+  },
+  {
+    name: "BubbleBox",
+    segments: ["matter", "bubble-box"],
+  },
 ];
 
 export const toPathKey = (segments: string[]) => segments.join("/");
@@ -25,4 +31,5 @@ export const findRouteBySegments = (segments: string[]) => {
   return routeMap.get(toPathKey(segments));
 };
 
-export const staticPaths = componentRouters.map((route) => route.segments);
+// Keep [] for optional catch-all export compatibility, while actual content defaults to /matter.
+export const staticPaths = [[], ...componentRouters.map((route) => route.segments)];

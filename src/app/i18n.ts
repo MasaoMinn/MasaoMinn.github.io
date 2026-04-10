@@ -4,6 +4,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { reactFurryErrorI18n } from './react-furry-error/i18n';
+import { SunnyZyUiI18n } from './sunny-zy-ui/i18n';
 
 i18n
   .use(LanguageDetector)
@@ -81,6 +82,9 @@ i18n
           reactFurryError: {
             ...reactFurryErrorI18n.en,
           },
+          sunnyZyUi: {
+            ...SunnyZyUiI18n.en,
+          },
         }
       },
       zh: {
@@ -131,6 +135,9 @@ i18n
           },
           reactFurryError: {
             ...reactFurryErrorI18n.zh
+          },
+          sunnyZyUi: {
+            ...SunnyZyUiI18n.zh
           },
           cookie: {
             title: '是否接受我的Cookie ?',
@@ -188,6 +195,9 @@ i18n
           },
           reactFurryError: {
             ...reactFurryErrorI18n.jp
+          },
+          sunnyZyUi: {
+            ...SunnyZyUiI18n.jp
           },
           cookie: {
             title: 'Cookieを受け入れますか？',
