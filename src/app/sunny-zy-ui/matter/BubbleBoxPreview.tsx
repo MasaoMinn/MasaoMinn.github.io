@@ -1,31 +1,422 @@
 "use client";
 
-import { useState } from "react";
-import BubbleBox, { BubbleProps, type BubbleBoxProps } from "../../../../components/ui/matter/BubbleBox";
+import { type CSSProperties, useState } from "react";
+import BubbleBox, {
+  type BubbleProps,
+  type BubbleShape,
+} from "../../../../components/ui/matter/BubbleBox";
+import { useTheme } from "@/components/boxed/ThemeProvider";
+import { getThemePalette, type ThemePalette } from "@/app/sunny-zy-ui/theme-style";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+type EditableBubbleBoxProps = {
+  content: BubbleProps[];
+  temperature: number;
+  draggable: boolean;
+  fill: boolean;
+};
+
+type NumberControlItem = {
+  key: "temperature";
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+};
+
+const SHAPES: BubbleShape[] = [
+  "circle",
+  "triangle",
+  "rectangle",
+  "trapezoid",
+  "pentagon",
+  "hexagon",
+  "octagon",
+  "polygon",
+  "starshape",
+];
+
+const NUMBER_CONTROLS: NumberControlItem[] = [
+  { key: "temperature", label: "Temperature", min: 0, max: 100, step: 1 },
+];
+
+const FIXED_WIDTH = 1200;
+const FIXED_HEIGHT = 675;
+
+const INITIAL_BUBBLE_CONTENT: BubbleProps[] = [
+  {
+    label: "Matter-js",
+    shape: "rectangle",
+    backgroundColor: "#38bdf8",
+    textColor: "#aa2b2b",
+    rotate: 5,
+    scale: 1.1,
+    textRotate: true,
+  },
+  {
+    label: "React",
+    shape: "starshape",
+    backgroundColor: "#0080ff",
+    textColor: "#002aff",
+    rotate: 3,
+    scale: 0.95,
+    textRotate: true,
+  },
+  {
+    label: "Sunny_ZY",
+    shape: "trapezoid",
+    backgroundColor: "#572eb6",
+    textColor: "#005324",
+    rotate: 2,
+    scale: 1.05,
+    textRotate: true,
+  },
+];
+
+const randomFrom = <T,>(list: T[]) => list[Math.floor(Math.random() * list.length)];
+const randomInt = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+const randomScale = () => Number((Math.random() * (2.6 - 0.6) + 0.6).toFixed(1));
+const randomHexColor = () =>
+  `#${randomInt(0, 255).toString(16).padStart(2, "0")}${randomInt(0, 255)
+    .toString(16)
+    .padStart(2, "0")}${randomInt(0, 255).toString(16).padStart(2, "0")}`;
+
+const createBubble = (index: number): BubbleProps => ({
+  label: `Bubble${index + 1}`,
+  shape: randomFrom(SHAPES),
+  backgroundColor: randomHexColor(),
+  textColor: randomHexColor(),
+  rotate: randomInt(0, 10),
+  scale: randomScale(),
+  textRotate: Math.random() > 0.5,
+});
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));
+
+const createSliderThemeStyle = (palette: ThemePalette) =>
+({
+  "--slider-track-color": palette.borderColor,
+  "--slider-range-color": palette.extraColor,
+  "--slider-thumb-bg": palette.backgroundColor,
+  "--slider-thumb-border": palette.extraColor,
+} as CSSProperties);
+
+function BubbleConsole({
+  content,
+  onChange,
+  palette,
+}: {
+  content: BubbleProps[];
+  onChange: (nextContent: BubbleProps[]) => void;
+  palette: ThemePalette;
+}) {
+  const updateBubble = <K extends keyof BubbleProps>(
+    index: number,
+    key: K,
+    value: BubbleProps[K],
+  ) => {
+    const next = [...content];
+    next[index] = { ...next[index], [key]: value };
+    onChange(next);
+  };
+
+  const addBubble = () => {
+    onChange([...content, createBubble(content.length)]);
+  };
+
+  const deleteBubble = (index: number) => {
+    onChange(content.filter((_, i) => i !== index));
+  };
+
+  return (
+    <FieldSet className="gap-3 rounded-md border border-slate-200/70 p-3">
+      <FieldLegend variant="label" className="mb-1">
+        Content (BubbleConsole)
+      </FieldLegend>
+      <FieldDescription className="text-xs">
+        Add / remove / edit bubble items.
+      </FieldDescription>
+
+      <div className="space-y-3">
+        {content.map((bubble, index) => (
+          <div key={`${bubble.label}-${index}`} className="rounded-md border border-slate-200/70 p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <div className="text-sm font-semibold">Bubble #{index + 1}</div>
+              <Button variant="outline" size="sm" onClick={() => deleteBubble(index)}>
+                Delete
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
+              <Field>
+                <FieldLabel htmlFor={`bubble-label-${index}`}>Label</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id={`bubble-label-${index}`}
+                    type="text"
+                    value={bubble.label}
+                    onChange={(event) => updateBubble(index, "label", event.target.value)}
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel>Shape</FieldLabel>
+                <FieldContent>
+                  <Select
+                    value={bubble.shape ?? "circle"}
+                    onValueChange={(value) => updateBubble(index, "shape", value as BubbleShape)}
+                  >
+                    <SelectTrigger
+                      style={{
+                        backgroundColor: palette.backgroundColor,
+                        borderColor: palette.borderColor,
+                        color: palette.color,
+                      }}
+                    >
+                      <SelectValue placeholder="Select shape" />
+                    </SelectTrigger>
+                    <SelectContent
+                      style={{
+                        backgroundColor: palette.backgroundColor2,
+                        borderColor: palette.borderColor,
+                        color: palette.color2,
+                      }}
+                    >
+                      {SHAPES.map((shape) => (
+                        <SelectItem key={shape} value={shape}>
+                          {shape}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor={`bubble-bg-${index}`}>Background Color</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id={`bubble-bg-${index}`}
+                    type="color"
+                    className="h-10"
+                    value={bubble.backgroundColor ?? "#38bdf8"}
+                    onChange={(event) => updateBubble(index, "backgroundColor", event.target.value)}
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor={`bubble-text-${index}`}>Text Color</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id={`bubble-text-${index}`}
+                    type="color"
+                    className="h-10"
+                    value={bubble.textColor ?? "#ffffff"}
+                    onChange={(event) => updateBubble(index, "textColor", event.target.value)}
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel>Rotate ({bubble.rotate ?? 0})</FieldLabel>
+                <FieldContent>
+                  <Slider
+                    min={0}
+                    max={10}
+                    step={1}
+                    value={[bubble.rotate ?? 0]}
+                    onValueChange={(value) => updateBubble(index, "rotate", value[0] ?? 0)}
+                    style={createSliderThemeStyle(palette)}
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel>Scale ({(bubble.scale ?? 1).toFixed(1)})</FieldLabel>
+                <FieldContent>
+                  <Slider
+                    min={0.4}
+                    max={3}
+                    step={0.1}
+                    value={[bubble.scale ?? 1]}
+                    onValueChange={(value) => updateBubble(index, "scale", value[0] ?? 1)}
+                    style={createSliderThemeStyle(palette)}
+                  />
+                  <label className="inline-flex items-center gap-2 text-sm">
+                    <input
+                      id={`bubble-text-rotate-${index}`}
+                      type="checkbox"
+                      checked={Boolean(bubble.textRotate)}
+                      onChange={(event) => updateBubble(index, "textRotate", event.target.checked)}
+                    />
+                    <span>Text Rotate</span>
+                  </label>
+                </FieldContent>
+              </Field>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Button variant="outline" onClick={addBubble}>
+        Add Bubble
+      </Button>
+    </FieldSet>
+  );
+}
+
+function ComponentConsole({
+  componentProps,
+  onChange,
+  palette,
+}: {
+  componentProps: EditableBubbleBoxProps;
+  onChange: (next: EditableBubbleBoxProps) => void;
+  palette: ThemePalette;
+}) {
+  const updateNumber = (item: NumberControlItem, value: number) => {
+    const clamped = clamp(value, item.min, item.max);
+    onChange({ ...componentProps, [item.key]: clamped });
+  };
+
+  return (
+    <FieldGroup className="gap-3 rounded-xl border border-slate-300/60 bg-white/60 p-4">
+      <FieldLegend>ComponentConsole</FieldLegend>
+      {/* <FieldDescription className="text-xs">
+        Width / Height are fixed: {FIXED_WIDTH} x {FIXED_HEIGHT}
+      </FieldDescription> */}
+
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
+        {NUMBER_CONTROLS.map((item) => {
+          const value = componentProps[item.key];
+          return (
+            <Field key={item.key}>
+              <FieldLabel>
+                {item.label}: {value}
+              </FieldLabel>
+              <FieldContent>
+                <Slider
+                  min={item.min}
+                  max={item.max}
+                  step={item.step}
+                  value={[value]}
+                  onValueChange={(next) => updateNumber(item, next[0] ?? value)}
+                  style={createSliderThemeStyle(palette)}
+                />
+                <FieldDescription className="text-xs">
+                  {item.min} - {item.max}
+                </FieldDescription>
+              </FieldContent>
+            </Field>
+          );
+        })}
+
+        <Field>
+          <FieldLabel htmlFor="draggable">Draggable</FieldLabel>
+          <FieldContent>
+            <label className="inline-flex items-center gap-2 text-sm">
+              <input
+                id="draggable"
+                type="checkbox"
+                checked={componentProps.draggable}
+                onChange={(event) =>
+                  onChange({ ...componentProps, draggable: event.target.checked })
+                }
+              />
+              <span>{componentProps.draggable ? "Enabled" : "Disabled"}</span>
+            </label>
+          </FieldContent>
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="fill">Fill Parent</FieldLabel>
+          <FieldContent>
+            <label className="inline-flex items-center gap-2 text-sm">
+              <input
+                id="fill"
+                type="checkbox"
+                checked={componentProps.fill}
+                onChange={(event) =>
+                  onChange({ ...componentProps, fill: event.target.checked })
+                }
+              />
+              <span>{componentProps.fill ? "Enabled" : "Disabled"}</span>
+            </label>
+          </FieldContent>
+        </Field>
+      </div>
+
+      <BubbleConsole
+        content={componentProps.content}
+        onChange={(content) => onChange({ ...componentProps, content })}
+        palette={palette}
+      />
+    </FieldGroup>
+  );
+}
 
 export default function BubbleBoxPreview() {
-  const [componentProps, setComponentProps] = useState<BubbleBoxProps>({
-    content: [],
+  const { theme, currentTheme } = useTheme();
+  const palette = getThemePalette(theme, currentTheme);
+
+  const [componentProps, setComponentProps] = useState<EditableBubbleBoxProps>({
+    content: INITIAL_BUBBLE_CONTENT.map((item) => ({ ...item })),
     temperature: 40,
     draggable: true,
-    width: 720,
-    height: 380,
-  })
-  const ComponentConsole = () => {
-    const BubbleConsole = () => {
-      return (
-        <></>
-      )
-    }
-  }
+    fill: false,
+  });
+
   return (
-    <section className="rounded-xl border border-slate-300/60 bg-white/60 p-6 shadow-sm">
+    <section
+      className="rounded-xl border p-6 shadow-sm"
+      style={{
+        borderColor: palette.borderColor,
+        backgroundColor: palette.backgroundColor2,
+        color: palette.color2,
+      }}
+    >
       <h1 className="text-2xl font-semibold">BubbleBox</h1>
-      <p className="mt-3 text-sm text-slate-700">
+      <p className="mt-3 text-sm">
         Preview for <code className="rounded bg-slate-100 px-2 py-0.5">matter/BubbleBox</code>.
       </p>
-      <div className="mt-4">
-        <BubbleBox {...componentProps} />
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
+        <div className="overflow-x-auto">
+          <BubbleBox
+            content={componentProps.content}
+            temperature={componentProps.temperature}
+            draggable={componentProps.draggable}
+            fill={componentProps.fill}
+            width={FIXED_WIDTH}
+            height={FIXED_HEIGHT}
+          />
+        </div>
+        <ComponentConsole
+          componentProps={componentProps}
+          onChange={setComponentProps}
+          palette={palette}
+        />
       </div>
     </section>
   );
