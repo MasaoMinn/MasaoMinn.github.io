@@ -23,7 +23,7 @@ export default function SunnyZyUiLayout({ children }: SunnyZyUiLayoutProps) {
     >
       <div className="mx-auto flex max-w-7xl gap-0">
         <Catalog />
-        <main className="min-w-0 flex-1">
+        <main className="min-w-0 flex-1 pl-[17rem]">
           <div
             className="max-w-6xl rounded-r-xl border border-l-0 p-4"
             style={{

@@ -31,7 +31,6 @@ type EditableBubbleBoxProps = {
   content: BubbleProps[];
   temperature: number;
   draggable: boolean;
-  fill: boolean;
 };
 
 type NumberControlItem = {
@@ -69,7 +68,7 @@ const INITIAL_BUBBLE_CONTENT: BubbleProps[] = [
     textColor: "#aa2b2b",
     rotate: 5,
     scale: 1.1,
-    textRotate: true,
+    textRotate: false,
   },
   {
     label: "React",
@@ -78,16 +77,17 @@ const INITIAL_BUBBLE_CONTENT: BubbleProps[] = [
     textColor: "#002aff",
     rotate: 3,
     scale: 0.95,
-    textRotate: true,
+    textRotate: false,
   },
   {
     label: "Sunny_ZY",
     shape: "trapezoid",
     backgroundColor: "#572eb6",
     textColor: "#005324",
+    trapezoidSlope: 0.25,
     rotate: 2,
     scale: 1.05,
-    textRotate: true,
+    textRotate: false,
   },
 ];
 
@@ -95,20 +95,27 @@ const randomFrom = <T,>(list: T[]) => list[Math.floor(Math.random() * list.lengt
 const randomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 const randomScale = () => Number((Math.random() * (2.6 - 0.6) + 0.6).toFixed(1));
+const randomTrapezoidSlope = () =>
+  Number((Math.random() * (0.45 - 0.1) + 0.1).toFixed(2));
 const randomHexColor = () =>
   `#${randomInt(0, 255).toString(16).padStart(2, "0")}${randomInt(0, 255)
     .toString(16)
     .padStart(2, "0")}${randomInt(0, 255).toString(16).padStart(2, "0")}`;
 
-const createBubble = (index: number): BubbleProps => ({
-  label: `Bubble${index + 1}`,
-  shape: randomFrom(SHAPES),
-  backgroundColor: randomHexColor(),
-  textColor: randomHexColor(),
-  rotate: randomInt(0, 10),
-  scale: randomScale(),
-  textRotate: Math.random() > 0.5,
-});
+const createBubble = (index: number): BubbleProps => {
+  const shape = randomFrom(SHAPES);
+  return {
+    label: `Bubble${index + 1}`,
+    shape,
+    backgroundColor: randomHexColor(),
+    textColor: randomHexColor(),
+    polygonSides: shape === "polygon" ? randomInt(3, 12) : undefined,
+    trapezoidSlope: shape === "trapezoid" ? randomTrapezoidSlope() : undefined,
+    rotate: randomInt(0, 10),
+    scale: randomScale(),
+    textRotate: Math.random() > 0.5,
+  };
+};
 
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
@@ -137,6 +144,27 @@ function BubbleConsole({
   ) => {
     const next = [...content];
     next[index] = { ...next[index], [key]: value };
+    onChange(next);
+  };
+  const updateBubbleShape = (index: number, shape: BubbleShape) => {
+    const next = [...content];
+    const current = next[index] ?? createBubble(index);
+    next[index] = {
+      ...current,
+      shape,
+      polygonSides:
+        shape === "polygon"
+          ? typeof current.polygonSides === "number"
+            ? current.polygonSides
+            : 6
+          : undefined,
+      trapezoidSlope:
+        shape === "trapezoid"
+          ? typeof current.trapezoidSlope === "number"
+            ? current.trapezoidSlope
+            : 0.25
+          : undefined,
+    };
     onChange(next);
   };
 
@@ -185,7 +213,7 @@ function BubbleConsole({
                 <FieldContent>
                   <Select
                     value={bubble.shape ?? "circle"}
-                    onValueChange={(value) => updateBubble(index, "shape", value as BubbleShape)}
+                    onValueChange={(value) => updateBubbleShape(index, value as BubbleShape)}
                   >
                     <SelectTrigger
                       style={{
@@ -275,6 +303,50 @@ function BubbleConsole({
                   </label>
                 </FieldContent>
               </Field>
+
+              {bubble.shape === "polygon" ? (
+                <Field>
+                  <FieldLabel>
+                    Polygon Sides ({bubble.polygonSides ?? 6})
+                  </FieldLabel>
+                  <FieldContent>
+                    <Slider
+                      min={3}
+                      max={12}
+                      step={1}
+                      value={[bubble.polygonSides ?? 6]}
+                      onValueChange={(value) =>
+                        updateBubble(index, "polygonSides", Math.round(value[0] ?? 6))
+                      }
+                      style={createSliderThemeStyle(palette)}
+                    />
+                  </FieldContent>
+                </Field>
+              ) : null}
+
+              {bubble.shape === "trapezoid" ? (
+                <Field>
+                  <FieldLabel>
+                    Trapezoid Slope ({(bubble.trapezoidSlope ?? 0.25).toFixed(2)})
+                  </FieldLabel>
+                  <FieldContent>
+                    <Slider
+                      min={0.1}
+                      max={0.45}
+                      step={0.01}
+                      value={[bubble.trapezoidSlope ?? 0.25]}
+                      onValueChange={(value) =>
+                        updateBubble(
+                          index,
+                          "trapezoidSlope",
+                          Number((value[0] ?? 0.25).toFixed(2)),
+                        )
+                      }
+                      style={createSliderThemeStyle(palette)}
+                    />
+                  </FieldContent>
+                </Field>
+              ) : null}
             </div>
           </div>
         ))}
@@ -349,23 +421,6 @@ function ComponentConsole({
             </label>
           </FieldContent>
         </Field>
-
-        <Field>
-          <FieldLabel htmlFor="fill">Fill Parent</FieldLabel>
-          <FieldContent>
-            <label className="inline-flex items-center gap-2 text-sm">
-              <input
-                id="fill"
-                type="checkbox"
-                checked={componentProps.fill}
-                onChange={(event) =>
-                  onChange({ ...componentProps, fill: event.target.checked })
-                }
-              />
-              <span>{componentProps.fill ? "Enabled" : "Disabled"}</span>
-            </label>
-          </FieldContent>
-        </Field>
       </div>
 
       <BubbleConsole
@@ -385,7 +440,6 @@ export default function BubbleBoxPreview() {
     content: INITIAL_BUBBLE_CONTENT.map((item) => ({ ...item })),
     temperature: 40,
     draggable: true,
-    fill: false,
   });
 
   return (
@@ -407,7 +461,7 @@ export default function BubbleBoxPreview() {
             content={componentProps.content}
             temperature={componentProps.temperature}
             draggable={componentProps.draggable}
-            fill={componentProps.fill}
+            fill={false}
             width={FIXED_WIDTH}
             height={FIXED_HEIGHT}
           />

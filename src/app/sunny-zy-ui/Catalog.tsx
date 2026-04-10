@@ -173,9 +173,9 @@ export default function Catalog() {
   };
 
   return (
-    <aside className="w-64 shrink-0 bg-transparent">
+    <aside className="fixed left-4 top-20 z-40 w-64 shrink-0 bg-transparent">
       <div
-        className="sticky top-4 h-[calc(100vh-2rem)] rounded-xl border p-4 shadow-sm backdrop-blur-sm transition-colors"
+        className="h-[calc(100vh-6rem)] rounded-xl border p-4 shadow-sm backdrop-blur-sm transition-colors"
         style={{
           borderColor: palette.borderColor,
           backgroundColor: palette.backgroundColor2,
