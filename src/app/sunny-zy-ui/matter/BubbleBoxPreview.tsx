@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import BubbleBox, {
   type BubbleProps,
   type BubbleShape,
@@ -41,6 +41,13 @@ type NumberControlItem = {
   step: number;
 };
 
+type PropDocRow = {
+  name: string;
+  type: string;
+  value: string;
+  description: string;
+};
+
 const SHAPES: BubbleShape[] = [
   "circle",
   "triangle",
@@ -55,6 +62,108 @@ const SHAPES: BubbleShape[] = [
 
 const NUMBER_CONTROLS: NumberControlItem[] = [
   { key: "temperature", label: "Temperature", min: 0, max: 100, step: 1 },
+];
+
+const BUBBLE_BOX_PROPS_DOC: PropDocRow[] = [
+  {
+    name: "content",
+    type: "BubbleProps[]",
+    value: "required, at least 1 item recommended",
+    description: "Bubbles rendered in the physics area.",
+  },
+  {
+    name: "temperature",
+    type: "number",
+    value: "0 ~ 100, default 60",
+    description: "Controls bubble moving speed.",
+  },
+  {
+    name: "draggable",
+    type: "boolean",
+    value: "true | false, default false",
+    description: "Whether bubbles can be dragged by mouse.",
+  },
+  {
+    name: "fill",
+    type: "boolean",
+    value: "true | false, default false",
+    description: "Fill parent height when no explicit height.",
+  },
+  {
+    name: "width",
+    type: "number | string",
+    value: "e.g. 1200, \"100%\"",
+    description: "Preview uses fixed 1200.",
+  },
+  {
+    name: "height",
+    type: "number | string",
+    value: "e.g. 675, \"320px\"",
+    description: "Preview uses fixed 675.",
+  },
+];
+
+const BUBBLE_PROPS_DOC: PropDocRow[] = [
+  {
+    name: "label",
+    type: "string",
+    value: "any text",
+    description: "Text rendered inside bubble.",
+  },
+  {
+    name: "textColor",
+    type: "string",
+    value: "hex color, e.g. #ffffff",
+    description: "Bubble text color.",
+  },
+  {
+    name: "backgroundColor",
+    type: "string",
+    value: "hex color, e.g. #38bdf8",
+    description: "Bubble fill color.",
+  },
+  {
+    name: "shape",
+    type: "BubbleShape",
+    value: SHAPES.join(" | "),
+    description: "Bubble geometry type.",
+  },
+  {
+    name: "polygonSides",
+    type: "number",
+    value: "3 ~ 12 (polygon only)",
+    description: "Used only when shape is polygon.",
+  },
+  {
+    name: "trapezoidSlope",
+    type: "number",
+    value: "0.1 ~ 0.45 (trapezoid only)",
+    description: "Used only when shape is trapezoid.",
+  },
+  {
+    name: "vertices",
+    type: "Vertex2D[] | null",
+    value: "custom normalized polygon points",
+    description: "Optional custom convex vertices.",
+  },
+  {
+    name: "rotate",
+    type: "number",
+    value: "0 ~ 10",
+    description: "Angular velocity factor.",
+  },
+  {
+    name: "scale",
+    type: "number",
+    value: "0.4 ~ 3",
+    description: "Bubble size factor.",
+  },
+  {
+    name: "textRotate",
+    type: "boolean",
+    value: "true | false",
+    description: "Rotate text with body angle.",
+  },
 ];
 
 const FIXED_WIDTH = 1200;
@@ -127,6 +236,47 @@ const createSliderThemeStyle = (palette: ThemePalette) =>
   "--slider-thumb-bg": palette.backgroundColor,
   "--slider-thumb-border": palette.extraColor,
 } as CSSProperties);
+
+function PropsDocTable({
+  title,
+  rows,
+  palette,
+}: {
+  title: string;
+  rows: PropDocRow[];
+  palette: ThemePalette;
+}) {
+  return (
+    <div
+      className="overflow-x-auto rounded-lg border"
+      style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor }}
+    >
+      <div className="border-b px-3 py-2 text-sm font-semibold" style={{ borderColor: palette.borderColor }}>
+        {title}
+      </div>
+      <table className="min-w-full text-sm">
+        <thead>
+          <tr className="border-b text-left" style={{ borderColor: palette.borderColor }}>
+            <th className="px-3 py-2">Prop</th>
+            <th className="px-3 py-2">Type</th>
+            <th className="px-3 py-2">Values</th>
+            <th className="px-3 py-2">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.name} className="border-b align-top" style={{ borderColor: palette.borderColor }}>
+              <td className="px-3 py-2 font-mono">{row.name}</td>
+              <td className="px-3 py-2">{row.type}</td>
+              <td className="px-3 py-2">{row.value}</td>
+              <td className="px-3 py-2">{row.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function BubbleConsole({
   content,
@@ -435,12 +585,35 @@ function ComponentConsole({
 export default function BubbleBoxPreview() {
   const { theme, currentTheme } = useTheme();
   const palette = getThemePalette(theme, currentTheme);
+  const [copied, setCopied] = useState(false);
 
   const [componentProps, setComponentProps] = useState<EditableBubbleBoxProps>({
     content: INITIAL_BUBBLE_CONTENT.map((item) => ({ ...item })),
     temperature: 40,
     draggable: true,
   });
+
+  const bubbleBoxSource = useMemo(() => {
+    const contentSource = JSON.stringify(componentProps.content, null, 2);
+    return `<BubbleBox
+  content={${contentSource}}
+  temperature={${componentProps.temperature}}
+  draggable={${componentProps.draggable}}
+  fill={false}
+  width={${FIXED_WIDTH}}
+  height={${FIXED_HEIGHT}}
+/>`;
+  }, [componentProps]);
+
+  const handleCopySource = async () => {
+    try {
+      await navigator.clipboard.writeText(bubbleBoxSource);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <section
@@ -471,6 +644,44 @@ export default function BubbleBoxPreview() {
           onChange={setComponentProps}
           palette={palette}
         />
+      </div>
+      <div
+        className="group relative mt-4 overflow-x-auto rounded-lg border"
+        style={{
+          borderColor: palette.borderColor,
+          background: `linear-gradient(135deg, ${palette.backgroundColor2} 0%, ${palette.backgroundColor} 100%)`,
+        }}
+      >
+        <div
+          className="flex items-center justify-between border-b px-3 py-2 text-sm font-semibold"
+          style={{ borderColor: palette.borderColor }}
+        >
+          <span>Generated JSX</span>
+          <Button
+            size="sm"
+            variant="outline"
+            type="button"
+            onClick={handleCopySource}
+            // className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+            style={{
+              borderColor: palette.borderColor,
+              backgroundColor: palette.backgroundColor,
+              color: palette.color,
+            }}
+          >
+            {copied ? "Copied" : "Copy"}
+          </Button>
+        </div>
+        <pre
+          className="p-3 text-xs leading-6"
+          style={{ backgroundColor: palette.backgroundColor2, color: palette.color2 }}
+        >
+          <code>{bubbleBoxSource}</code>
+        </pre>
+      </div>
+      <div className="mt-6 space-y-3">
+        <PropsDocTable title="BubbleBoxProps" rows={BUBBLE_BOX_PROPS_DOC} palette={palette} />
+        <PropsDocTable title="BubbleProps" rows={BUBBLE_PROPS_DOC} palette={palette} />
       </div>
     </section>
   );
