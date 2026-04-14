@@ -6,8 +6,9 @@ import BubbleBox, {
   type BubbleShape,
 } from "../../../../components/ui/matter/BubbleBox";
 import { useTheme } from "@/components/boxed/ThemeProvider";
+import { ThemedButton } from "@/components/boxed/ThemedButton";
 import { getThemePalette, type ThemePalette } from "@/app/sunny-zy-ui/theme-style";
-import { Button } from "@/components/ui/button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Field,
   FieldContent,
@@ -26,21 +27,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { Bubbles, Trash } from "lucide-react";
+import styled from "styled-components";
 
 type EditableBubbleBoxProps = {
   content: BubbleProps[];
   temperature: number;
   draggable: boolean;
-};
-
-type NumberControlItem = {
-  key: "temperature";
-  label: string;
-  min: number;
-  max: number;
-  step: number;
 };
 
 type PropDocRow = {
@@ -54,6 +49,7 @@ type BubbleVertex = {
   x: number;
   y: number;
 };
+type BubbleBoxTab = "preview" | "code";
 
 const SHAPES: BubbleShape[] = [
   "circle",
@@ -64,20 +60,15 @@ const SHAPES: BubbleShape[] = [
   "ellipse",
   "parallelogram",
 ];
-const CUSTOM_VERTICES_SHAPE = "customize-from-vertices" as const;
-type ShapeSelectValue = BubbleShape | typeof CUSTOM_VERTICES_SHAPE;
+type ShapeSelectValue = BubbleShape | "custom";
 const SHAPE_OPTIONS: Array<{ value: ShapeSelectValue; label: string }> = [
   ...SHAPES.map((shape) => ({ value: shape, label: shape })),
-  { value: CUSTOM_VERTICES_SHAPE, label: "customize from vertices" },
+  { value: "custom", label: "customize from vertices" },
 ];
 const DEFAULT_CUSTOM_VERTICES: BubbleVertex[] = [
   { x: -8, y: 6 },
   { x: 8, y: 6 },
   { x: 0, y: -9 },
-];
-
-const NUMBER_CONTROLS: NumberControlItem[] = [
-  { key: "temperature", label: "Temperature", min: 0, max: 100, step: 1 },
 ];
 
 const BUBBLE_BOX_PROPS_DOC: PropDocRow[] = [
@@ -141,7 +132,7 @@ const BUBBLE_PROPS_DOC: PropDocRow[] = [
   {
     name: "shape",
     type: "BubbleShape",
-    value: `${SHAPES.join(" | ")} | customize-from-vertices (preview-only)`,
+    value: `${SHAPES.join(" | ")} | custom (preview-only)`,
     description: "Bubble geometry type.",
   },
   {
@@ -292,7 +283,7 @@ const preventNumberInputWheel = (event: WheelEvent<HTMLInputElement>) => {
 };
 const toShapeSelectValue = (bubble: BubbleProps): ShapeSelectValue =>
   Array.isArray(bubble.vertices) && bubble.vertices.length >= 3
-    ? CUSTOM_VERTICES_SHAPE
+    ? "custom"
     : (bubble.shape ?? "circle");
 const getVerticesOrDefault = (vertices: BubbleProps["vertices"]): BubbleVertex[] => {
   if (Array.isArray(vertices) && vertices.length > 0) {
@@ -311,6 +302,93 @@ const createSliderThemeStyle = (palette: ThemePalette) =>
   "--slider-thumb-bg": palette.backgroundColor,
   "--slider-thumb-border": palette.extraColor,
 } as CSSProperties);
+
+const ThemedFieldSet = styled(FieldSet) <{ $palette: ThemePalette }>`
+  border-color: ${({ $palette }) => $palette.borderColor};
+  background-color: ${({ $palette }) => $palette.backgroundColor2};
+  color: ${({ $palette }) => $palette.color2};
+  [data-slot="field"] {
+    border: 1px solid ${({ $palette }) => $palette.borderColor};
+    background-color: ${({ $palette }) => $palette.backgroundColor};
+    color: ${({ $palette }) => $palette.color};
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+  [data-slot="field-description"] {
+    color: ${({ $palette }) => $palette.extraColor2};
+  }
+`;
+
+const ThemedFieldGroup = styled(FieldGroup) <{ $palette: ThemePalette }>`
+  border-color: ${({ $palette }) => $palette.borderColor};
+  background-color: ${({ $palette }) => $palette.backgroundColor2};
+  color: ${({ $palette }) => $palette.color2};
+  [data-slot="field"] {
+    border: 1px solid ${({ $palette }) => $palette.borderColor};
+    background-color: ${({ $palette }) => $palette.backgroundColor};
+    color: ${({ $palette }) => $palette.color};
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+  [data-slot="field-description"] {
+    color: ${({ $palette }) => $palette.extraColor2};
+  }
+`;
+
+const ThemedFieldLegend = styled(FieldLegend) <{ $palette: ThemePalette }>`
+  color: ${({ $palette }) => $palette.color2};
+`;
+
+const ThemedFieldDescription = styled(FieldDescription) <{ $palette: ThemePalette }>`
+  color: ${({ $palette }) => $palette.extraColor2};
+`;
+
+const ThemedInput = styled(Input) <{ $palette: ThemePalette }>`
+  && {
+    border-color: ${({ $palette }) => $palette.borderColor} !important;
+    background-color: ${({ $palette }) => $palette.backgroundColor2} !important;
+    color: ${({ $palette }) => $palette.color2} !important;
+  }
+  &&::placeholder {
+    color: ${({ $palette }) => $palette.extraColor2};
+  }
+  &&:focus-visible {
+    border-color: ${({ $palette }) => $palette.extraColor} !important;
+    box-shadow: 0 0 0 2px ${({ $palette }) => $palette.extraColor2} !important;
+  }
+  &&[type="color"] {
+    padding: 0.125rem;
+    background-color: ${({ $palette }) => $palette.backgroundColor2} !important;
+  }
+  &&[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  &&[type="color"]::-webkit-color-swatch {
+    border: 1px solid ${({ $palette }) => $palette.borderColor};
+    border-radius: 0.375rem;
+  }
+`;
+
+const ThemedBubbleCard = styled.div<{ $palette: ThemePalette }>`
+  border-color: ${({ $palette }) => $palette.borderColor};
+  background-color: ${({ $palette }) => $palette.backgroundColor2};
+`;
+
+const ThemedTabsList = styled(TabsList) <{ $palette: ThemePalette }>`
+  background-color: ${({ $palette }) => $palette.backgroundColor};
+  color: ${({ $palette }) => $palette.color};
+`;
+
+const ThemedTabsTrigger = styled(TabsTrigger) <{ $palette: ThemePalette }>`
+  && {
+    color: ${({ $palette }) => $palette.color2};
+  }
+  &&[data-state="active"] {
+    background-color: ${({ $palette }) => $palette.extraColor};
+    color: ${({ $palette }) => $palette.backgroundColor};
+    box-shadow: none;
+  }
+`;
 
 function PropsDocTable({
   title,
@@ -386,7 +464,7 @@ function BubbleConsole({
   const updateBubbleShape = (index: number, shape: ShapeSelectValue) => {
     const next = [...content];
     const current = next[index] ?? createBubble(index);
-    if (shape === CUSTOM_VERTICES_SHAPE) {
+    if (shape === "custom") {
       next[index] = {
         ...current,
         shape: current.shape ?? "polygon",
@@ -485,22 +563,22 @@ function BubbleConsole({
   };
 
   return (
-    <FieldSet className="gap-3 rounded-md border border-slate-200/70 p-3">
-      <FieldLegend variant="label" className="mb-1">
+    <ThemedFieldSet className="gap-3 rounded-md border p-3" $palette={palette}>
+      <ThemedFieldLegend variant="label" className="mb-1" $palette={palette}>
         Content (BubbleConsole)
-      </FieldLegend>
-      <FieldDescription className="text-xs">
+      </ThemedFieldLegend>
+      <ThemedFieldDescription className="text-xs" $palette={palette}>
         Add / remove / edit bubble items.
-      </FieldDescription>
+      </ThemedFieldDescription>
 
       <div className="space-y-3">
         {content.map((bubble, index) => (
-          <div key={`${bubble.label}-${index}`} className="rounded-md border border-slate-200/70 p-3">
+          <ThemedBubbleCard key={`${bubble.label}-${index}`} className="rounded-md border p-3" $palette={palette}>
             <div className="mb-2 flex items-center justify-between">
               <div className="mx-auto text-lg font-semibold"><Bubbles />Bubble #{index + 1}</div>
-              <Button variant="outline" size="sm" onClick={() => deleteBubble(index)}>
+              <ThemedButton palette={palette} variant="outline" size="sm" onClick={() => deleteBubble(index)}>
                 <Trash />
-              </Button>
+              </ThemedButton>
             </div>
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
@@ -512,9 +590,10 @@ function BubbleConsole({
                     <Field>
                       <FieldLabel htmlFor={`bubble-label-${index}`}>Label</FieldLabel>
                       <FieldContent>
-                        <Input
+                        <ThemedInput
                           id={`bubble-label-${index}`}
                           type="text"
+                          $palette={palette}
                           value={bubble.label}
                           onChange={(event) => updateBubble(index, "label", event.target.value)}
                         />
@@ -557,10 +636,11 @@ function BubbleConsole({
                     <Field>
                       <FieldLabel htmlFor={`bubble-bg-${index}`}>Background Color</FieldLabel>
                       <FieldContent>
-                        <Input
+                        <ThemedInput
                           id={`bubble-bg-${index}`}
                           type="color"
                           className="h-10"
+                          $palette={palette}
                           value={bubble.backgroundColor ?? "#38bdf8"}
                           onChange={(event) => updateBubble(index, "backgroundColor", event.target.value)}
                         />
@@ -570,10 +650,11 @@ function BubbleConsole({
                     <Field>
                       <FieldLabel htmlFor={`bubble-text-${index}`}>Text Color</FieldLabel>
                       <FieldContent>
-                        <Input
+                        <ThemedInput
                           id={`bubble-text-${index}`}
                           type="color"
                           className="h-10"
+                          $palette={palette}
                           value={bubble.textColor ?? "#ffffff"}
                           onChange={(event) => updateBubble(index, "textColor", event.target.value)}
                         />
@@ -590,6 +671,7 @@ function BubbleConsole({
                           value={[bubble.rotate ?? 0]}
                           onValueChange={(value) => updateBubble(index, "rotate", value[0] ?? 0)}
                           style={createSliderThemeStyle(palette)}
+                          className="mx-auto w-full max-w-xs"
                         />
                       </FieldContent>
                     </Field>
@@ -720,7 +802,7 @@ function BubbleConsole({
                         </FieldContent>
                       </Field>
                     ) : null}
-                    {shapeSelectValue === CUSTOM_VERTICES_SHAPE ? (
+                    {shapeSelectValue === "custom" ? (
                       <Field className="col-span-full">
                         <FieldLabel>Vertices (custom shape)</FieldLabel>
                         <FieldContent>
@@ -728,8 +810,9 @@ function BubbleConsole({
                             {vertices.map((vertex, vertexIndex) => (
                               <div key={`bubble-${index}-vertex-${vertexIndex}`} className="space-y-1">
                                 <div className="grid grid-cols-[1fr_1fr_auto] items-center gap-2">
-                                  <Input
+                                  <ThemedInput
                                     type="number"
+                                    $palette={palette}
                                     value={vertex.x}
                                     onWheel={preventNumberInputWheel}
                                     onChange={(event) =>
@@ -741,8 +824,9 @@ function BubbleConsole({
                                       )
                                     }
                                   />
-                                  <Input
+                                  <ThemedInput
                                     type="number"
+                                    $palette={palette}
                                     value={vertex.y}
                                     onWheel={preventNumberInputWheel}
                                     onChange={(event) =>
@@ -754,7 +838,8 @@ function BubbleConsole({
                                       )
                                     }
                                   />
-                                  <Button
+                                  <ThemedButton
+                                    palette={palette}
                                     type="button"
                                     size="sm"
                                     variant="outline"
@@ -762,7 +847,7 @@ function BubbleConsole({
                                     disabled={vertices.length <= 3}
                                   >
                                     <Trash />
-                                  </Button>
+                                  </ThemedButton>
                                 </div>
                                 {Math.abs(vertex.x) > 10000 || Math.abs(vertex.y) > 10000 ? (
                                   <FieldDescription className="text-xs text-amber-600">
@@ -772,12 +857,12 @@ function BubbleConsole({
                               </div>
                             ))}
                             <div className="flex items-center justify-between gap-2">
-                              <FieldDescription className="text-xs">
+                              <ThemedFieldDescription className="text-xs" $palette={palette}>
                                 At least 3 vertices. Integers only.
-                              </FieldDescription>
-                              <Button type="button" size="sm" variant="outline" onClick={() => addVertex(index)}>
+                              </ThemedFieldDescription>
+                              <ThemedButton palette={palette} type="button" size="sm" variant="outline" onClick={() => addVertex(index)}>
                                 Add Vertex
-                              </Button>
+                              </ThemedButton>
                             </div>
                           </div>
                         </FieldContent>
@@ -787,14 +872,14 @@ function BubbleConsole({
                 );
               })()}
             </div>
-          </div>
+          </ThemedBubbleCard>
         ))}
       </div>
 
-      <Button variant="outline" onClick={addBubble}>
+      <ThemedButton palette={palette} variant="outline" onClick={addBubble}>
         Add Bubble
-      </Button>
-    </FieldSet>
+      </ThemedButton>
+    </ThemedFieldSet>
   );
 }
 
@@ -807,42 +892,33 @@ function ComponentConsole({
   onChange: (next: EditableBubbleBoxProps) => void;
   palette: ThemePalette;
 }) {
-  const updateNumber = (item: NumberControlItem, value: number) => {
-    const clamped = clamp(value, item.min, item.max);
-    onChange({ ...componentProps, [item.key]: clamped });
-  };
-
   return (
-    <FieldGroup className="gap-3 rounded-xl border border-slate-300/60 bg-white/60 p-4">
-      <FieldLegend>ComponentConsole</FieldLegend>
+    <ThemedFieldGroup className="gap-3 rounded-xl border p-4" $palette={palette}>
+      <ThemedFieldLegend $palette={palette}>ComponentConsole</ThemedFieldLegend>
       {/* <FieldDescription className="text-xs">
         Width / Height are fixed: {FIXED_WIDTH} x {FIXED_HEIGHT}
       </FieldDescription> */}
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
-        {NUMBER_CONTROLS.map((item) => {
-          const value = componentProps[item.key];
-          return (
-            <Field key={item.key}>
-              <FieldLabel>
-                {item.label}: {value}
-              </FieldLabel>
-              <FieldContent>
-                <Slider
-                  min={item.min}
-                  max={item.max}
-                  step={item.step}
-                  value={[value]}
-                  onValueChange={(next) => updateNumber(item, next[0] ?? value)}
-                  style={createSliderThemeStyle(palette)}
-                />
-                <FieldDescription className="text-xs">
-                  {item.min} - {item.max}
-                </FieldDescription>
-              </FieldContent>
-            </Field>
-          );
-        })}
+        <Field>
+          <FieldLabel>Temperature: {componentProps.temperature}</FieldLabel>
+          <FieldContent>
+            <Slider
+              min={0}
+              max={100}
+              step={1}
+              value={[componentProps.temperature]}
+              onValueChange={(next) =>
+                onChange({
+                  ...componentProps,
+                  temperature: clamp(Math.round(next[0] ?? componentProps.temperature), 0, 100),
+                })
+              }
+              style={createSliderThemeStyle(palette)}
+            />
+            <ThemedFieldDescription className="text-xs" $palette={palette}>0 - 100</ThemedFieldDescription>
+          </FieldContent>
+        </Field>
 
         <Field>
           <FieldLabel htmlFor="draggable">Draggable</FieldLabel>
@@ -867,7 +943,7 @@ function ComponentConsole({
         onChange={(content) => onChange({ ...componentProps, content })}
         palette={palette}
       />
-    </FieldGroup>
+    </ThemedFieldGroup>
   );
 }
 
@@ -876,6 +952,10 @@ export default function BubbleBoxPreview() {
   const palette = getThemePalette(theme, currentTheme);
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeTab: BubbleBoxTab = searchParams.get("tab") === "code" ? "code" : "preview";
 
   const [componentProps, setComponentProps] = useState<EditableBubbleBoxProps>({
     content: INITIAL_BUBBLE_CONTENT.map((item) => ({ ...item })),
@@ -905,6 +985,50 @@ export default function BubbleBoxPreview() {
     }
   };
 
+  const handleTabChange = (nextTab: string) => {
+    const tab = nextTab === "code" ? "code" : "preview";
+    const params = new URLSearchParams(searchParams.toString());
+    if (tab === "code") {
+      params.set("tab", "code");
+    } else {
+      params.delete("tab");
+    }
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
+
+  const sourcePanel = (
+    <div
+      className="group relative mt-4 overflow-x-auto rounded-lg border"
+      style={{
+        borderColor: palette.borderColor,
+        background: `linear-gradient(135deg, ${palette.backgroundColor2} 0%, ${palette.backgroundColor} 100%)`,
+      }}
+    >
+      <div
+        className="flex items-center justify-between border-b px-3 py-2 text-sm font-semibold"
+        style={{ borderColor: palette.borderColor }}
+      >
+        <span>Generated JSX</span>
+        <ThemedButton
+          palette={palette}
+          size="sm"
+          variant="outline"
+          type="button"
+          onClick={handleCopySource}
+        >
+          {copied ? "Copied" : "Copy"}
+        </ThemedButton>
+      </div>
+      <pre
+        className="p-3 text-xs leading-6"
+        style={{ backgroundColor: palette.backgroundColor2, color: palette.color2 }}
+      >
+        <code>{bubbleBoxSource}</code>
+      </pre>
+    </div>
+  );
+
   return (
     <section
       className="rounded-xl border p-6 shadow-sm"
@@ -914,68 +1038,67 @@ export default function BubbleBoxPreview() {
         color: palette.color2,
       }}
     >
-      <h1 className="text-2xl font-semibold m-4">BubbleBox</h1>
-      <p className="m-3 text-sm select-none">
-        An UI component that renders floating bubbles<Bubbles />. Providing innovative solution for information presentation methods, making your website more interactive and interesting.
-      </p>
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
-        <div className="overflow-x-auto">
-          <BubbleBox
-            content={componentProps.content}
-            temperature={componentProps.temperature}
-            draggable={componentProps.draggable}
-            fill={false}
-            width={FIXED_WIDTH}
-            height={FIXED_HEIGHT}
-            className="bg-transparent"
-          />
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="mt-2">
+        <div className="m-4 flex items-center justify-between gap-4">
+          <h1 className="m-0 text-2xl font-semibold">BubbleBox</h1>
+          <ThemedTabsList className="h-10 rounded-md p-1" $palette={palette}>
+            <ThemedTabsTrigger value="preview" $palette={palette}>Preview</ThemedTabsTrigger>
+            <ThemedTabsTrigger value="code" $palette={palette}>Code</ThemedTabsTrigger>
+          </ThemedTabsList>
         </div>
-        <ComponentConsole
-          componentProps={componentProps}
-          onChange={setComponentProps}
-          palette={palette}
-        />
-      </div>
-      <div
-        className="group relative mt-4 overflow-x-auto rounded-lg border"
-        style={{
-          borderColor: palette.borderColor,
-          background: `linear-gradient(135deg, ${palette.backgroundColor2} 0%, ${palette.backgroundColor} 100%)`,
-        }}
-      >
-        <div
-          className="flex items-center justify-between border-b px-3 py-2 text-sm font-semibold"
-          style={{ borderColor: palette.borderColor }}
-        >
-          <span>Generated JSX</span>
-          <Button
-            size="sm"
-            variant="outline"
-            type="button"
-            onClick={handleCopySource}
-            // className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-            style={{
-              borderColor: palette.borderColor,
-              backgroundColor: palette.backgroundColor,
-              color: palette.color,
-            }}
-          >
-            {copied ? "Copied" : "Copy"}
-          </Button>
-        </div>
-        <pre
-          className="p-3 text-xs leading-6"
-          style={{ backgroundColor: palette.backgroundColor2, color: palette.color2 }}
-        >
-          <code>{bubbleBoxSource}</code>
-        </pre>
-      </div>
-      <div className="mt-6 space-y-3">
-        <h3>{t('sunnyZyUi.matter.bubbleBox.props')}</h3>
-        <PropsDocTable title="BubbleBoxProps" rows={BUBBLE_BOX_PROPS_DOC} palette={palette} />
-        <PropsDocTable title="BubbleProps" rows={BUBBLE_PROPS_DOC} palette={palette} />
-        <PropsDocTable title="Vertex2D" rows={VERTEX_2D_DOC} palette={palette} />
-      </div>
+        <p className="m-3 text-sm select-none">
+          An UI component that renders floating bubbles<Bubbles />. Providing innovative solution for information presentation methods, making your website more interactive and interesting.
+        </p>
+        <TabsContent value="preview">
+          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
+            <div className="overflow-x-auto">
+              <BubbleBox
+                content={componentProps.content}
+                temperature={componentProps.temperature}
+                draggable={componentProps.draggable}
+                fill={false}
+                width={FIXED_WIDTH}
+                height={FIXED_HEIGHT}
+                className="bg-transparent"
+              />
+            </div>
+            <ComponentConsole
+              componentProps={componentProps}
+              onChange={setComponentProps}
+              palette={palette}
+            />
+          </div>
+          {sourcePanel}
+          <div className="mt-6 space-y-3">
+            <h3>{t("sunnyZyUi.matter.bubbleBox.props")}</h3>
+            <PropsDocTable title="BubbleBoxProps" rows={BUBBLE_BOX_PROPS_DOC} palette={palette} />
+            <PropsDocTable title="BubbleProps" rows={BUBBLE_PROPS_DOC} palette={palette} />
+            <PropsDocTable title="Vertex2D" rows={VERTEX_2D_DOC} palette={palette} />
+          </div>
+        </TabsContent>
+        <TabsContent value="code">
+          <div className="mt-4 space-y-4">
+            <div
+              className="rounded-lg border p-4"
+              style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor }}
+            >
+              <h3 className="text-lg font-semibold">Download Guide</h3>
+              <p className="mt-1 text-sm" style={{ color: palette.extraColor2 }}>
+                Install dependencies then import the component in your page.
+              </p>
+              <pre
+                className="mt-3 rounded-md border p-3 text-xs leading-6"
+                style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor2 }}
+              >
+                <code>{`pnpm add matter-js\npnpm add -D @types/matter-js\n\nimport BubbleBox from "@/components/ui/matter/BubbleBox";`}</code>
+              </pre>
+            </div>
+            {sourcePanel}
+          </div>
+        </TabsContent>
+      </Tabs>
+
+
     </section>
   );
 }
