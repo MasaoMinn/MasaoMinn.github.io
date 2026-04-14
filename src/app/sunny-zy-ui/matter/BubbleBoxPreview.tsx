@@ -26,6 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
+import { Bubbles, Delete, Trash } from "lucide-react";
 
 type EditableBubbleBoxProps = {
   content: BubbleProps[];
@@ -53,11 +55,9 @@ const SHAPES: BubbleShape[] = [
   "triangle",
   "rectangle",
   "trapezoid",
-  "pentagon",
-  "hexagon",
-  "octagon",
   "polygon",
-  "starshape",
+  "ellipse",
+  "parallelogram",
 ];
 
 const NUMBER_CONTROLS: NumberControlItem[] = [
@@ -141,6 +141,18 @@ const BUBBLE_PROPS_DOC: PropDocRow[] = [
     description: "Used only when shape is trapezoid.",
   },
   {
+    name: "ellipseAxisRatio",
+    type: "number",
+    value: "1 ~ 4 (ellipse only)",
+    description: "Major/minor axis ratio for ellipse shape.",
+  },
+  {
+    name: "skew",
+    type: "number",
+    value: "-1 ~ 1 (parallelogram only)",
+    description: "Horizontal skew amount for parallelogram shape.",
+  },
+  {
     name: "vertices",
     type: "Vertex2D[] | null",
     value: "custom normalized polygon points",
@@ -164,6 +176,26 @@ const BUBBLE_PROPS_DOC: PropDocRow[] = [
     value: "true | false",
     description: "Rotate text with body angle.",
   },
+  {
+    name: "initialAngle",
+    type: "number",
+    value: "0 ~ 360",
+    description: "Initial body angle in degrees.",
+  },
+];
+const VERTEX_2D_DOC: PropDocRow[] = [
+  {
+    name: "x",
+    type: "number",
+    value: "",
+    description: "x coordinate of vertex.",
+  },
+  {
+    name: "y",
+    type: "number",
+    value: "",
+    description: "y coordinate of vertex.",
+  },
 ];
 
 const FIXED_WIDTH = 1200;
@@ -181,9 +213,10 @@ const INITIAL_BUBBLE_CONTENT: BubbleProps[] = [
   },
   {
     label: "React",
-    shape: "starshape",
+    shape: "polygon",
     backgroundColor: "#0080ff",
-    textColor: "#002aff",
+    textColor: "#00ffc3",
+    polygonSides: 5,
     rotate: 3,
     scale: 0.95,
     textRotate: false,
@@ -191,8 +224,8 @@ const INITIAL_BUBBLE_CONTENT: BubbleProps[] = [
   {
     label: "Sunny_ZY",
     shape: "trapezoid",
-    backgroundColor: "#572eb6",
-    textColor: "#005324",
+    backgroundColor: "#8f80b2",
+    textColor: "#045f2b",
     trapezoidSlope: 0.25,
     rotate: 2,
     scale: 1.05,
@@ -206,6 +239,9 @@ const randomInt = (min: number, max: number) =>
 const randomScale = () => Number((Math.random() * (2.6 - 0.6) + 0.6).toFixed(1));
 const randomTrapezoidSlope = () =>
   Number((Math.random() * (0.45 - 0.1) + 0.1).toFixed(2));
+const randomEllipseAxisRatio = () =>
+  Number((Math.random() * (4 - 1) + 1).toFixed(2));
+const randomSkew = () => Number((Math.random() * (1 - -1) + -1).toFixed(2));
 const randomHexColor = () =>
   `#${randomInt(0, 255).toString(16).padStart(2, "0")}${randomInt(0, 255)
     .toString(16)
@@ -220,6 +256,9 @@ const createBubble = (index: number): BubbleProps => {
     textColor: randomHexColor(),
     polygonSides: shape === "polygon" ? randomInt(3, 12) : undefined,
     trapezoidSlope: shape === "trapezoid" ? randomTrapezoidSlope() : undefined,
+    ellipseAxisRatio: shape === "ellipse" ? randomEllipseAxisRatio() : undefined,
+    skew: shape === "parallelogram" ? randomSkew() : undefined,
+    initialAngle: randomInt(0, 359),
     rotate: randomInt(0, 10),
     scale: randomScale(),
     textRotate: Math.random() > 0.5,
@@ -251,24 +290,36 @@ function PropsDocTable({
       className="overflow-x-auto rounded-lg border"
       style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor }}
     >
-      <div className="border-b px-3 py-2 text-sm font-semibold" style={{ borderColor: palette.borderColor }}>
+      <div className="border-2 border-solid px-3 py-2 text-xl font-bold" style={{ borderColor: palette.borderColor }}>
         {title}
       </div>
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b text-left" style={{ borderColor: palette.borderColor }}>
-            <th className="px-3 py-2">Prop</th>
-            <th className="px-3 py-2">Type</th>
-            <th className="px-3 py-2">Values</th>
+            <th className="border-r px-3 py-2" style={{ borderColor: palette.borderColor }}>
+              Prop
+            </th>
+            <th className="border-r px-3 py-2" style={{ borderColor: palette.borderColor }}>
+              Type
+            </th>
+            <th className="border-r px-3 py-2" style={{ borderColor: palette.borderColor }}>
+              Values
+            </th>
             <th className="px-3 py-2">Description</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
             <tr key={row.name} className="border-b align-top" style={{ borderColor: palette.borderColor }}>
-              <td className="px-3 py-2 font-mono">{row.name}</td>
-              <td className="px-3 py-2">{row.type}</td>
-              <td className="px-3 py-2">{row.value}</td>
+              <td className="border-r px-3 py-2 font-mono" style={{ borderColor: palette.borderColor }}>
+                {row.name}
+              </td>
+              <td className="border-r px-3 py-2" style={{ borderColor: palette.borderColor }}>
+                {row.type}
+              </td>
+              <td className="border-r px-3 py-2" style={{ borderColor: palette.borderColor }}>
+                {row.value}
+              </td>
               <td className="px-3 py-2">{row.description}</td>
             </tr>
           ))}
@@ -314,6 +365,18 @@ function BubbleConsole({
             ? current.trapezoidSlope
             : 0.25
           : undefined,
+      ellipseAxisRatio:
+        shape === "ellipse"
+          ? typeof current.ellipseAxisRatio === "number"
+            ? current.ellipseAxisRatio
+            : 1.6
+          : undefined,
+      skew:
+        shape === "parallelogram"
+          ? typeof current.skew === "number"
+            ? current.skew
+            : 0
+          : undefined,
     };
     onChange(next);
   };
@@ -339,9 +402,9 @@ function BubbleConsole({
         {content.map((bubble, index) => (
           <div key={`${bubble.label}-${index}`} className="rounded-md border border-slate-200/70 p-3">
             <div className="mb-2 flex items-center justify-between">
-              <div className="text-sm font-semibold">Bubble #{index + 1}</div>
+              <div className="text-lg font-semibold mx-auto"><Bubbles />Bubble #{index + 1}</div>
               <Button variant="outline" size="sm" onClick={() => deleteBubble(index)}>
-                Delete
+                <Trash />
               </Button>
             </div>
 
@@ -454,6 +517,24 @@ function BubbleConsole({
                 </FieldContent>
               </Field>
 
+              <Field>
+                <FieldLabel>
+                  Initial Angle ({Math.round(bubble.initialAngle ?? 0)}deg)
+                </FieldLabel>
+                <FieldContent>
+                  <Slider
+                    min={0}
+                    max={360}
+                    step={1}
+                    value={[bubble.initialAngle ?? 0]}
+                    onValueChange={(value) =>
+                      updateBubble(index, "initialAngle", Math.round(value[0] ?? 0))
+                    }
+                    style={createSliderThemeStyle(palette)}
+                  />
+                </FieldContent>
+              </Field>
+
               {bubble.shape === "polygon" ? (
                 <Field>
                   <FieldLabel>
@@ -491,6 +572,48 @@ function BubbleConsole({
                           "trapezoidSlope",
                           Number((value[0] ?? 0.25).toFixed(2)),
                         )
+                      }
+                      style={createSliderThemeStyle(palette)}
+                    />
+                  </FieldContent>
+                </Field>
+              ) : null}
+
+              {bubble.shape === "ellipse" ? (
+                <Field>
+                  <FieldLabel>
+                    Ellipse Axis Ratio ({(bubble.ellipseAxisRatio ?? 1.6).toFixed(2)})
+                  </FieldLabel>
+                  <FieldContent>
+                    <Slider
+                      min={1}
+                      max={4}
+                      step={0.01}
+                      value={[bubble.ellipseAxisRatio ?? 1.6]}
+                      onValueChange={(value) =>
+                        updateBubble(
+                          index,
+                          "ellipseAxisRatio",
+                          Number((value[0] ?? 1.6).toFixed(2)),
+                        )
+                      }
+                      style={createSliderThemeStyle(palette)}
+                    />
+                  </FieldContent>
+                </Field>
+              ) : null}
+
+              {bubble.shape === "parallelogram" ? (
+                <Field>
+                  <FieldLabel>Skew ({(bubble.skew ?? 0).toFixed(2)})</FieldLabel>
+                  <FieldContent>
+                    <Slider
+                      min={-1}
+                      max={1}
+                      step={0.01}
+                      value={[bubble.skew ?? 0]}
+                      onValueChange={(value) =>
+                        updateBubble(index, "skew", Number((value[0] ?? 0).toFixed(2)))
                       }
                       style={createSliderThemeStyle(palette)}
                     />
@@ -586,6 +709,7 @@ export default function BubbleBoxPreview() {
   const { theme, currentTheme } = useTheme();
   const palette = getThemePalette(theme, currentTheme);
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
 
   const [componentProps, setComponentProps] = useState<EditableBubbleBoxProps>({
     content: INITIAL_BUBBLE_CONTENT.map((item) => ({ ...item })),
@@ -624,9 +748,9 @@ export default function BubbleBoxPreview() {
         color: palette.color2,
       }}
     >
-      <h1 className="text-2xl font-semibold">BubbleBox</h1>
-      <p className="mt-3 text-sm">
-        Preview for <code className="rounded bg-slate-100 px-2 py-0.5">matter/BubbleBox</code>.
+      <h1 className="text-2xl font-semibold m-4">BubbleBox</h1>
+      <p className="m-3 text-sm select-none">
+        An UI component that renders floating bubbles<Bubbles />. Providing innovative solution for information presentation methods, making your website more interactive and interesting.
       </p>
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="overflow-x-auto">
@@ -637,6 +761,7 @@ export default function BubbleBoxPreview() {
             fill={false}
             width={FIXED_WIDTH}
             height={FIXED_HEIGHT}
+            className="bg-transparent"
           />
         </div>
         <ComponentConsole
@@ -680,8 +805,10 @@ export default function BubbleBoxPreview() {
         </pre>
       </div>
       <div className="mt-6 space-y-3">
+        <h3>{t('sunnyZyUi.matter.bubbleBox.props')}</h3>
         <PropsDocTable title="BubbleBoxProps" rows={BUBBLE_BOX_PROPS_DOC} palette={palette} />
         <PropsDocTable title="BubbleProps" rows={BUBBLE_PROPS_DOC} palette={palette} />
+        <PropsDocTable title="Vertex2D" rows={VERTEX_2D_DOC} palette={palette} />
       </div>
     </section>
   );

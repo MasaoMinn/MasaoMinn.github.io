@@ -28,7 +28,7 @@ const Slider = React.forwardRef<
       {...props}
     >
       <SliderPrimitive.Track
-        className="relative h-3 w-full grow overflow-hidden rounded-full"
+        className="relative h-4 w-full grow overflow-hidden rounded-full"
         style={{
           backgroundColor: "var(--slider-track-color)",
           border: "1px solid var(--slider-thumb-border)",
@@ -40,7 +40,7 @@ const Slider = React.forwardRef<
         />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb
-        className="block h-7 w-7 rounded-full border-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+        className="block h-9 w-9 rounded-full border-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
         style={{
           borderColor: "var(--slider-thumb-border)",
           backgroundColor: "var(--slider-thumb-bg)",

@@ -18,7 +18,7 @@ const DEFAULT_WIDTH = 480;
 const DEFAULT_HEIGHT = 320;
 const DEFAULT_TEXT_COLOR = "#ffffff";
 const DEFAULT_SCALE = 1;
-const STAR_INNER_RATIO = 0.5;
+const DEFAULT_ELLIPSE_AXIS_RATIO = 1.6;
 
 const BUBBLE_COLORS = [
   "#38bdf8",
@@ -29,7 +29,7 @@ const BUBBLE_COLORS = [
   "#a78bfa",
 ];
 
-export type Vertex2D = {
+type Vertex2D = {
   x: number;
   y: number;
 };
@@ -39,23 +39,25 @@ export type BubbleShape =
   | "triangle"
   | "rectangle"
   | "trapezoid"
-  | "pentagon"
-  | "hexagon"
-  | "octagon"
   | "polygon"
-  | "starshape";
+  | "ellipse"
+  | "parallelogram";
 
 export type BubbleProps = {
   label: string;
+  lable?: string;
   textColor?: string;
   backgroundColor?: string;
   shape?: BubbleShape;
   polygonSides?: number;
   trapezoidSlope?: number;
+  ellipseAxisRatio?: number;
+  skew?: number;
   vertices?: Vertex2D[] | null;
   rotate?: number;
   scale?: number;
   textRotate?: boolean;
+  initialAngle?: number;
 };
 
 type NormalizedBubble = {
@@ -65,10 +67,13 @@ type NormalizedBubble = {
   shape: BubbleShape;
   polygonSides: number;
   trapezoidSlope: number;
+  ellipseAxisRatio: number;
+  skew: number;
   vertices: Vertex2D[] | null;
   rotate: number;
   scale: number;
   textRotate: boolean;
+  initialAngle: number;
 };
 
 type BubbleGeometry = {
@@ -262,6 +267,10 @@ export function BubbleBox({
     const bubbles: BubbleRuntime[] = bubbleGeometries.map((geometry, index) => {
       const point = spawnPoints[index];
       Body.setPosition(geometry.body, { x: point.x, y: point.y });
+      Body.setAngle(
+        geometry.body,
+        toRadians(normalizedContent[index]?.initialAngle ?? 0),
+      );
       setBodySpeed(geometry.body, targetSpeed);
 
       return {
@@ -438,29 +447,20 @@ function createBubbleGeometry(
     return measureBubbleGeometry(body, 0.8);
   }
 
-  if (item.shape === "pentagon") {
-    const polygonRadius = equivalentPolygonRadius(sizeRadius, 5);
-    const body = Bodies.polygon(0, 0, 5, polygonRadius, bodyOptions);
-    return measureBubbleGeometry(body, 0.85);
-  }
-
-  if (item.shape === "hexagon") {
-    const polygonRadius = equivalentPolygonRadius(sizeRadius, 6);
-    const body = Bodies.polygon(0, 0, 6, polygonRadius, bodyOptions);
-    return measureBubbleGeometry(body, 0.86);
-  }
-
-  if (item.shape === "octagon") {
-    const polygonRadius = equivalentPolygonRadius(sizeRadius, 8);
-    const body = Bodies.polygon(0, 0, 8, polygonRadius, bodyOptions);
-    return measureBubbleGeometry(body, 0.88);
-  }
-
   if (item.shape === "polygon") {
     const sides = clampInt(item.polygonSides, 3, 12);
     const polygonRadius = equivalentPolygonRadius(sizeRadius, sides);
     const body = Bodies.polygon(0, 0, sides, polygonRadius, bodyOptions);
     return measureBubbleGeometry(body, 0.86);
+  }
+
+  if (item.shape === "ellipse") {
+    const majorMinorRatio = normalizeEllipseAxisRatio(item.ellipseAxisRatio);
+    const scaleX = Math.sqrt(majorMinorRatio);
+    const scaleY = 1 / scaleX;
+    const body = Bodies.circle(0, 0, sizeRadius, bodyOptions);
+    Body.scale(body, scaleX, scaleY);
+    return measureBubbleGeometry(body, 0.74);
   }
 
   if (item.shape === "rectangle") {
@@ -480,13 +480,20 @@ function createBubbleGeometry(
     return measureBubbleGeometry(body, 0.8);
   }
 
-  if (item.shape === "starshape") {
-    const outerRadius = sizeRadius * 1.462;
-    const innerRadius = outerRadius * STAR_INNER_RATIO;
-    const vertices = createStarVertices(0, 0, outerRadius, innerRadius, 5);
+  if (item.shape === "parallelogram") {
+    const aspect = 1.2;
+    const width = Math.sqrt(referenceArea * aspect);
+    const height = referenceArea / width;
+    const offset = clamp(item.skew, -1, 1) * width * 0.32;
+    const vertices = [
+      { x: -width / 2 + offset, y: -height / 2 },
+      { x: width / 2 + offset, y: -height / 2 },
+      { x: width / 2 - offset, y: height / 2 },
+      { x: -width / 2 - offset, y: height / 2 },
+    ];
     const body = Bodies.fromVertices(0, 0, [vertices], bodyOptions, true);
-    body.label = `bubble-star-${index}`;
-    return measureBubbleGeometry(body, 0.68);
+    body.label = `bubble-parallelogram-${index}`;
+    return measureBubbleGeometry(body, 0.8);
   }
 
   const body = Bodies.circle(0, 0, sizeRadius, bodyOptions);
@@ -641,33 +648,6 @@ function calculateBubbleRadius(width: number, height: number, count: number) {
   return clamp(Math.floor(Math.min(byGrid, byArea, maxRadius)), MIN_RADIUS, 80);
 }
 
-function createStarVertices(
-  cx: number,
-  cy: number,
-  outerRadius: number,
-  innerRadius: number,
-  spikes: number,
-) {
-  const vertices: Array<{ x: number; y: number }> = [];
-  const step = Math.PI / spikes;
-  let angle = -Math.PI / 2;
-
-  for (let i = 0; i < spikes; i += 1) {
-    vertices.push({
-      x: cx + Math.cos(angle) * outerRadius,
-      y: cy + Math.sin(angle) * outerRadius,
-    });
-    angle += step;
-    vertices.push({
-      x: cx + Math.cos(angle) * innerRadius,
-      y: cy + Math.sin(angle) * innerRadius,
-    });
-    angle += step;
-  }
-
-  return vertices;
-}
-
 function measureBubbleGeometry(body: MatterBody, textRadiusScale: number): BubbleGeometry {
   const halfWidth = (body.bounds.max.x - body.bounds.min.x) / 2;
   const halfHeight = (body.bounds.max.y - body.bounds.min.y) / 2;
@@ -813,7 +793,7 @@ function normalizeBubbleProps(item: BubbleProps): NormalizedBubble {
   const shape = normalizeShape(item.shape);
   const polygonSides = clampInt(item.polygonSides ?? 6, 3, 12);
   const normalizedVertices = normalizeConvexVertices(item.vertices);
-  const normalizedLabel = String(item.label ?? "").trim();
+  const normalizedLabel = String(item.label ?? item.lable ?? "").trim();
 
   return {
     label: normalizedLabel,
@@ -822,10 +802,13 @@ function normalizeBubbleProps(item: BubbleProps): NormalizedBubble {
     shape,
     polygonSides,
     trapezoidSlope: clamp(item.trapezoidSlope ?? 0.25, 0.1, 0.45),
+    ellipseAxisRatio: normalizeEllipseAxisRatio(item.ellipseAxisRatio),
+    skew: clamp(item.skew ?? 0, -1, 1),
     vertices: normalizedVertices,
     rotate: clamp(item.rotate ?? 0, 0, 10),
     scale: clamp(item.scale ?? DEFAULT_SCALE, 0.4, 3),
     textRotate: Boolean(item.textRotate),
+    initialAngle: normalizeAngle(item.initialAngle),
   };
 }
 
@@ -837,25 +820,40 @@ function normalizeShape(input: string | undefined): BubbleShape {
   if (value === "trapezoid") {
     return "trapezoid";
   }
-  if (value === "pentagon") {
-    return "pentagon";
-  }
-  if (value === "hexagon") {
-    return "hexagon";
-  }
-  if (value === "octagon") {
-    return "octagon";
-  }
   if (value === "polygon") {
     return "polygon";
+  }
+  if (value === "ellipse") {
+    return "ellipse";
+  }
+  if (value === "parallelogram") {
+    return "parallelogram";
   }
   if (value === "rectangle" || value === "rect" || value === "square") {
     return "rectangle";
   }
-  if (value === "starshape" || value === "star" || value === "star-shape") {
-    return "starshape";
-  }
   return "circle";
+}
+
+function normalizeEllipseAxisRatio(value: number | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value) || value === 0) {
+    return DEFAULT_ELLIPSE_AXIS_RATIO;
+  }
+  const ratio = Math.abs(value);
+  const majorMinorRatio = ratio < 1 ? 1 / ratio : ratio;
+  return clamp(majorMinorRatio, 1, 4);
+}
+
+function normalizeAngle(value: number | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return 0;
+  }
+  const normalized = value % 360;
+  return normalized < 0 ? normalized + 360 : normalized;
+}
+
+function toRadians(degrees: number) {
+  return (degrees * Math.PI) / 180;
 }
 
 function extractBodyFromEvent(event: unknown): MatterBody | null {

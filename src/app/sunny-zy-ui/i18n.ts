@@ -10,7 +10,8 @@ export const SunnyZyUiI18n = {
     matter: {
       description: "Components based on physics engine matter-js",
       bubbleBox: {
-        description: "BubbleBox component description page."
+        description: "BubbleBox component description page.",
+        props: "BubbleBoxProps Explanation",
       }
     }
   },

@@ -1,5 +1,5 @@
 "use client";
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider";
@@ -12,10 +12,12 @@ import styles from "./App.module.css";
 
 type ActionItem = {
   label: string;
+  hoverDescription: string;
   onClick: () => void;
 };
 
 type CardItem = {
+  id: string;
   title: string;
   description: string;
   actions: ActionItem[];
@@ -34,6 +36,7 @@ const App = () => {
   const { theme, currentTheme } = useTheme();
   const { modal, showModal } = useModalStore();
   const activeTheme = theme === "light" ? lightTheme[currentTheme] : darkTheme[currentTheme];
+  const [hoveredActionHints, setHoveredActionHints] = useState<Record<string, string | null>>({});
 
   // 检查并显示cookie同意弹窗
   useEffect(() => {
@@ -58,17 +61,20 @@ const App = () => {
   };
 
   const spotlightCard: CardItem = {
+    id: "spotlight",
     title: t("mainpage.react_furry.title"),
     description: t("mainpage.react_furry.description"),
     actions: [
       {
         label: t("mainpage.react_furry.persona"),
+        hoverDescription: t("mainpage.react_furry.hover.persona"),
         onClick: () => {
           window.location.href = "/react-furry";
         },
       },
       {
         label: t("mainpage.react_furry.error"),
+        hoverDescription: t("mainpage.react_furry.hover.error"),
         onClick: () => {
           window.location.href = "/react-furry-error";
         },
@@ -79,23 +85,27 @@ const App = () => {
 
   const featureCards: CardItem[] = [
     {
+      id: "minigame",
       title: t("mainpage.minigame.title"),
       description: t("mainpage.minigame.description"),
       actions: [
         {
           label: t("mainpage.minigame.bwite"),
+          hoverDescription: t("mainpage.minigame.hover.bwite"),
           onClick: () => {
             window.location.href = "/BWIte/index.html";
           },
         },
         {
           label: t("mainpage.minigame.color"),
+          hoverDescription: t("mainpage.minigame.hover.color"),
           onClick: () => {
             window.location.href = "/Color/index.html";
           },
         },
         {
           label: t("mainpage.minigame.light"),
+          hoverDescription: t("mainpage.minigame.hover.light"),
           onClick: () => {
             window.location.href = "/LightMaze";
           },
@@ -104,19 +114,27 @@ const App = () => {
       animationDelay: "0.12s",
     },
     {
+      id: "tools",
       title: t("mainpage.tools.title"),
       description: t("mainpage.tools.description"),
       actions: [
         {
-          label: t("mainpage.tools.tobe"),
+          label: "sunny-zy-ui",
+          hoverDescription: t("mainpage.tools.hover.sunny_zy_ui"),
           onClick: () => {
-            window.location.href = "/";
-          },
-        },
-        {
+            window.location.href = "/sunny-zy-ui";
+          }
+        }, {
           label: t("mainpage.tools.furry"),
+          hoverDescription: t("mainpage.tools.hover.furry"),
           onClick: () => {
             window.location.href = "/Furry";
+          },
+        }, {
+          label: t("mainpage.tools.tobe"),
+          hoverDescription: t("mainpage.tools.hover.tobe"),
+          onClick: () => {
+            window.location.href = "/";
           },
         },
       ],
@@ -125,23 +143,27 @@ const App = () => {
   ];
 
   const linksCard: CardItem = {
+    id: "vercel_links",
     title: t("mainpage.vercel.title"),
     description: t("mainpage.vercel.description"),
     actions: [
       {
         label: t("mainpage.vercel.mirror"),
+        hoverDescription: t("mainpage.vercel.hover.mirror"),
         onClick: () => {
           window.open("https://masaominn.vercel.app/", "_blank", "noopener,noreferrer");
         },
       },
       {
         label: t("mainpage.vercel.personal"),
+        hoverDescription: t("mainpage.vercel.hover.personal"),
         onClick: () => {
           window.open("https://kinotsuki.vercel.app/", "_blank", "noopener,noreferrer");
         },
       },
       {
         label: t("mainpage.vercel.make_your_oc_alive"),
+        hoverDescription: t("mainpage.vercel.hover.make_your_oc_alive"),
         onClick: () => {
           window.open("https://make-your-oc-alive.vercel.app/", "_blank", "noopener,noreferrer");
         },
@@ -151,21 +173,37 @@ const App = () => {
   };
 
   const renderCard = (card: CardItem, className?: string) => {
+    const hoverHint = hoveredActionHints[card.id] ?? null;
+
     return (
       <section
         className={`${styles.appCard}${className ? ` ${className}` : ""}`}
         style={{ animationDelay: card.animationDelay }}
+
       >
         <h2 className={styles.cardTitle}>{card.title}</h2>
         <p className={styles.cardDescription}>{card.description}</p>
         <div className={styles.cardDivider} />
         <div className={styles.actionGrid}>
           {card.actions.map((action) => (
-            <ThemedButton className="w-100" key={action.label} onClick={action.onClick}>
+            <ThemedButton
+              className="w-100"
+              key={action.label}
+              onClick={action.onClick}
+              onMouseEnter={() => {
+                setHoveredActionHints((prev) => ({ ...prev, [card.id]: action.hoverDescription }));
+              }}
+              onMouseLeave={() => {
+                setHoveredActionHints((prev) => ({ ...prev, [card.id]: null }));
+              }}
+            >
               {action.label}
             </ThemedButton>
           ))}
         </div>
+        <p className={`${styles.hoverHint}${hoverHint ? ` ${styles.hoverHintVisible}` : ""}`}>
+          {hoverHint ?? ""}
+        </p>
       </section>
     );
   };

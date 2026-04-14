@@ -37,7 +37,11 @@ i18n
               title: 'React & Furry',
               description: 'Furry-react persona and react-furry-error for react developpers',
               persona: 'Furry-react persona',
-              error: 'react-furry-error'
+              error: 'react-furry-error',
+              hover: {
+                persona: 'The React furry persona details and copyright declaration',
+                error: 'Open documentation for react-furry-error package.',
+              },
             },
             cookie: {
               title: 'Would You Accpet My Cookies ?',
@@ -51,12 +55,22 @@ i18n
               bwite: 'Black-White Iteration',
               color: 'My Sense Of Color Is Amazing',
               light: 'Light On The Lights(Two-player Battle)',
+              hover: {
+                bwite: 'the Black-White Iteration web game.',
+                color: 'the color perception mini game.',
+                light: 'the LightMaze two-player battle game.',
+              },
             },
             tools: {
               title: 'Tools',
               description: 'Useful tools',
               tobe: 'Stay Tuned',
-              furry: 'Contact Me'
+              furry: 'Contact Me',
+              hover: {
+                sunny_zy_ui: 'Browse Sunny-ZY-UI components and interactive previews.',
+                furry: 'Open furry contact and related tools page.',
+                tobe: 'Placeholder entry for upcoming tools.',
+              },
             },
             furry: {
               intro: "Hello! This is Kino Tsuki, a blue furry fox, living in Guangzhou China.I'm excited to connect with you here! Feel free to reach out to add me as a friend. Looking forward to chatting and sharing our furry interests!"
@@ -67,6 +81,11 @@ i18n
               mirror: 'Mirror Site of this',
               personal: 'My Personal Website',
               make_your_oc_alive: 'Make Your OC Alive',
+              hover: {
+                mirror: 'Open the Vercel mirror of this site in a new tab.',
+                personal: 'Visit Kino Tsuki personal website on Vercel(Under Construction)',
+                make_your_oc_alive: 'Open Make Your OC Alive project site(deprecated)',
+              },
             },
           },
           cookie: {
@@ -102,20 +121,34 @@ i18n
               title: 'React 拟兽兽设',
               description: 'React拟兽兽设说明,与react-furry-error包的使用说明',
               persona: 'React拟兽兽设',
-              error: 'react-furry-error'
+              error: 'react-furry-error',
+              hover: {
+                persona: '查看 React 拟兽兽设展示页面。',
+                error: '打开 react-furry-error 包的使用文档。',
+              },
             },
             minigame: {
               title: '小游戏',
               description: '这里是我写的一些H5小游戏。',
               bwite: '黑白迭代',
               color: '我色感贼6',
-              light: '点灯新世界(双人游戏)'
+              light: '点灯新世界(双人游戏)',
+              hover: {
+                bwite: '启动黑白迭代网页游戏。',
+                color: '开始色彩感知小游戏。',
+                light: '打开 LightMaze 双人对战游戏。',
+              },
             },
             tools: {
               title: '工具',
               description: '这里是我写的一些工具。',
               tobe: '敬请期待',
-              furry: 'LXFS'
+              furry: 'LXFS',
+              hover: {
+                sunny_zy_ui: '浏览 Sunny-ZY-UI 组件及交互预览。',
+                furry: '打开 furry 联系与相关工具页面。',
+                tobe: '预留入口，后续将添加更多工具。',
+              },
             },
             furry: {
               intro: "你好！我是湛月，一只生活在中国广州的蓝色兽设狐狸。很高兴能在这里与你联系！欢迎随时联系我加为好友。期待与你聊天并分享furry的乐趣！"
@@ -126,6 +159,11 @@ i18n
               mirror: '这个网站的镜像',
               personal: '我的个人网站',
               make_your_oc_alive: 'Make Your OC Alive',
+              hover: {
+                mirror: '在新标签页打开本站的 Vercel 镜像。',
+                personal: '访问 Kino Tsuki 的个人网站。',
+                make_your_oc_alive: '打开 Make Your OC Alive 项目站点。',
+              },
             },
 
           },
@@ -163,7 +201,11 @@ i18n
               title: 'リアクト ファーソナ',
               description: 'Reactのファー(擬獣)設定説明とreact-furry-error パッケージの使用説明',
               persona: 'Reactのファー(擬獣)設定',
-              error: 'react-furry-error'
+              error: 'react-furry-error',
+              hover: {
+                persona: 'React のファーソナ紹介ページを表示します。',
+                error: 'react-furry-error パッケージのドキュメントを開きます。',
+              },
             },
             minigame: {
               title: 'ゲーム',
@@ -171,12 +213,22 @@ i18n
               bwite: '黒白の交替',
               color: '私の色感覚が最高だ',
               light: '電気をつける挑戦(二人のゲーム)',
+              hover: {
+                bwite: '黒白イテレーションのWebゲームを起動します。',
+                color: '色覚ミニゲームを開始します。',
+                light: 'LightMaze の2人対戦ゲームを開きます。',
+              },
             },
             tools: {
               title: '工具',
               description: '役に立つ工具',
               tobe: '乞うご期待',
-              furry: '連絡先'
+              furry: '連絡先',
+              hover: {
+                sunny_zy_ui: 'Sunny-ZY-UI コンポーネントとプレビューを表示します。',
+                furry: 'furry 関連の連絡・ツールページを開きます。',
+                tobe: '今後追加予定のツール用プレースホルダーです。',
+              },
             },
             furry: {
               intro: "こんにちは！私はキノツキ、広州に住む青いケモノの狐です。ここであなたとつながることができてうれしいです！友達追加のためにいつでも連絡してください。お話ししたり、ケモノの興味を共有したりするのを楽しみにしています！"
@@ -187,6 +239,11 @@ i18n
               mirror: 'このサイトのミラー',
               personal: '私の個人サイト',
               make_your_oc_alive: 'Make Your OC Alive',
+              hover: {
+                mirror: 'このサイトの Vercel ミラーを新しいタブで開きます。',
+                personal: 'Kino Tsuki の個人サイトを表示します。',
+                make_your_oc_alive: 'Make Your OC Alive プロジェクトサイトを開きます。',
+              },
             },
           },
           react_furry: {
