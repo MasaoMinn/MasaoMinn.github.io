@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useMemo, useState } from "react";
+import { type CSSProperties, type WheelEvent, useMemo, useState } from "react";
 import BubbleBox, {
   type BubbleProps,
   type BubbleShape,
@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
-import { Bubbles, Delete, Trash } from "lucide-react";
+import { Bubbles, Trash } from "lucide-react";
 
 type EditableBubbleBoxProps = {
   content: BubbleProps[];
@@ -50,6 +50,11 @@ type PropDocRow = {
   description: string;
 };
 
+type BubbleVertex = {
+  x: number;
+  y: number;
+};
+
 const SHAPES: BubbleShape[] = [
   "circle",
   "triangle",
@@ -58,6 +63,17 @@ const SHAPES: BubbleShape[] = [
   "polygon",
   "ellipse",
   "parallelogram",
+];
+const CUSTOM_VERTICES_SHAPE = "customize-from-vertices" as const;
+type ShapeSelectValue = BubbleShape | typeof CUSTOM_VERTICES_SHAPE;
+const SHAPE_OPTIONS: Array<{ value: ShapeSelectValue; label: string }> = [
+  ...SHAPES.map((shape) => ({ value: shape, label: shape })),
+  { value: CUSTOM_VERTICES_SHAPE, label: "customize from vertices" },
+];
+const DEFAULT_CUSTOM_VERTICES: BubbleVertex[] = [
+  { x: -8, y: 6 },
+  { x: 8, y: 6 },
+  { x: 0, y: -9 },
 ];
 
 const NUMBER_CONTROLS: NumberControlItem[] = [
@@ -125,7 +141,7 @@ const BUBBLE_PROPS_DOC: PropDocRow[] = [
   {
     name: "shape",
     type: "BubbleShape",
-    value: SHAPES.join(" | "),
+    value: `${SHAPES.join(" | ")} | customize-from-vertices (preview-only)`,
     description: "Bubble geometry type.",
   },
   {
@@ -242,6 +258,10 @@ const randomTrapezoidSlope = () =>
 const randomEllipseAxisRatio = () =>
   Number((Math.random() * (4 - 1) + 1).toFixed(2));
 const randomSkew = () => Number((Math.random() * (1 - -1) + -1).toFixed(2));
+const randomVertex = (): BubbleVertex => ({
+  x: randomInt(-100, 100),
+  y: randomInt(-100, 100),
+});
 const randomHexColor = () =>
   `#${randomInt(0, 255).toString(16).padStart(2, "0")}${randomInt(0, 255)
     .toString(16)
@@ -267,6 +287,22 @@ const createBubble = (index: number): BubbleProps => {
 
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
+const preventNumberInputWheel = (event: WheelEvent<HTMLInputElement>) => {
+  event.currentTarget.blur();
+};
+const toShapeSelectValue = (bubble: BubbleProps): ShapeSelectValue =>
+  Array.isArray(bubble.vertices) && bubble.vertices.length >= 3
+    ? CUSTOM_VERTICES_SHAPE
+    : (bubble.shape ?? "circle");
+const getVerticesOrDefault = (vertices: BubbleProps["vertices"]): BubbleVertex[] => {
+  if (Array.isArray(vertices) && vertices.length > 0) {
+    return vertices.map((vertex) => ({
+      x: Number(vertex.x),
+      y: Number(vertex.y),
+    }));
+  }
+  return DEFAULT_CUSTOM_VERTICES.map((vertex) => ({ ...vertex }));
+};
 
 const createSliderThemeStyle = (palette: ThemePalette) =>
 ({
@@ -347,12 +383,26 @@ function BubbleConsole({
     next[index] = { ...next[index], [key]: value };
     onChange(next);
   };
-  const updateBubbleShape = (index: number, shape: BubbleShape) => {
+  const updateBubbleShape = (index: number, shape: ShapeSelectValue) => {
     const next = [...content];
     const current = next[index] ?? createBubble(index);
+    if (shape === CUSTOM_VERTICES_SHAPE) {
+      next[index] = {
+        ...current,
+        shape: current.shape ?? "polygon",
+        vertices: getVerticesOrDefault(current.vertices),
+        polygonSides: undefined,
+        trapezoidSlope: undefined,
+        ellipseAxisRatio: undefined,
+        skew: undefined,
+      };
+      onChange(next);
+      return;
+    }
     next[index] = {
       ...current,
       shape,
+      vertices: undefined,
       polygonSides:
         shape === "polygon"
           ? typeof current.polygonSides === "number"
@@ -380,6 +430,51 @@ function BubbleConsole({
     };
     onChange(next);
   };
+  const updateVertex = (
+    bubbleIndex: number,
+    vertexIndex: number,
+    key: keyof BubbleVertex,
+    value: number,
+  ) => {
+    const next = [...content];
+    const current = next[bubbleIndex] ?? createBubble(bubbleIndex);
+    const source = getVerticesOrDefault(current.vertices);
+    const safeValue = Number.isFinite(value) ? Math.trunc(value) : 0;
+    const vertices = source.map((vertex, index) =>
+      index === vertexIndex ? { ...vertex, [key]: safeValue } : vertex,
+    );
+    next[bubbleIndex] = {
+      ...current,
+      shape: current.shape ?? "polygon",
+      vertices,
+    };
+    onChange(next);
+  };
+  const addVertex = (bubbleIndex: number) => {
+    const next = [...content];
+    const current = next[bubbleIndex] ?? createBubble(bubbleIndex);
+    const source = getVerticesOrDefault(current.vertices);
+    next[bubbleIndex] = {
+      ...current,
+      shape: current.shape ?? "polygon",
+      vertices: [...source, randomVertex()],
+    };
+    onChange(next);
+  };
+  const deleteVertex = (bubbleIndex: number, vertexIndex: number) => {
+    const next = [...content];
+    const current = next[bubbleIndex] ?? createBubble(bubbleIndex);
+    const source = getVerticesOrDefault(current.vertices);
+    if (source.length <= 3) {
+      return;
+    }
+    next[bubbleIndex] = {
+      ...current,
+      shape: current.shape ?? "polygon",
+      vertices: source.filter((_, index) => index !== vertexIndex),
+    };
+    onChange(next);
+  };
 
   const addBubble = () => {
     onChange([...content, createBubble(content.length)]);
@@ -402,224 +497,295 @@ function BubbleConsole({
         {content.map((bubble, index) => (
           <div key={`${bubble.label}-${index}`} className="rounded-md border border-slate-200/70 p-3">
             <div className="mb-2 flex items-center justify-between">
-              <div className="text-lg font-semibold mx-auto"><Bubbles />Bubble #{index + 1}</div>
+              <div className="mx-auto text-lg font-semibold"><Bubbles />Bubble #{index + 1}</div>
               <Button variant="outline" size="sm" onClick={() => deleteBubble(index)}>
                 <Trash />
               </Button>
             </div>
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
-              <Field>
-                <FieldLabel htmlFor={`bubble-label-${index}`}>Label</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id={`bubble-label-${index}`}
-                    type="text"
-                    value={bubble.label}
-                    onChange={(event) => updateBubble(index, "label", event.target.value)}
-                  />
-                </FieldContent>
-              </Field>
+              {(() => {
+                const shapeSelectValue = toShapeSelectValue(bubble);
+                const vertices = getVerticesOrDefault(bubble.vertices);
+                return (
+                  <>
+                    <Field>
+                      <FieldLabel htmlFor={`bubble-label-${index}`}>Label</FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id={`bubble-label-${index}`}
+                          type="text"
+                          value={bubble.label}
+                          onChange={(event) => updateBubble(index, "label", event.target.value)}
+                        />
+                      </FieldContent>
+                    </Field>
 
-              <Field>
-                <FieldLabel>Shape</FieldLabel>
-                <FieldContent>
-                  <Select
-                    value={bubble.shape ?? "circle"}
-                    onValueChange={(value) => updateBubbleShape(index, value as BubbleShape)}
-                  >
-                    <SelectTrigger
-                      style={{
-                        backgroundColor: palette.backgroundColor,
-                        borderColor: palette.borderColor,
-                        color: palette.color,
-                      }}
-                    >
-                      <SelectValue placeholder="Select shape" />
-                    </SelectTrigger>
-                    <SelectContent
-                      style={{
-                        backgroundColor: palette.backgroundColor2,
-                        borderColor: palette.borderColor,
-                        color: palette.color2,
-                      }}
-                    >
-                      {SHAPES.map((shape) => (
-                        <SelectItem key={shape} value={shape}>
-                          {shape}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FieldContent>
-              </Field>
+                    <Field>
+                      <FieldLabel>Shape</FieldLabel>
+                      <FieldContent>
+                        <Select
+                          value={shapeSelectValue}
+                          onValueChange={(value) => updateBubbleShape(index, value as ShapeSelectValue)}
+                        >
+                          <SelectTrigger
+                            style={{
+                              backgroundColor: palette.backgroundColor,
+                              borderColor: palette.borderColor,
+                              color: palette.color,
+                            }}
+                          >
+                            <SelectValue placeholder="Select shape" />
+                          </SelectTrigger>
+                          <SelectContent
+                            style={{
+                              backgroundColor: palette.backgroundColor2,
+                              borderColor: palette.borderColor,
+                              color: palette.color2,
+                            }}
+                          >
+                            {SHAPE_OPTIONS.map((shapeOption) => (
+                              <SelectItem key={shapeOption.value} value={shapeOption.value}>
+                                {shapeOption.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FieldContent>
+                    </Field>
 
-              <Field>
-                <FieldLabel htmlFor={`bubble-bg-${index}`}>Background Color</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id={`bubble-bg-${index}`}
-                    type="color"
-                    className="h-10"
-                    value={bubble.backgroundColor ?? "#38bdf8"}
-                    onChange={(event) => updateBubble(index, "backgroundColor", event.target.value)}
-                  />
-                </FieldContent>
-              </Field>
+                    <Field>
+                      <FieldLabel htmlFor={`bubble-bg-${index}`}>Background Color</FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id={`bubble-bg-${index}`}
+                          type="color"
+                          className="h-10"
+                          value={bubble.backgroundColor ?? "#38bdf8"}
+                          onChange={(event) => updateBubble(index, "backgroundColor", event.target.value)}
+                        />
+                      </FieldContent>
+                    </Field>
 
-              <Field>
-                <FieldLabel htmlFor={`bubble-text-${index}`}>Text Color</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id={`bubble-text-${index}`}
-                    type="color"
-                    className="h-10"
-                    value={bubble.textColor ?? "#ffffff"}
-                    onChange={(event) => updateBubble(index, "textColor", event.target.value)}
-                  />
-                </FieldContent>
-              </Field>
+                    <Field>
+                      <FieldLabel htmlFor={`bubble-text-${index}`}>Text Color</FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id={`bubble-text-${index}`}
+                          type="color"
+                          className="h-10"
+                          value={bubble.textColor ?? "#ffffff"}
+                          onChange={(event) => updateBubble(index, "textColor", event.target.value)}
+                        />
+                      </FieldContent>
+                    </Field>
 
-              <Field>
-                <FieldLabel>Rotate ({bubble.rotate ?? 0})</FieldLabel>
-                <FieldContent>
-                  <Slider
-                    min={0}
-                    max={10}
-                    step={1}
-                    value={[bubble.rotate ?? 0]}
-                    onValueChange={(value) => updateBubble(index, "rotate", value[0] ?? 0)}
-                    style={createSliderThemeStyle(palette)}
-                  />
-                </FieldContent>
-              </Field>
+                    <Field>
+                      <FieldLabel>Rotate ({bubble.rotate ?? 0})</FieldLabel>
+                      <FieldContent>
+                        <Slider
+                          min={0}
+                          max={10}
+                          step={1}
+                          value={[bubble.rotate ?? 0]}
+                          onValueChange={(value) => updateBubble(index, "rotate", value[0] ?? 0)}
+                          style={createSliderThemeStyle(palette)}
+                        />
+                      </FieldContent>
+                    </Field>
 
-              <Field>
-                <FieldLabel>Scale ({(bubble.scale ?? 1).toFixed(1)})</FieldLabel>
-                <FieldContent>
-                  <Slider
-                    min={0.4}
-                    max={3}
-                    step={0.1}
-                    value={[bubble.scale ?? 1]}
-                    onValueChange={(value) => updateBubble(index, "scale", value[0] ?? 1)}
-                    style={createSliderThemeStyle(palette)}
-                  />
-                  <label className="inline-flex items-center gap-2 text-sm">
-                    <input
-                      id={`bubble-text-rotate-${index}`}
-                      type="checkbox"
-                      checked={Boolean(bubble.textRotate)}
-                      onChange={(event) => updateBubble(index, "textRotate", event.target.checked)}
-                    />
-                    <span>Text Rotate</span>
-                  </label>
-                </FieldContent>
-              </Field>
+                    <Field>
+                      <FieldLabel>Scale ({(bubble.scale ?? 1).toFixed(1)})</FieldLabel>
+                      <FieldContent>
+                        <Slider
+                          min={0.4}
+                          max={3}
+                          step={0.1}
+                          value={[bubble.scale ?? 1]}
+                          onValueChange={(value) => updateBubble(index, "scale", value[0] ?? 1)}
+                          style={createSliderThemeStyle(palette)}
+                        />
+                        <label className="inline-flex items-center gap-2 text-sm">
+                          <input
+                            id={`bubble-text-rotate-${index}`}
+                            type="checkbox"
+                            checked={Boolean(bubble.textRotate)}
+                            onChange={(event) => updateBubble(index, "textRotate", event.target.checked)}
+                          />
+                          <span>Text Rotate</span>
+                        </label>
+                      </FieldContent>
+                    </Field>
 
-              <Field>
-                <FieldLabel>
-                  Initial Angle ({Math.round(bubble.initialAngle ?? 0)}deg)
-                </FieldLabel>
-                <FieldContent>
-                  <Slider
-                    min={0}
-                    max={360}
-                    step={1}
-                    value={[bubble.initialAngle ?? 0]}
-                    onValueChange={(value) =>
-                      updateBubble(index, "initialAngle", Math.round(value[0] ?? 0))
-                    }
-                    style={createSliderThemeStyle(palette)}
-                  />
-                </FieldContent>
-              </Field>
+                    <Field>
+                      <FieldLabel>
+                        Initial Angle ({Math.round(bubble.initialAngle ?? 0)}deg)
+                      </FieldLabel>
+                      <FieldContent>
+                        <Slider
+                          min={0}
+                          max={360}
+                          step={1}
+                          value={[bubble.initialAngle ?? 0]}
+                          onValueChange={(value) =>
+                            updateBubble(index, "initialAngle", Math.round(value[0] ?? 0))
+                          }
+                          style={createSliderThemeStyle(palette)}
+                        />
+                      </FieldContent>
+                    </Field>
 
-              {bubble.shape === "polygon" ? (
-                <Field>
-                  <FieldLabel>
-                    Polygon Sides ({bubble.polygonSides ?? 6})
-                  </FieldLabel>
-                  <FieldContent>
-                    <Slider
-                      min={3}
-                      max={12}
-                      step={1}
-                      value={[bubble.polygonSides ?? 6]}
-                      onValueChange={(value) =>
-                        updateBubble(index, "polygonSides", Math.round(value[0] ?? 6))
-                      }
-                      style={createSliderThemeStyle(palette)}
-                    />
-                  </FieldContent>
-                </Field>
-              ) : null}
+                    {shapeSelectValue === "polygon" ? (
+                      <Field>
+                        <FieldLabel>
+                          Polygon Sides ({bubble.polygonSides ?? 6})
+                        </FieldLabel>
+                        <FieldContent>
+                          <Slider
+                            min={3}
+                            max={12}
+                            step={1}
+                            value={[bubble.polygonSides ?? 6]}
+                            onValueChange={(value) =>
+                              updateBubble(index, "polygonSides", Math.round(value[0] ?? 6))
+                            }
+                            style={createSliderThemeStyle(palette)}
+                          />
+                        </FieldContent>
+                      </Field>
+                    ) : null}
 
-              {bubble.shape === "trapezoid" ? (
-                <Field>
-                  <FieldLabel>
-                    Trapezoid Slope ({(bubble.trapezoidSlope ?? 0.25).toFixed(2)})
-                  </FieldLabel>
-                  <FieldContent>
-                    <Slider
-                      min={0.1}
-                      max={0.45}
-                      step={0.01}
-                      value={[bubble.trapezoidSlope ?? 0.25]}
-                      onValueChange={(value) =>
-                        updateBubble(
-                          index,
-                          "trapezoidSlope",
-                          Number((value[0] ?? 0.25).toFixed(2)),
-                        )
-                      }
-                      style={createSliderThemeStyle(palette)}
-                    />
-                  </FieldContent>
-                </Field>
-              ) : null}
+                    {shapeSelectValue === "trapezoid" ? (
+                      <Field>
+                        <FieldLabel>
+                          Trapezoid Slope ({(bubble.trapezoidSlope ?? 0.25).toFixed(2)})
+                        </FieldLabel>
+                        <FieldContent>
+                          <Slider
+                            min={0.1}
+                            max={0.45}
+                            step={0.01}
+                            value={[bubble.trapezoidSlope ?? 0.25]}
+                            onValueChange={(value) =>
+                              updateBubble(
+                                index,
+                                "trapezoidSlope",
+                                Number((value[0] ?? 0.25).toFixed(2)),
+                              )
+                            }
+                            style={createSliderThemeStyle(palette)}
+                          />
+                        </FieldContent>
+                      </Field>
+                    ) : null}
 
-              {bubble.shape === "ellipse" ? (
-                <Field>
-                  <FieldLabel>
-                    Ellipse Axis Ratio ({(bubble.ellipseAxisRatio ?? 1.6).toFixed(2)})
-                  </FieldLabel>
-                  <FieldContent>
-                    <Slider
-                      min={1}
-                      max={4}
-                      step={0.01}
-                      value={[bubble.ellipseAxisRatio ?? 1.6]}
-                      onValueChange={(value) =>
-                        updateBubble(
-                          index,
-                          "ellipseAxisRatio",
-                          Number((value[0] ?? 1.6).toFixed(2)),
-                        )
-                      }
-                      style={createSliderThemeStyle(palette)}
-                    />
-                  </FieldContent>
-                </Field>
-              ) : null}
+                    {shapeSelectValue === "ellipse" ? (
+                      <Field>
+                        <FieldLabel>
+                          Ellipse Axis Ratio ({(bubble.ellipseAxisRatio ?? 1.6).toFixed(2)})
+                        </FieldLabel>
+                        <FieldContent>
+                          <Slider
+                            min={1}
+                            max={4}
+                            step={0.01}
+                            value={[bubble.ellipseAxisRatio ?? 1.6]}
+                            onValueChange={(value) =>
+                              updateBubble(
+                                index,
+                                "ellipseAxisRatio",
+                                Number((value[0] ?? 1.6).toFixed(2)),
+                              )
+                            }
+                            style={createSliderThemeStyle(palette)}
+                          />
+                        </FieldContent>
+                      </Field>
+                    ) : null}
 
-              {bubble.shape === "parallelogram" ? (
-                <Field>
-                  <FieldLabel>Skew ({(bubble.skew ?? 0).toFixed(2)})</FieldLabel>
-                  <FieldContent>
-                    <Slider
-                      min={-1}
-                      max={1}
-                      step={0.01}
-                      value={[bubble.skew ?? 0]}
-                      onValueChange={(value) =>
-                        updateBubble(index, "skew", Number((value[0] ?? 0).toFixed(2)))
-                      }
-                      style={createSliderThemeStyle(palette)}
-                    />
-                  </FieldContent>
-                </Field>
-              ) : null}
+                    {shapeSelectValue === "parallelogram" ? (
+                      <Field>
+                        <FieldLabel>Skew ({(bubble.skew ?? 0).toFixed(2)})</FieldLabel>
+                        <FieldContent>
+                          <Slider
+                            min={-1}
+                            max={1}
+                            step={0.01}
+                            value={[bubble.skew ?? 0]}
+                            onValueChange={(value) =>
+                              updateBubble(index, "skew", Number((value[0] ?? 0).toFixed(2)))
+                            }
+                            style={createSliderThemeStyle(palette)}
+                          />
+                        </FieldContent>
+                      </Field>
+                    ) : null}
+                    {shapeSelectValue === CUSTOM_VERTICES_SHAPE ? (
+                      <Field className="col-span-full">
+                        <FieldLabel>Vertices (custom shape)</FieldLabel>
+                        <FieldContent>
+                          <div className="space-y-2">
+                            {vertices.map((vertex, vertexIndex) => (
+                              <div key={`bubble-${index}-vertex-${vertexIndex}`} className="space-y-1">
+                                <div className="grid grid-cols-[1fr_1fr_auto] items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    value={vertex.x}
+                                    onWheel={preventNumberInputWheel}
+                                    onChange={(event) =>
+                                      updateVertex(
+                                        index,
+                                        vertexIndex,
+                                        "x",
+                                        Number(event.target.valueAsNumber),
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    type="number"
+                                    value={vertex.y}
+                                    onWheel={preventNumberInputWheel}
+                                    onChange={(event) =>
+                                      updateVertex(
+                                        index,
+                                        vertexIndex,
+                                        "y",
+                                        Number(event.target.valueAsNumber),
+                                      )
+                                    }
+                                  />
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => deleteVertex(index, vertexIndex)}
+                                    disabled={vertices.length <= 3}
+                                  >
+                                    <Trash />
+                                  </Button>
+                                </div>
+                                {Math.abs(vertex.x) > 10000 || Math.abs(vertex.y) > 10000 ? (
+                                  <FieldDescription className="text-xs text-amber-600">
+                                    number may too large
+                                  </FieldDescription>
+                                ) : null}
+                              </div>
+                            ))}
+                            <div className="flex items-center justify-between gap-2">
+                              <FieldDescription className="text-xs">
+                                At least 3 vertices. Integers only.
+                              </FieldDescription>
+                              <Button type="button" size="sm" variant="outline" onClick={() => addVertex(index)}>
+                                Add Vertex
+                              </Button>
+                            </div>
+                          </div>
+                        </FieldContent>
+                      </Field>
+                    ) : null}
+                  </>
+                );
+              })()}
             </div>
           </div>
         ))}
