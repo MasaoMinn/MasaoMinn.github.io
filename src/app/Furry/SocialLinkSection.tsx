@@ -1,6 +1,7 @@
 import React from 'react';
-import { Row, Col, Button, Accordion } from 'react-bootstrap';
+import { Row, Col, Accordion } from 'react-bootstrap';
 import Image from 'next/image';
+import ThemedButton from '@/components/boxed/ThemedButton';
 
 interface SocialLinkSectionProps {
   url: string;
@@ -28,13 +29,11 @@ const SocialLinkSection: React.FC<SocialLinkSectionProps> = ({
     <>
       <Row className="justify-content-center g-1">
         <Col xs={9} md={6} className="d-flex justify-content-center">
-          <Button
-            variant="info"
-            href={url}
+          <ThemedButton
+            variant="outline"
             aria-label={ariaLabel}
             className="px-4 py-2 d-flex align-items-center"
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
           >
             <Image
               src={iconSrc}
@@ -44,7 +43,7 @@ const SocialLinkSection: React.FC<SocialLinkSectionProps> = ({
               className="me-2"
             />
             {buttonText}
-          </Button>
+          </ThemedButton>
         </Col>
       </Row>
       <Row className="mt-1 justify-content-center">
@@ -52,8 +51,17 @@ const SocialLinkSection: React.FC<SocialLinkSectionProps> = ({
           <Accordion
             defaultActiveKey={null}
             flush
-            className="my-3 border-2 border-blue-600 border-solid rounded-lg"
-            style={{ borderColor: "blue" }} // Keep inline style if Tailwind config doesn't cover this exact blue or overrides
+            className="my-3 rounded-lg border-2 border-solid"
+            style={{
+              borderColor: "var(--border)",
+              ["--bs-accordion-color" as string]: "var(--foreground)",
+              ["--bs-accordion-bg" as string]: "var(--background)",
+              ["--bs-accordion-border-color" as string]: "var(--border)",
+              ["--bs-accordion-btn-color" as string]: "var(--foreground)",
+              ["--bs-accordion-btn-bg" as string]: "var(--background)",
+              ["--bs-accordion-active-bg" as string]: "var(--secondary)",
+              ["--bs-accordion-active-color" as string]: "var(--secondary-foreground)",
+            }}
           >
             <Accordion.Item eventKey="0">
               <Accordion.Header>

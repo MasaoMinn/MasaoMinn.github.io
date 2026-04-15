@@ -5,7 +5,6 @@ import BubbleBox, {
   type BubbleProps,
   type BubbleShape,
 } from "../../../../components/ui/matter/BubbleBox";
-import { useTheme } from "@/components/boxed/ThemeProvider";
 import { ThemedButton } from "@/components/boxed/ThemedButton";
 import { getThemePalette, type ThemePalette } from "@/app/sunny-zy-ui/theme-style";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -948,8 +947,7 @@ function ComponentConsole({
 }
 
 export default function BubbleBoxPreview() {
-  const { theme, currentTheme } = useTheme();
-  const palette = getThemePalette(theme, currentTheme);
+  const palette = getThemePalette();
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
   const router = useRouter();

@@ -4,7 +4,6 @@ import React, { useCallback, useState } from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import { darkTheme, lightTheme, useTheme } from "./ThemeProvider";
 
 interface MarkdownComponentProps {
   content: string;
@@ -14,16 +13,10 @@ interface MarkdownComponentProps {
 
 export default function MarkdownComponent({
   content,
-  className = "prose max-w-none",
+  className = "prose max-w-none prose-headings:text-[var(--foreground)] prose-p:text-[var(--foreground)] prose-strong:text-[var(--foreground)] prose-li:text-[var(--foreground)] prose-a:text-[var(--primary)] prose-code:text-[var(--foreground)] prose-hr:border-[var(--border)]",
   loadingText = "Loading...",
 }: MarkdownComponentProps) {
-  const { theme, currentTheme } = useTheme();
   const displayContent = content || loadingText;
-
-  const themeConfig =
-    theme === "dark"
-      ? darkTheme[currentTheme % darkTheme.length]
-      : lightTheme[currentTheme % lightTheme.length];
 
   /* ---------------- CodeBlock ---------------- */
 
@@ -56,18 +49,9 @@ export default function MarkdownComponent({
       <pre
         className="not-prose relative my-4 overflow-x-auto rounded-xl"
         style={{
-          backgroundColor:
-            theme === "dark"
-              ? "rgba(30, 98, 19, 0.95)"
-              : "rgba(172, 206, 231, 0.95)",
-          border:
-            theme === "dark"
-              ? "1px solid rgba(255,255,255,0.12)"
-              : "1px solid rgba(0,0,0,0.08)",
-          boxShadow:
-            theme === "dark"
-              ? "0 0 0 1px rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.4)"
-              : "0 0 0 1px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.08)",
+          backgroundColor: "var(--secondary)",
+          border: "1px solid var(--border)",
+          boxShadow: "0 8px 20px rgba(0,0,0,0.10)",
           padding: "1rem",
         }}
         onMouseEnter={() => setIsHovered(true)}
@@ -78,11 +62,9 @@ export default function MarkdownComponent({
           onClick={handleCopy}
           className="rounded-md px-2 py-1 text-xs transition-opacity duration-200"
           style={{
-            backgroundColor:
-              theme === "dark"
-                ? "rgba(255,255,255,0.12)"
-                : "rgba(0,0,0,0.08)",
-            color: themeConfig.color,
+            backgroundColor: "var(--background)",
+            color: "var(--foreground)",
+            border: "1px solid var(--border)",
             cursor: 'pointer',
             opacity: isHovered || copied ? 1 : 0,
           }}
@@ -109,11 +91,8 @@ export default function MarkdownComponent({
             style={{
               display: "inline",
               whiteSpace: "nowrap",
-              backgroundColor:
-                theme === "dark"
-                  ? "rgba(255,255,255,0.08)"
-                  : "rgba(0,0,0,0.06)",
-              color: themeConfig.color,
+              backgroundColor: "var(--secondary)",
+              color: "var(--foreground)",
             }}
             {...props}
           >
@@ -126,7 +105,7 @@ export default function MarkdownComponent({
       return (
         <code
           className={`block font-mono text-sm leading-relaxed ${className}`}
-          style={{ color: themeConfig.color }}
+          style={{ color: "var(--foreground)" }}
           {...props}
         >
           {children}
@@ -136,7 +115,7 @@ export default function MarkdownComponent({
   };
 
   return (
-    <article className={`${className} ${theme === "dark" ? "prose-invert" : ""}`}>
+    <article className={className}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}

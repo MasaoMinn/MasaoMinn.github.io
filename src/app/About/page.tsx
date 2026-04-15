@@ -1,15 +1,16 @@
 "use client";
 // import Picture from "@/components/boxed/Picture"
-import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider"
+import { useTheme } from "@/components/boxed/ThemeProvider"
 import Image from "react-bootstrap/Image"
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { RotateDiv, DefaultDiv, BoldDiv, BababoiDiv } from "@/components/boxed/MotionComponents";
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import GradientText from "@/components/GradientText";
+import ThemedButton from "@/components/boxed/ThemedButton";
 
 const About = () => {
-  const { theme, currentTheme } = useTheme();
+  const { theme } = useTheme();
   const { i18n } = useTranslation();
   const [logoSize, setLogoSize] = useState<number>(100); // 使用useState管理logoSize
 
@@ -147,8 +148,7 @@ const About = () => {
   ];
 
   return (
-    <Container className="text-center min-vh-100" fluid style={{
-      ...(theme === 'light' ? lightTheme[(currentTheme + 1) % lightTheme.length] : darkTheme[(currentTheme + 1) % darkTheme.length]),
+    <Container className="theme-page text-center min-vh-100" fluid style={{
       position: 'relative' // 设置相对定位，以便滑动条绝对定位
     }}>
       <Container className="mt-10 mb-16">
@@ -244,7 +244,7 @@ const About = () => {
           value={logoSize}
           onChange={(e) => setLogoSize(parseInt(e.target.value))}
           style={{
-            accentColor: theme === 'light' ? '#333' : '#fff',
+            accentColor: 'var(--primary)',
             transform: 'rotate(90deg)', // 旋转90度使滑动条垂直
             width: '30vh', // 垂直方向的长度
             height: '10vw'
@@ -277,7 +277,7 @@ const About = () => {
       </Container>
       <Row>
         <Col>
-          <Button variant="danger" href="./">BACK</Button>
+          <ThemedButton variant="outline" onClick={() => window.location.href = "./"}>BACK</ThemedButton>
         </Col>
       </Row>
 

@@ -1,14 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import DashedLine from "@/components/boxed/DashedLine";
-import { useTheme, darkTheme, lightTheme } from "@/components/boxed/ThemeProvider";
 // import { ShowcaseDiv } from "@/components/boxed/MotionComponents"
 import Image from "next/image"
 import { Col, Container, Row } from "react-bootstrap"
 
 export default function TangetsuPage() {
-  const { theme, currentTheme } = useTheme();
-
   // 图片URL生成函数
   const getImageUrl = (number: number): string => {
     const baseUrl = `https://cdn.jsdelivr.net/gh/MasaoMinn/react-furry-error-docs@main/tangetsu/tangetsu (`;
@@ -47,7 +44,7 @@ export default function TangetsuPage() {
   ]
 
   return (
-    <Container fluid className="py-5" style={theme === 'light' ? { ...lightTheme[currentTheme] } : { ...darkTheme[currentTheme] }}>
+    <Container fluid className="theme-page py-5">
       <Row>
         <Col className="text-center mb-5">
           <h1 className="display-4">Tangetsu Showcase</h1>
@@ -67,7 +64,7 @@ export default function TangetsuPage() {
                   {item.type === 'desc' && <><div className="p-3 p-md-4 d-md-none" style={{ backgroundColor: 'transparent' }}>
                     <h3
                       className="h5 font-weight-bold mb-0"
-                      style={theme === 'light' ? { color: '#111827' } : { color: '#f9fafb' }}
+                      style={{ color: "var(--foreground)" }}
                     >
                       {item.title}
                     </h3>
@@ -78,13 +75,13 @@ export default function TangetsuPage() {
                     <div className="p-3 p-md-4 flex-grow-1 d-flex flex-column justify-content-center" style={{ backgroundColor: 'transparent' }}>
                       <h3
                         className="h5 font-weight-bold mb-2 mb-md-3 d-none d-md-block"
-                        style={theme === 'light' ? { color: '#111827' } : { color: '#f9fafb' }}
+                        style={{ color: "var(--foreground)" }}
                       >
                         {item.title}
                       </h3>
                       <p
                         className="mb-0"
-                        style={theme === 'light' ? { color: '#374151' } : { color: '#d1d5db' }}
+                        style={{ color: "var(--muted-foreground)" }}
                       >
                         {item.content}
                       </p>

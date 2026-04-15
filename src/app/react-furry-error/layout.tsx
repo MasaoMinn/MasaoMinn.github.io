@@ -1,14 +1,11 @@
 "use client";
 import { Container, Row, Col, Stack, Button, Alert } from 'react-bootstrap';
-import { useTheme, lightTheme, darkTheme } from '@/components/boxed/ThemeProvider';
 import { useTranslation } from 'react-i18next';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import "highlight.js/styles/github.css";
 
 export default function ReactFurryErrorLayout({ children }: { children: React.ReactNode }) {
-  const { theme, currentTheme } = useTheme();
   const { t } = useTranslation();
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -45,13 +42,20 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
 
   return (
     <Container
-      className="min-vh-100"
-      style={theme === 'light' ? lightTheme[currentTheme] : darkTheme[currentTheme]}
+      className="theme-page min-vh-100"
       fluid
     >
       <Row>
         <Col xs={12} lg={8} className="mx-auto">
-          <Alert show={initialNotice} variant="warning" style={{ background: 'transparent' }}>
+          <Alert
+            show={initialNotice}
+            variant="warning"
+            style={{
+              backgroundColor: "var(--secondary)",
+              color: "var(--secondary-foreground)",
+              borderColor: "var(--border)",
+            }}
+          >
             <Alert.Heading>{t('reactFurryError.notice.title')}</Alert.Heading>
             <p>
               {t('reactFurryError.notice.content')}
@@ -59,7 +63,15 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
             <a target="_blank" rel="noopener noreferrer" href='https://kcnhl2uub4k0.feishu.cn/wiki/WkOUwdykxiXjx8kLNH3chhpQn0c'>Link</a>
             <hr />
             <div className="d-flex justify-content-end">
-              <Button onClick={() => setInitialNotice(false)} variant="outline-success">
+              <Button
+                onClick={() => setInitialNotice(false)}
+                variant="outline-success"
+                style={{
+                  borderColor: "var(--border)",
+                  color: "var(--foreground)",
+                  backgroundColor: "transparent",
+                }}
+              >
                 {t('reactFurryError.notice.close')}
               </Button>
             </div>
@@ -73,9 +85,9 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
             variant="primary"
             onClick={toggleSidebar}
             style={{
-              backgroundColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
-              borderColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
-              color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color
+              backgroundColor: "var(--primary)",
+              borderColor: "var(--primary)",
+              color: "var(--primary-foreground)",
             }}
           >
             {isSidebarOpen ? '×' : '☰'}
@@ -102,8 +114,8 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
               gap={3}
               style={{
                 width: '100%',
-                borderColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
-                backgroundColor: theme === 'light' ? lightTheme[currentTheme].backgroundColor : darkTheme[currentTheme].backgroundColor
+                borderColor: "var(--border)",
+                backgroundColor: "var(--background)",
               }}
             >
               {/* 移动端关闭按钮 */}
@@ -113,9 +125,9 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
                   onClick={toggleSidebar}
                   className="ml-auto"
                   style={{
-                    backgroundColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
-                    borderColor: theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor,
-                    color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color
+                    backgroundColor: "var(--primary)",
+                    borderColor: "var(--primary)",
+                    color: "var(--primary-foreground)",
                   }}
                 >
                   ×
@@ -126,9 +138,9 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
                 href="/react-furry-error/introduction"
                 className={`p-2 cursor-pointer rounded`}
                 style={{
-                  color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color,
+                  color: isActive('introduction') ? "var(--primary-foreground)" : "var(--foreground)",
                   backgroundColor: isActive('introduction')
-                    ? (theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor)
+                    ? "var(--primary)"
                     : 'transparent',
                   whiteSpace: 'nowrap',
                   overflow: 'visible',
@@ -142,9 +154,9 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
                 href="/react-furry-error/install"
                 className={`p-2 cursor-pointer rounded`}
                 style={{
-                  color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color,
+                  color: isActive('install') ? "var(--primary-foreground)" : "var(--foreground)",
                   backgroundColor: isActive('install')
-                    ? (theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor)
+                    ? "var(--primary)"
                     : 'transparent',
                   whiteSpace: 'nowrap',
                   overflow: 'visible',
@@ -158,9 +170,9 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
                 href="/react-furry-error/mechanism"
                 className={`p-2 cursor-pointer rounded`}
                 style={{
-                  color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color,
+                  color: isActive('mechanism') ? "var(--primary-foreground)" : "var(--foreground)",
                   backgroundColor: isActive('mechanism')
-                    ? (theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor)
+                    ? "var(--primary)"
                     : 'transparent',
                   whiteSpace: 'nowrap',
                   overflow: 'visible',
@@ -174,9 +186,9 @@ export default function ReactFurryErrorLayout({ children }: { children: React.Re
                 href="/react-furry-error/gallery"
                 className={`p-2 cursor-pointer rounded`}
                 style={{
-                  color: theme === 'light' ? lightTheme[currentTheme].color : darkTheme[currentTheme].color,
+                  color: isActive('gallery') ? "var(--primary-foreground)" : "var(--foreground)",
                   backgroundColor: isActive('gallery')
-                    ? (theme === 'light' ? lightTheme[currentTheme].borderColor : darkTheme[currentTheme].borderColor)
+                    ? "var(--primary)"
                     : 'transparent',
                   whiteSpace: 'nowrap',
                   overflow: 'visible',

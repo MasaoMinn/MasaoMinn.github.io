@@ -1,8 +1,7 @@
 "use client";
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
-import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider";
 import { useTranslation } from "react-i18next";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
@@ -24,18 +23,9 @@ type CardItem = {
   animationDelay: string;
 };
 
-type AppCssVars = CSSProperties & {
-  "--app-bg": string;
-  "--app-text": string;
-  "--app-border": string;
-  "--app-accent": string;
-};
-
 const App = () => {
   const { t } = useTranslation();
-  const { theme, currentTheme } = useTheme();
   const { modal, showModal } = useModalStore();
-  const activeTheme = theme === "light" ? lightTheme[currentTheme] : darkTheme[currentTheme];
   const [hoveredActionHints, setHoveredActionHints] = useState<Record<string, string | null>>({});
 
   // 检查并显示cookie同意弹窗
@@ -51,14 +41,6 @@ const App = () => {
   }, [showModal]);
 
   const isCookieModalVisible = modal.type === "cookie";
-  const appStyle: AppCssVars = {
-    "--app-bg": activeTheme.backgroundColor,
-    "--app-text": activeTheme.color,
-    "--app-border": activeTheme.borderColor,
-    "--app-accent": activeTheme.extraColor,
-    backgroundColor: activeTheme.backgroundColor,
-    color: activeTheme.color,
-  };
 
   const spotlightCard: CardItem = {
     id: "spotlight",
@@ -210,9 +192,7 @@ const App = () => {
 
   return (
     <Container
-      className={`${styles.appShell} min-vh-100 text-center`}
-      style={appStyle}
-      data-theme-mode={theme}
+      className={`${styles.appShell} min-vh-100 text-center theme-page`}
       fluid
     >
       <div className={styles.ambientOne} aria-hidden="true" />

@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import Catalog from "./Catalog";
-import { useTheme } from "@/components/boxed/ThemeProvider";
 import { getThemePalette } from "./theme-style";
 
 type SunnyZyUiLayoutProps = {
@@ -10,8 +9,7 @@ type SunnyZyUiLayoutProps = {
 };
 
 export default function SunnyZyUiLayout({ children }: SunnyZyUiLayoutProps) {
-  const { theme, currentTheme } = useTheme();
-  const palette = getThemePalette(theme, currentTheme);
+  const palette = getThemePalette();
 
   return (
     <div

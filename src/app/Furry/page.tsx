@@ -1,14 +1,12 @@
 "use client";
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
 import ImgCarousel from './Carousel';
 import { useTranslation } from 'react-i18next'
-import { useTheme, darkTheme, lightTheme } from '@/components/boxed/ThemeProvider';
 import SocialLinkSection from './SocialLinkSection';
+import ThemedButton from '@/components/boxed/ThemedButton';
 
 const QQProfileLink: React.FC = () => {
-  const { theme, currentTheme } = useTheme();
   const { t } = useTranslation();
 
   const socialLinks = [
@@ -50,20 +48,18 @@ const QQProfileLink: React.FC = () => {
   return (
     <Container
       fluid
-      className="px-3 min-vh-100 py-3"
-      style={theme === 'dark' ? darkTheme[currentTheme] : lightTheme[currentTheme]}
+      className="theme-page px-3 min-vh-100 py-3"
     >
-      <Button variant={theme} onClick={() => window.history.back()} className="mb-3">
+      <ThemedButton onClick={() => window.history.back()} className="mb-3">
         {t('mainpage.back')}
-      </Button>
+      </ThemedButton>
 
       <Row className="justify-content-center g-1 mb-4">
         <Col
           xs={12}
           lg={8}
           xl={6}
-          className="justify-content-center mt-3 border-2 border-blue-600 rounded-lg p-2 bg-white"
-          style={{ borderColor: 'blue' }}
+          className="theme-surface justify-content-center mt-3 rounded-lg border-2 p-2"
         >
           <ImgCarousel />
         </Col>
@@ -72,8 +68,8 @@ const QQProfileLink: React.FC = () => {
       <Row className="justify-content-center g-1 mb-4">
         <Col xs={10} md={9} lg={8} className="d-flex justify-content-center">
           <p
-            className="bg-[#d1d1d1] text-green-700 border-2 border-blue-600 rounded-lg p-3 text-sm md:text-base lg:text-lg w-full text-center"
-            style={{ borderColor: 'blue' }}
+            className="theme-surface w-full rounded-lg border-2 p-3 text-center text-sm md:text-base lg:text-lg"
+            style={{ color: "var(--foreground)" }}
           >
             {t('mainpage.furry.intro')}
           </p>

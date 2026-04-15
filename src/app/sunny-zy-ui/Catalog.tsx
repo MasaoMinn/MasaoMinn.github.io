@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { componentRouters, routeToHref, toPathKey, type SunnyUiRoute } from "./component-routes";
-import { useTheme } from "@/components/boxed/ThemeProvider";
 import { getThemePalette } from "./theme-style";
 
 type RouteTreeNode = {
@@ -135,8 +134,7 @@ function TreeView({ node, pathname, expanded, onToggle, depth }: TreeViewProps) 
 
 export default function Catalog() {
   const pathname = usePathname();
-  const { theme, currentTheme } = useTheme();
-  const palette = getThemePalette(theme, currentTheme);
+  const palette = getThemePalette();
   const tree = useMemo(() => createRouteTree(componentRouters), []);
   const expandableKeys = useMemo(() => collectExpandableKeys(tree), [tree]);
   const [expanded, setExpanded] = useState<Record<string, boolean>>(() =>

@@ -4,11 +4,9 @@ import { useEffect, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useToastStore } from '@/store/ToastStore';
-import { useTheme, darkTheme, lightTheme } from './ThemeProvider';
 export const MyToast = (props: ToastPayload) => {
   const { t } = useTranslation();
   const hideToast = useToastStore(s => s.hideToast);
-  const { theme, currentTheme } = useTheme();
   const [show, setShow] = useState(true);
   const { type, title: pTitle, message: pMessage } = props ?? { type: null, title: null, message: null };
   useEffect(() => {
@@ -42,7 +40,11 @@ export const MyToast = (props: ToastPayload) => {
         onClose={handleClose}
         delay={2500}
         autohide
-        style={theme === 'light' ? { ...lightTheme[currentTheme] } : { ...darkTheme[currentTheme] }}
+        style={{
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          borderColor: "var(--border)",
+        }}
       >
         <Toast.Header>
           <strong className="me-auto">{finalTitle}</strong>

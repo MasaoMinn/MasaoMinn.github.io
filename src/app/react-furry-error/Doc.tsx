@@ -82,8 +82,11 @@ export default function DocumentComponent({ slug, lang }: { slug: string; lang: 
   }, [slug, lang, url, t]);
 
   return (
-    <article className="prose max-w-none">
-      {error && <p className="text-red-500">{error}</p>}
+    <article
+      className="theme-surface max-w-none rounded-xl border p-4"
+      style={{ minHeight: "60vh" }}
+    >
+      {error && <p style={{ color: "var(--primary)" }}>{error}</p>}
       <MarkdownComponent content={content} loadingText="Loading..." />
     </article>
   );

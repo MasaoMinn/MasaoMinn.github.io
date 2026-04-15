@@ -3,7 +3,7 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
-import { useTheme, lightTheme, darkTheme } from "@/components/boxed/ThemeProvider";
+import { useTheme } from "@/components/boxed/ThemeProvider";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
@@ -13,9 +13,8 @@ interface CookieModalProps {
 
 export const CookieModal: React.FC<CookieModalProps> = ({ show }) => {
   const { hideModal } = useModalStore();
-  const { theme, currentTheme } = useTheme();
+  const { theme } = useTheme();
   const { t } = useTranslation();
-  const currentThemeConfig = theme === 'light' ? lightTheme[currentTheme] : darkTheme[currentTheme];
 
   const { acceptCookies, declineCookies, setThemeCookie } = useLocalStorageStore();
 
@@ -50,9 +49,9 @@ export const CookieModal: React.FC<CookieModalProps> = ({ show }) => {
       <Modal.Header
         closeButton
         style={{
-          backgroundColor: currentThemeConfig.backgroundColor,
-          color: currentThemeConfig.color,
-          borderBottom: `1px solid ${currentThemeConfig.borderColor}`,
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          borderBottom: "1px solid var(--border)",
         }}
       >
         <Modal.Title>{t('cookie.title')}</Modal.Title>
@@ -63,29 +62,29 @@ export const CookieModal: React.FC<CookieModalProps> = ({ show }) => {
         width={500}
         height={400}
         className="mb-4 mx-auto d-block"
-        style={{ backgroundColor: currentThemeConfig.backgroundColor }}
+        style={{ backgroundColor: "var(--background)" }}
       />
       <Modal.Body
         style={{
-          backgroundColor: currentThemeConfig.backgroundColor,
-          color: currentThemeConfig.color,
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
         }}
       >
         <p>{t('cookie.content')}</p>
       </Modal.Body>
       <Modal.Footer
         style={{
-          backgroundColor: currentThemeConfig.backgroundColor,
-          color: currentThemeConfig.color,
-          borderTop: `1px solid ${currentThemeConfig.borderColor}`,
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          borderTop: "1px solid var(--border)",
         }}
       >
         <Button
           variant="outline-secondary"
           onClick={handleDecline}
           style={{
-            borderColor: currentThemeConfig.borderColor,
-            color: currentThemeConfig.color,
+            borderColor: "var(--border)",
+            color: "var(--foreground)",
           }}
         >
           {t('cookie.reject')}
@@ -94,8 +93,9 @@ export const CookieModal: React.FC<CookieModalProps> = ({ show }) => {
           variant="primary"
           onClick={handleAccept}
           style={{
-            backgroundColor: currentThemeConfig.borderColor,
-            borderColor: currentThemeConfig.borderColor,
+            backgroundColor: "var(--primary)",
+            borderColor: "var(--primary)",
+            color: "var(--primary-foreground)",
           }}
         >
           {t('cookie.accept')}

@@ -3,6 +3,8 @@
   overflow: hidden;
   isolation: isolate;
   padding: 0 0.9rem 2.6rem;
+  background-color: var(--background);
+  color: var(--foreground);
   transition: background-color 0.24s ease, color 0.24s ease;
 }
 
@@ -30,7 +32,7 @@
   height: 38rem;
   top: -14rem;
   left: -13rem;
-  background: radial-gradient(circle at center, var(--app-border) 0%, transparent 68%);
+  background: radial-gradient(circle at center, var(--border) 0%, transparent 68%);
   opacity: 0.2;
   filter: blur(10px);
   animation: drift 18s ease-in-out infinite;
@@ -41,7 +43,7 @@
   height: 34rem;
   right: -10rem;
   bottom: -12rem;
-  background: radial-gradient(circle at center, var(--app-accent) 0%, transparent 70%);
+  background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
   opacity: 0.2;
   filter: blur(16px);
   animation: drift 20s ease-in-out infinite reverse;
@@ -61,7 +63,7 @@
   z-index: 1;
   height: 100%;
   padding: clamp(1rem, 2vw, 1.4rem);
-  border: 1.5px solid var(--app-border);
+  border: 1.5px solid var(--border);
   border-radius: 1.15rem;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
   box-shadow:
@@ -94,7 +96,7 @@
 .cardDivider {
   height: 1px;
   margin: 1rem 0;
-  background: linear-gradient(90deg, transparent, var(--app-border), transparent);
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 .actionGrid {
@@ -112,7 +114,7 @@
   min-height: 1.3rem;
   font-size: 0.86rem;
   line-height: 1.45;
-  color: var(--app-accent);
+  color: var(--primary);
   opacity: 0;
   transform: translateY(-3px);
   transition: opacity 0.2s ease, transform 0.2s ease;
@@ -123,14 +125,14 @@
   transform: translateY(0);
 }
 
-.appShell[data-theme-mode="dark"] .appCard {
+[data-theme="dark"] .appCard {
   background: linear-gradient(155deg, rgba(16, 16, 26, 0.86), rgba(16, 16, 26, 0.56));
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
-.appShell[data-theme-mode="dark"] .texture {
+[data-theme="dark"] .texture {
   opacity: 0.16;
 }
 
