@@ -30,6 +30,9 @@ export interface LocalStorageState {
   setThemeCookie: (theme: string) => void;
   getThemeIndexCookie: () => string | null;
   setThemeIndexCookie: (index: string) => void;
+  getCustomThemePalette: () => string | null;
+  setCustomThemePalette: (paletteJson: string) => void;
+  removeCustomThemePalette: () => void;
 
   // 语言相关方法
   getLanguageCookie: () => string | null;
@@ -233,6 +236,18 @@ export const useLocalStorageStore = create<LocalStorageState>()(
 
     setThemeIndexCookie: (index: string) => {
       get().setItem("themeIndex", index);
+    },
+
+    getCustomThemePalette: () => {
+      return get().getItem("customThemePalette");
+    },
+
+    setCustomThemePalette: (paletteJson: string) => {
+      get().setItem("customThemePalette", paletteJson);
+    },
+
+    removeCustomThemePalette: () => {
+      get().removeItem("customThemePalette");
     },
 
     // 语言相关方法

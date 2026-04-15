@@ -4,11 +4,117 @@
 
 :root {
   --font-sans: var(--font-kiwi-maru);
+  --background: #eeeeee;
+  --foreground: #000000;
+  --border: #b68989;
+  --input: #b68989;
+  --ring: #cfa6a6;
+  --primary: #863030;
+  --primary-foreground: #eeeeee;
+  --secondary: #ffffff;
+  --secondary-foreground: #1f1f1f;
+  --muted: #ffffff;
+  --muted-foreground: #cfa6a6;
+  --accent: #cfa6a6;
+  --accent-foreground: #1f1f1f;
+  --card: #ffffff;
+  --card-foreground: #1f1f1f;
+  --popover: #ffffff;
+  --popover-foreground: #1f1f1f;
+  --theme-bg: var(--background);
+  --theme-fg: var(--foreground);
+  --theme-border: var(--border);
+  --theme-accent: var(--primary);
+  --theme-bg-2: var(--secondary);
+  --theme-fg-2: var(--secondary-foreground);
+  --theme-accent-2: var(--muted-foreground);
+  --bs-body-bg: var(--background);
+  --bs-body-color: var(--foreground);
+  --bs-border-color: var(--border);
+  --bs-emphasis-color: var(--foreground);
+  --bs-tertiary-bg: var(--secondary);
+  --bs-secondary-bg: var(--secondary);
+  --bs-secondary-color: var(--secondary-foreground);
+  --bs-link-color: var(--primary);
+  --bs-link-hover-color: var(--accent);
+  --bs-card-bg: var(--card);
+  --bs-card-color: var(--card-foreground);
+  --bs-modal-bg: var(--background);
+  --bs-modal-color: var(--foreground);
+  --bs-popover-bg: var(--popover);
+  --bs-popover-color: var(--popover-foreground);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 }
 
 body {
   font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
 }
 pre code.hljs {
   background: transparent !important;
+}
+
+.hljs {
+  background: var(--secondary) !important;
+  color: var(--secondary-foreground) !important;
+}
+
+.theme-page {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+.theme-surface {
+  background-color: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+.theme-border {
+  border-color: var(--border) !important;
+}
+
+.theme-muted-text {
+  color: var(--muted-foreground) !important;
+}
+
+.theme-accent-bg {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+.theme-more-dropdown .dropdown-menu {
+  right: 0;
+  left: auto;
+  width: max-content;
+  min-width: max-content;
+  max-width: min(92vw, 42rem);
+  overflow-x: auto;
+}
+
+.theme-more-dropdown .dropdown-item,
+.theme-more-dropdown .btn,
+.theme-more-dropdown .btn-link,
+.theme-more-dropdown .small {
+  white-space: nowrap;
 }
