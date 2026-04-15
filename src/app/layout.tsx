@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/boxed/ThemeProvider";
 import localFont from "next/font/local"
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico"
   }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 // 导入Playpen Sans字体
@@ -39,8 +44,7 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <html lang="en" suppressHydrationWarning>
       <body className={`${playpenSans.variable} ${kiwiMaru.variable} ${kiwiMaru.className}`}>
         <ThemeProvider>
           <Header />

@@ -99,12 +99,13 @@ function BasicExample() {
     <>
       <Navbar
         expand="lg"
-        className="bg-body-tertiary"
-        bg={theme}
+        className="theme-header sticky-top"
         data-bs-theme={theme}
       >
-        <Container>
-          <Navbar.Brand href="/">{t("mainpage.title")}</Navbar.Brand>
+        <Container className="theme-header-inner">
+          <Navbar.Brand className="theme-header-brand" href="/">
+            {t("mainpage.title")}
+          </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
@@ -115,8 +116,14 @@ function BasicExample() {
             <Nav className="me-auto" />
 
             <Nav>
-              <NavDropdown title={t("lang")} id="lang" autoClose="outside">
+              <NavDropdown
+                title={t("lang")}
+                id="lang"
+                autoClose="outside"
+                className="theme-header-dropdown"
+              >
                 <NavDropdown.Item
+                  className="theme-header-item"
                   onClick={() => {
                     i18n.changeLanguage("en");
                     useLocalStorageStore
@@ -128,6 +135,7 @@ function BasicExample() {
                 </NavDropdown.Item>
 
                 <NavDropdown.Item
+                  className="theme-header-item"
                   onClick={() => {
                     i18n.changeLanguage("zh");
                     useLocalStorageStore
@@ -139,6 +147,7 @@ function BasicExample() {
                 </NavDropdown.Item>
 
                 <NavDropdown.Item
+                  className="theme-header-item"
                   onClick={() => {
                     i18n.changeLanguage("jp");
                     useLocalStorageStore
@@ -155,7 +164,7 @@ function BasicExample() {
                 id="theme-dropdown"
                 autoClose
                 align="end"
-                className="theme-more-dropdown"
+                className="theme-header-dropdown theme-more-dropdown"
               >
                 <div
                   className="px-3 py-2"
@@ -251,11 +260,12 @@ function BasicExample() {
 
                 <NavDropdown.Divider />
 
-                <NavDropdown.Item href="./About">
+                <NavDropdown.Item className="theme-header-item" href="./About">
                   {t("mainpage.about")}
                 </NavDropdown.Item>
 
                 <NavDropdown.Item
+                  className="theme-header-item"
                   href="https://github.com/MasaoMinn/MasaoMinn.github.io"
                   target="_blank"
                 >

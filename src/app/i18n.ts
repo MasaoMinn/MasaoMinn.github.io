@@ -27,6 +27,7 @@ i18n
           lang: 'Language',
           mainpage: {
             title: 'Sunny_Tangetsu - Static Resource Site',
+            description: 'Curated entrances for my projects. Choose a lane and jump in.',
             dropdown: 'More',
             about: 'About Me',
             seeme: 'See me on Github',
@@ -70,11 +71,11 @@ i18n
             },
             react_furry: {
               title: 'React & Furry',
-              description: 'Furry-react persona and react-furry-error for react developpers',
-              persona: 'Furry-react persona',
+              description: 'React Fursona and react-furry-error for react developpers',
+              persona: 'React Fursona',
               error: 'react-furry-error',
               hover: {
-                persona: 'The React furry persona details and copyright declaration',
+                persona: 'The React Fursona details and copyright declaration',
                 error: 'Open documentation for react-furry-error package.',
               },
             },
@@ -146,6 +147,7 @@ i18n
           lang: '语言',
           mainpage: {
             title: 'Sunny_湛月 - 静态资源网站',
+            description: '这是一个静态资源网站，用于展示我的各种各样的项目',
             dropdown: '更多',
             about: '关于我',
             seeme: '我的 Github',
@@ -261,6 +263,7 @@ i18n
           lang: '言語',
           mainpage: {
             title: 'Sunny_湛月 - 静的リソースサイト',
+            description: 'これは静的リソースサイトです。ここでは、私の各種プロジェクトを示しています。',
             dropdown: 'そのうえ',
             about: '私について',
             seeme: 'Github',
