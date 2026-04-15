@@ -2,174 +2,253 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  padding: 0 0.9rem 2.6rem;
-  background-color: var(--background);
+  padding: 1.1rem 0.95rem 2.8rem;
+  background: radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--theme-accent) 30%, transparent), transparent 40%),
+    radial-gradient(circle at 90% 85%, color-mix(in srgb, var(--theme-accent-2) 36%, transparent), transparent 44%),
+    linear-gradient(160deg, var(--background) 0%, var(--theme-bg-2) 72%);
   color: var(--foreground);
-  transition: background-color 0.24s ease, color 0.24s ease;
 }
 
-.appShell::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 48%),
-    linear-gradient(300deg, rgba(255, 255, 255, 0.08), transparent 55%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.ambientOne,
-.ambientTwo,
-.texture {
+.backdropAura,
+.backdropGrid {
   position: absolute;
   pointer-events: none;
   z-index: 0;
 }
 
-.ambientOne {
-  width: 38rem;
-  height: 38rem;
-  top: -14rem;
-  left: -13rem;
-  background: radial-gradient(circle at center, var(--border) 0%, transparent 68%);
-  opacity: 0.2;
-  filter: blur(10px);
-  animation: drift 18s ease-in-out infinite;
+.backdropAura {
+  inset: -18%;
+  background: conic-gradient(from 200deg at 30% 40%,
+      transparent 0deg,
+      color-mix(in srgb, var(--theme-accent) 20%, transparent) 120deg,
+      transparent 240deg,
+      color-mix(in srgb, var(--theme-accent-2) 18%, transparent) 340deg);
+  filter: blur(44px);
+  animation: auraShift 20s linear infinite;
 }
 
-.ambientTwo {
-  width: 34rem;
-  height: 34rem;
-  right: -10rem;
-  bottom: -12rem;
-  background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
-  opacity: 0.2;
-  filter: blur(16px);
-  animation: drift 20s ease-in-out infinite reverse;
-}
-
-.texture {
+.backdropGrid {
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 26px 26px;
-  opacity: 0.1;
+    linear-gradient(color-mix(in srgb, var(--theme-border) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--theme-border) 22%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.3;
 }
 
-.appCard {
+.pageHeader {
   position: relative;
   z-index: 1;
-  height: 100%;
-  padding: clamp(1rem, 2vw, 1.4rem);
-  border: 1.5px solid var(--border);
-  border-radius: 1.15rem;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
-  box-shadow:
-    0 10px 26px rgba(0, 0, 0, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(7px);
-  animation: riseIn 0.54s ease both;
+  max-width: 56rem;
+  margin: 0 auto 1.6rem;
+  padding: 0.45rem 0.4rem 1.2rem;
+  text-align: left;
 }
 
-.heroCard {
-  padding-top: clamp(1.2rem, 2.4vw, 1.75rem);
-}
-
-.cardTitle {
+.pageEyebrow {
   margin: 0;
-  font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--theme-accent);
   font-weight: 700;
-  line-height: 1.22;
-  letter-spacing: 0.02em;
-  font-family: var(--font-playpen-sans), var(--font-kiwi-maru), cursive;
 }
 
-.cardDescription {
-  margin: 0.65rem 0 0;
-  font-size: 0.98rem;
-  opacity: 0.9;
+.pageTitle {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-playpen-sans), var(--font-kiwi-maru), sans-serif;
+  font-size: clamp(1.72rem, 3vw, 2.75rem);
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.pageDescription {
+  margin: 0.7rem 0 0;
+  max-width: 44rem;
+  font-size: 1rem;
   line-height: 1.55;
+  color: var(--theme-fg-2);
 }
 
-.cardDivider {
-  height: 1px;
-  margin: 1rem 0;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-.actionGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
-  gap: 0.7rem;
-}
-
-.heroCard .actionGrid {
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-}
-
-.hoverHint {
-  margin: 0.75rem 0 0;
-  min-height: 1.3rem;
-  font-size: 0.86rem;
-  line-height: 1.45;
-  color: var(--primary);
-  opacity: 0;
-  transform: translateY(-3px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.hoverHintVisible {
-  opacity: 0.95;
-  transform: translateY(0);
-}
-
-[data-theme="dark"] .appCard {
-  background: linear-gradient(155deg, rgba(16, 16, 26, 0.86), rgba(16, 16, 26, 0.56));
+.groupCard {
+  --group-accent: var(--theme-accent);
+  position: relative;
+  z-index: 1;
+  border: 1px solid color-mix(in srgb, var(--group-accent) 44%, var(--theme-border));
+  border-radius: 1.18rem;
+  padding: 1rem 1rem 1.05rem;
+  background:
+    linear-gradient(175deg,
+      color-mix(in srgb, var(--group-accent) 14%, var(--theme-bg-2)) 0%,
+      color-mix(in srgb, var(--group-accent) 7%, var(--background)) 38%,
+      color-mix(in srgb, var(--theme-bg-2) 92%, transparent) 100%);
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    0 14px 34px color-mix(in srgb, var(--group-accent) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 34%, transparent);
+  animation: cardEnter 0.55s ease both;
 }
 
-[data-theme="dark"] .texture {
-  opacity: 0.16;
+.masonry {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  margin: 0 auto;
+  column-count: 2;
+  column-gap: 1rem;
+  padding-bottom: 2rem;
+}
+
+.masonryItem {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 1rem;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+.groupHeader {
+  text-align: left;
+  margin-bottom: 0.8rem;
+}
+
+.themeTag {
+  display: inline-flex;
+  margin: 0;
+  padding: 0.26rem 0.58rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--group-accent) 70%, var(--foreground));
+  background: color-mix(in srgb, var(--group-accent) 17%, transparent);
+  border: 1px solid color-mix(in srgb, var(--group-accent) 42%, transparent);
+}
+
+.groupTitle {
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.08rem, 1.6vw, 1.42rem);
+  line-height: 1.2;
+  font-weight: 700;
+  font-family: var(--font-playpen-sans), var(--font-kiwi-maru), sans-serif;
+}
+
+.groupDescription {
+  margin: 0.42rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.46;
+  color: var(--theme-fg-2);
+}
+
+.linkList {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.linkRow {
+  min-width: 0;
+}
+
+.linkItem {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  text-decoration: none;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--group-accent) 36%, var(--theme-border));
+  background: color-mix(in srgb, var(--group-accent) 9%, var(--theme-bg-2));
+  color: inherit;
+  padding: 0.58rem 0.65rem;
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.linkItem:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--group-accent) 62%, var(--theme-border));
+  background: color-mix(in srgb, var(--group-accent) 14%, var(--theme-bg-2));
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--group-accent) 24%, transparent);
+}
+
+.iconBadge {
+  width: 1.88rem;
+  height: 1.88rem;
+  border-radius: 0.58rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--group-accent) 50%, transparent);
+  background: color-mix(in srgb, var(--group-accent) 18%, var(--theme-bg-2));
+  color: color-mix(in srgb, var(--group-accent) 75%, var(--foreground));
+}
+
+.iconSvg {
+  width: 1rem;
+  height: 1rem;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.linkCopy {
+  min-width: 0;
+  display: grid;
+  text-align: left;
+}
+
+.linkLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.linkCaption {
+  margin-top: 0.1rem;
+  font-size: 0.74rem;
+  color: var(--theme-fg-2);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linkArrow {
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--group-accent) 70%, var(--foreground));
 }
 
 @media (max-width: 992px) {
-  .ambientOne {
-    width: 26rem;
-    height: 26rem;
-    left: -12rem;
+  .pageHeader {
+    margin-bottom: 1.2rem;
   }
 
-  .ambientTwo {
-    width: 23rem;
-    height: 23rem;
-    right: -8rem;
+  .masonry {
+    max-width: 100%;
+    column-count: 1;
   }
 }
 
 @media (max-width: 576px) {
   .appShell {
-    padding: 0 0.6rem 2rem;
+    padding: 0.7rem 0.6rem 1.7rem;
   }
 
-  .appCard {
+  .pageDescription {
+    font-size: 0.92rem;
+  }
+
+  .groupCard {
     border-radius: 1rem;
-    padding: 1rem;
-  }
-
-  .actionGrid,
-  .heroCard .actionGrid {
-    grid-template-columns: 1fr;
+    padding: 0.86rem;
   }
 }
 
-@keyframes riseIn {
+@keyframes cardEnter {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.985);
+    transform: translateY(14px) scale(0.99);
   }
 
   to {
@@ -178,13 +257,16 @@
   }
 }
 
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
+@keyframes auraShift {
+  from {
+    transform: rotate(0deg) scale(1);
   }
 
   50% {
-    transform: translate3d(12px, 16px, 0);
+    transform: rotate(180deg) scale(1.04);
+  }
+
+  to {
+    transform: rotate(360deg) scale(1);
   }
 }

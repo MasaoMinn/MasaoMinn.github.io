@@ -1,32 +1,150 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
 import { CookieModal } from "@/components/layout/modals/CookieModal";
-import ThemedButton from "@/components/boxed/ThemedButton";
 import styles from "./App.module.css";
 
-type ActionItem = {
+type IconKind =
+  | "fox"
+  | "bug"
+  | "spark"
+  | "maze"
+  | "palette"
+  | "grid"
+  | "cube"
+  | "chat"
+  | "profile"
+  | "code"
+  | "mirror"
+  | "cloud"
+  | "rocket";
+
+type LinkItem = {
   label: string;
-  hoverDescription: string;
-  onClick: () => void;
+  caption: string;
+  href: string;
+  icon: IconKind;
+  kind: "internal" | "external";
 };
 
-type CardItem = {
+type LinkGroup = {
   id: string;
   title: string;
+  themeLabel: string;
   description: string;
-  actions: ActionItem[];
+  accent: string;
+  links: LinkItem[];
   animationDelay: string;
+};
+
+const LinkIcon = ({ icon }: { icon: IconKind }) => {
+  if (icon === "fox") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M4 7l4-3 2 3m10 0l-4-3-2 3" />
+        <path d="M5 8c0 6 3.5 10 7 10s7-4 7-10H5z" />
+        <path d="M9.5 13h0m5 0h0M11 15.5c.8.6 1.2.6 2 0" />
+      </svg>
+    );
+  }
+  if (icon === "bug") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M12 7V4m0 3a4 4 0 014 4v5a4 4 0 01-8 0v-5a4 4 0 014-4z" />
+        <path d="M6 10h12M5 14h14M7 18l-2 2m12-2l2 2" />
+      </svg>
+    );
+  }
+  if (icon === "spark") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z" />
+        <path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z" />
+      </svg>
+    );
+  }
+  if (icon === "maze") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M4 4h16v16H4z" />
+        <path d="M8 8h4v4H8zm8 0v8h-4m-4 0h4v-4" />
+      </svg>
+    );
+  }
+  if (icon === "palette") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M12 4a8 8 0 100 16h2a2 2 0 000-4h-2a2 2 0 110-4h4a4 4 0 004-4 8 8 0 00-8-4z" />
+        <path d="M8 9h0m-2 3h0m3 3h0" />
+      </svg>
+    );
+  }
+  if (icon === "grid") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z" />
+      </svg>
+    );
+  }
+  if (icon === "cube") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
+        <path d="M12 21v-9M4 7.5l8 4.5 8-4.5" />
+      </svg>
+    );
+  }
+  if (icon === "chat") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M4 5h16v10H8l-4 4z" />
+        <path d="M8 10h8m-8-3h5" />
+      </svg>
+    );
+  }
+  if (icon === "profile") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+        <path d="M5 20a7 7 0 0114 0" />
+      </svg>
+    );
+  }
+  if (icon === "code") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M8 7l-5 5 5 5m8-10l5 5-5 5M14 5l-4 14" />
+      </svg>
+    );
+  }
+  if (icon === "mirror") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M4 6h10v10H4zM10 8h10v10H10z" />
+      </svg>
+    );
+  }
+  if (icon === "cloud") {
+    return (
+      <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+        <path d="M6 17h11a4 4 0 10-.7-7.9A5 5 0 006 10a3.5 3.5 0 000 7z" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" className={styles.iconSvg} aria-hidden="true">
+      <path d="M12 3l3 6 6 .8-4.5 4.5 1.1 6.2L12 18l-5.6 3 1.1-6.2L3 9.8 9 9l3-6z" />
+    </svg>
+  );
 };
 
 const App = () => {
   const { t } = useTranslation();
   const { modal, showModal } = useModalStore();
-  const [hoveredActionHints, setHoveredActionHints] = useState<Record<string, string | null>>({});
 
   // 检查并显示cookie同意弹窗
   useEffect(() => {
@@ -42,150 +160,178 @@ const App = () => {
 
   const isCookieModalVisible = modal.type === "cookie";
 
-  const spotlightCard: CardItem = {
-    id: "spotlight",
-    title: t("mainpage.react_furry.title"),
-    description: t("mainpage.react_furry.description"),
-    actions: [
-      {
-        label: t("mainpage.react_furry.persona"),
-        hoverDescription: t("mainpage.react_furry.hover.persona"),
-        onClick: () => {
-          window.location.href = "/react-furry";
+  const linkGroups: LinkGroup[] = [
+    {
+      id: "react-furry",
+      title: t("mainpage.react_furry.title"),
+      themeLabel: "Persona Lab",
+      description: t("mainpage.react_furry.description"),
+      accent: "#ff7d9a",
+      links: [
+        {
+          label: t("mainpage.react_furry.persona"),
+          caption: t("mainpage.react_furry.hover.persona"),
+          href: "/react-furry",
+          icon: "fox",
+          kind: "internal",
+        }, {
+          label: t("mainpage.tools.furry"),
+          caption: t("mainpage.tools.hover.furry"),
+          href: "/Furry",
+          icon: "chat",
+          kind: "internal",
         },
-      },
-      {
-        label: t("mainpage.react_furry.error"),
-        hoverDescription: t("mainpage.react_furry.hover.error"),
-        onClick: () => {
-          window.location.href = "/react-furry-error";
-        },
-      },
-    ],
-    animationDelay: "0.05s",
-  };
 
-  const featureCards: CardItem[] = [
+      ],
+      animationDelay: "0.02s",
+    },
     {
       id: "minigame",
       title: t("mainpage.minigame.title"),
+      themeLabel: "Arcade Pulse",
       description: t("mainpage.minigame.description"),
-      actions: [
+      accent: "#f7b733",
+      links: [
         {
           label: t("mainpage.minigame.bwite"),
-          hoverDescription: t("mainpage.minigame.hover.bwite"),
-          onClick: () => {
-            window.location.href = "/BWIte/index.html";
-          },
+          caption: t("mainpage.minigame.hover.bwite"),
+          href: "/BWIte/index.html",
+          icon: "grid",
+          kind: "internal",
         },
         {
           label: t("mainpage.minigame.color"),
-          hoverDescription: t("mainpage.minigame.hover.color"),
-          onClick: () => {
-            window.location.href = "/Color/index.html";
-          },
+          caption: t("mainpage.minigame.hover.color"),
+          href: "/Color/index.html",
+          icon: "palette",
+          kind: "internal",
         },
         {
           label: t("mainpage.minigame.light"),
-          hoverDescription: t("mainpage.minigame.hover.light"),
-          onClick: () => {
-            window.location.href = "/LightMaze";
-          },
+          caption: t("mainpage.minigame.hover.light"),
+          href: "/LightMaze",
+          icon: "maze",
+          kind: "internal",
         },
       ],
-      animationDelay: "0.12s",
+      animationDelay: "0.08s",
     },
     {
       id: "tools",
       title: t("mainpage.tools.title"),
+      themeLabel: "Toolkit Forge",
       description: t("mainpage.tools.description"),
-      actions: [
+      accent: "#47c2ff",
+      links: [
         {
           label: "sunny-zy-ui",
-          hoverDescription: t("mainpage.tools.hover.sunny_zy_ui"),
-          onClick: () => {
-            window.location.href = "/sunny-zy-ui";
-          }
-        }, {
-          label: t("mainpage.tools.furry"),
-          hoverDescription: t("mainpage.tools.hover.furry"),
-          onClick: () => {
-            window.location.href = "/Furry";
-          },
-        }, {
-          label: t("mainpage.tools.tobe"),
-          hoverDescription: t("mainpage.tools.hover.tobe"),
-          onClick: () => {
-            window.location.href = "/";
-          },
+          caption: t("mainpage.tools.hover.sunny_zy_ui"),
+          href: "/sunny-zy-ui",
+          icon: "cube",
+          kind: "internal",
+        },
+        {
+          label: t("mainpage.react_furry.error"),
+          caption: t("mainpage.react_furry.hover.error"),
+          href: "/react-furry-error",
+          icon: "bug",
+          kind: "internal",
+        },
+      ],
+      animationDelay: "0.14s",
+    },
+    {
+      id: "vercel",
+      title: t("mainpage.vercel.title"),
+      themeLabel: "Cloud Launchpad",
+      description: t("mainpage.vercel.description"),
+      accent: "#9f8dff",
+      links: [
+        {
+          label: t("mainpage.vercel.mirror"),
+          caption: t("mainpage.vercel.hover.mirror"),
+          href: "https://masaominn.vercel.app/",
+          icon: "mirror",
+          kind: "external",
+        },
+        {
+          label: t("mainpage.vercel.personal"),
+          caption: t("mainpage.vercel.hover.personal"),
+          href: "https://kinotsuki.vercel.app/",
+          icon: "cloud",
+          kind: "external",
+        },
+        {
+          label: t("mainpage.vercel.make_your_oc_alive"),
+          caption: t("mainpage.vercel.hover.make_your_oc_alive"),
+          href: "https://make-your-oc-alive.vercel.app/",
+          icon: "rocket",
+          kind: "external",
         },
       ],
       animationDelay: "0.2s",
     },
   ];
 
-  const linksCard: CardItem = {
-    id: "vercel_links",
-    title: t("mainpage.vercel.title"),
-    description: t("mainpage.vercel.description"),
-    actions: [
-      {
-        label: t("mainpage.vercel.mirror"),
-        hoverDescription: t("mainpage.vercel.hover.mirror"),
-        onClick: () => {
-          window.open("https://masaominn.vercel.app/", "_blank", "noopener,noreferrer");
-        },
-      },
-      {
-        label: t("mainpage.vercel.personal"),
-        hoverDescription: t("mainpage.vercel.hover.personal"),
-        onClick: () => {
-          window.open("https://kinotsuki.vercel.app/", "_blank", "noopener,noreferrer");
-        },
-      },
-      {
-        label: t("mainpage.vercel.make_your_oc_alive"),
-        hoverDescription: t("mainpage.vercel.hover.make_your_oc_alive"),
-        onClick: () => {
-          window.open("https://make-your-oc-alive.vercel.app/", "_blank", "noopener,noreferrer");
-        },
-      },
-    ],
-    animationDelay: "0.28s",
-  };
+  const renderLinkItem = (item: LinkItem) => {
+    const content = (
+      <>
+        <span className={styles.iconBadge}>
+          <LinkIcon icon={item.icon} />
+        </span>
+        <span className={styles.linkCopy}>
+          <span className={styles.linkLabel}>{item.label}</span>
+          <span className={styles.linkCaption}>{item.caption}</span>
+        </span>
+        <span className={styles.linkArrow} aria-hidden="true">
+          ↗
+        </span>
+      </>
+    );
 
-  const renderCard = (card: CardItem, className?: string) => {
-    const hoverHint = hoveredActionHints[card.id] ?? null;
+    if (item.kind === "external") {
+      return (
+        <a
+          href={item.href}
+          className={styles.linkItem}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {content}
+        </a>
+      );
+    }
 
     return (
-      <section
-        className={`${styles.appCard}${className ? ` ${className}` : ""}`}
-        style={{ animationDelay: card.animationDelay }}
+      <Link href={item.href} className={styles.linkItem}>
+        {content}
+      </Link>
+    );
+  };
 
+  const renderGroup = (group: LinkGroup) => {
+    return (
+      <section
+        className={styles.groupCard}
+        style={
+          {
+            "--group-accent": group.accent,
+            animationDelay: group.animationDelay,
+          } as React.CSSProperties
+        }
       >
-        <h2 className={styles.cardTitle}>{card.title}</h2>
-        <p className={styles.cardDescription}>{card.description}</p>
-        <div className={styles.cardDivider} />
-        <div className={styles.actionGrid}>
-          {card.actions.map((action) => (
-            <ThemedButton
-              className="w-100"
-              key={action.label}
-              onClick={action.onClick}
-              onMouseEnter={() => {
-                setHoveredActionHints((prev) => ({ ...prev, [card.id]: action.hoverDescription }));
-              }}
-              onMouseLeave={() => {
-                setHoveredActionHints((prev) => ({ ...prev, [card.id]: null }));
-              }}
-            >
-              {action.label}
-            </ThemedButton>
+        <div className={styles.groupHeader}>
+          {/* <p className={styles.themeTag}>{group.themeLabel}</p> */}
+          <h2 className={styles.groupTitle}>{group.title}</h2>
+          <p className={styles.groupDescription}>{group.description}</p>
+        </div>
+        <div className={styles.linkList}>
+          {group.links.map((item) => (
+            <div key={`${group.id}-${item.label}`} className={styles.linkRow}>
+              {renderLinkItem(item)}
+            </div>
           ))}
         </div>
-        <p className={`${styles.hoverHint}${hoverHint ? ` ${styles.hoverHintVisible}` : ""}`}>
-          {hoverHint ?? ""}
-        </p>
       </section>
     );
   };
@@ -195,29 +341,22 @@ const App = () => {
       className={`${styles.appShell} min-vh-100 text-center theme-page`}
       fluid
     >
-      <div className={styles.ambientOne} aria-hidden="true" />
-      <div className={styles.ambientTwo} aria-hidden="true" />
-      <div className={styles.texture} aria-hidden="true" />
+      <div className={styles.backdropAura} aria-hidden="true" />
+      <div className={styles.backdropGrid} aria-hidden="true" />
 
-      <Row className="g-4 justify-content-center pt-5">
-        <Col xs={12} lg={10} xl={9}>
-          {renderCard(spotlightCard, styles.heroCard)}
-        </Col>
-      </Row>
+      <header className={styles.pageHeader}>
+        {/* <p className={styles.pageEyebrow}>Personal Launchpad</p> */}
+        <h1 className={styles.pageTitle}>{t("mainpage.title")}</h1>
+        <p className={styles.pageDescription}>{t("mainpage.description")}</p>
+      </header>
 
-      <Row className="g-4 justify-content-center mt-1">
-        {featureCards.map((card) => (
-          <Col xs={12} md={6} lg={5} xl={4} key={card.title}>
-            {renderCard(card)}
-          </Col>
+      <div className={styles.masonry}>
+        {linkGroups.map((group) => (
+          <div className={styles.masonryItem} key={group.id}>
+            {renderGroup(group)}
+          </div>
         ))}
-      </Row>
-
-      <Row className="g-4 justify-content-center mt-1 pb-4">
-        <Col xs={12} lg={10} xl={9}>
-          {renderCard(linksCard)}
-        </Col>
-      </Row>
+      </div>
 
       <CookieModal show={isCookieModalVisible} />
     </Container>

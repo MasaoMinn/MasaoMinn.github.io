@@ -103,6 +103,84 @@ pre code.hljs {
   color: var(--primary-foreground) !important;
 }
 
+.theme-header {
+  --bs-navbar-color: var(--theme-fg) !important;
+  --bs-navbar-hover-color: var(--theme-accent) !important;
+  --bs-navbar-active-color: var(--theme-accent) !important;
+  --bs-navbar-brand-color: var(--theme-fg) !important;
+  --bs-navbar-brand-hover-color: var(--theme-accent) !important;
+  --bs-navbar-toggler-border-color: var(--theme-border) !important;
+  z-index: 1035 !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-border) 84%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--theme-bg) 94%, transparent) 0%,
+      color-mix(in srgb, var(--theme-bg-2) 96%, transparent) 100%
+    ) !important;
+  box-shadow:
+    0 10px 22px -16px color-mix(in srgb, var(--theme-accent) 40%, transparent),
+    0 2px 6px -4px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.theme-header-inner {
+  min-height: 3.5rem;
+}
+
+.theme-header-brand {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.theme-header .navbar-toggler {
+  border-color: color-mix(in srgb, var(--theme-border) 88%, transparent) !important;
+  background-color: color-mix(in srgb, var(--theme-bg-2) 78%, transparent) !important;
+  box-shadow: none !important;
+}
+
+.theme-header .navbar-toggler:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-accent-2) 60%, transparent) !important;
+}
+
+.theme-header .dropdown-menu {
+  border: 1px solid color-mix(in srgb, var(--theme-border) 82%, transparent);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--theme-bg-2) 96%, transparent),
+      color-mix(in srgb, var(--theme-bg) 94%, transparent)
+    ) !important;
+  box-shadow: 0 16px 38px -26px color-mix(in srgb, var(--theme-accent) 52%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.theme-header .dropdown-divider {
+  border-top-color: color-mix(in srgb, var(--theme-border) 78%, transparent);
+}
+
+.theme-header .dropdown-item.theme-header-item {
+  color: var(--theme-fg);
+}
+
+.theme-header .dropdown-item.theme-header-item:hover,
+.theme-header .dropdown-item.theme-header-item:focus-visible {
+  color: var(--theme-fg);
+  background-color: color-mix(in srgb, var(--theme-accent-2) 24%, transparent);
+}
+
+.theme-header-dropdown > .dropdown-toggle {
+  border-radius: 0.66rem;
+  padding: 0.36rem 0.62rem;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.theme-header-dropdown > .dropdown-toggle:hover {
+  border-color: color-mix(in srgb, var(--theme-border) 70%, transparent);
+  background-color: color-mix(in srgb, var(--theme-bg-2) 78%, transparent);
+}
+
 .theme-more-dropdown .dropdown-menu {
   right: 0;
   left: auto;
