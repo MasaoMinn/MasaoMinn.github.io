@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
@@ -51,6 +51,48 @@ const normalizePalette = (palette: ThemePalette): ThemePalette => ({
   extraColor2: normalizeColor(palette.extraColor2, FALLBACK_COLOR),
 });
 
+const DESKTOP_DROPDOWN_CLOSE_DISTANCE = 42;
+
+type Point = { x: number; y: number };
+
+const getDistanceToRect = (point: Point, rect: DOMRect): number => {
+  const dx =
+    point.x < rect.left
+      ? rect.left - point.x
+      : point.x > rect.right
+        ? point.x - rect.right
+        : 0;
+  const dy =
+    point.y < rect.top
+      ? rect.top - point.y
+      : point.y > rect.bottom
+        ? point.y - rect.bottom
+        : 0;
+  return Math.hypot(dx, dy);
+};
+
+const unionRects = (a: DOMRect, b: DOMRect): DOMRect =>
+  new DOMRect(
+    Math.min(a.left, b.left),
+    Math.min(a.top, b.top),
+    Math.max(a.right, b.right) - Math.min(a.left, b.left),
+    Math.max(a.bottom, b.bottom) - Math.min(a.top, b.top)
+  );
+
+const getDropdownInteractionRect = (host: HTMLDivElement): DOMRect | null => {
+  const toggle = host.querySelector<HTMLElement>(".dropdown-toggle");
+  const menu = host.querySelector<HTMLElement>(".dropdown-menu.show");
+
+  if (!toggle && !menu) return null;
+  if (!menu && toggle) return toggle.getBoundingClientRect();
+  if (!toggle && menu) return menu.getBoundingClientRect();
+
+  return unionRects(
+    toggle!.getBoundingClientRect(),
+    menu!.getBoundingClientRect()
+  );
+};
+
 function BasicExample() {
   const {
     theme,
@@ -66,9 +108,14 @@ function BasicExample() {
   } = useTheme();
   const { t } = useTranslation();
   const [showCustomThemeModal, setShowCustomThemeModal] = useState(false);
+  const [isDesktopPointer, setIsDesktopPointer] = useState(false);
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const [showThemeDropdown, setShowThemeDropdown] = useState(false);
   const [customThemeDraft, setCustomThemeDraft] = useState<ThemePalette>(() =>
     normalizePalette(currentPalette)
   );
+  const langDropdownHostRef = useRef<HTMLDivElement | null>(null);
+  const themeDropdownHostRef = useRef<HTMLDivElement | null>(null);
 
   const currentThemeName = t(`mainpage.theme_names.${currentThemeNameKey}`, {
     defaultValue: currentThemeNameKey,
@@ -95,6 +142,67 @@ function BasicExample() {
     setShowCustomThemeModal(false);
   };
 
+  const handleLanguageChange = (lang: "en" | "zh" | "jp") => {
+    i18n.changeLanguage(lang);
+    useLocalStorageStore
+      .getState()
+      .setLanguageCookie(lang);
+    setShowLangDropdown(false);
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setIsDesktopPointer(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (isDesktopPointer) return;
+    setShowLangDropdown(false);
+    setShowThemeDropdown(false);
+  }, [isDesktopPointer]);
+
+  useEffect(() => {
+    if (!isDesktopPointer) return;
+    if (!showLangDropdown && !showThemeDropdown) return;
+
+    let rafId: number | null = null;
+    const onMouseMove = (event: MouseEvent) => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+
+      rafId = requestAnimationFrame(() => {
+        const point: Point = { x: event.clientX, y: event.clientY };
+
+        if (showLangDropdown && langDropdownHostRef.current) {
+          const rect = getDropdownInteractionRect(langDropdownHostRef.current);
+          if (rect && getDistanceToRect(point, rect) > DESKTOP_DROPDOWN_CLOSE_DISTANCE) {
+            setShowLangDropdown(false);
+          }
+        }
+
+        if (showThemeDropdown && themeDropdownHostRef.current) {
+          const rect = getDropdownInteractionRect(themeDropdownHostRef.current);
+          if (rect && getDistanceToRect(point, rect) > DESKTOP_DROPDOWN_CLOSE_DISTANCE) {
+            setShowThemeDropdown(false);
+          }
+        }
+      });
+    };
+
+    document.addEventListener("mousemove", onMouseMove, { passive: true });
+    return () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, [isDesktopPointer, showLangDropdown, showThemeDropdown]);
+
   return (
     <>
       <Navbar
@@ -116,162 +224,170 @@ function BasicExample() {
             <Nav className="me-auto" />
 
             <Nav>
-              <NavDropdown
-                title={t("lang")}
-                id="lang"
-                autoClose="outside"
-                className="theme-header-dropdown"
-              >
-                <NavDropdown.Item
-                  className="theme-header-item"
-                  onClick={() => {
-                    i18n.changeLanguage("en");
-                    useLocalStorageStore
-                      .getState()
-                      .setLanguageCookie("en");
+              <div ref={langDropdownHostRef}>
+                <NavDropdown
+                  title={t("lang")}
+                  id="lang"
+                  autoClose
+                  className="theme-header-dropdown"
+                  show={isDesktopPointer ? showLangDropdown : undefined}
+                  onToggle={(nextShow) => {
+                    if (!isDesktopPointer) return;
+                    setShowLangDropdown(nextShow);
+                    if (nextShow) setShowThemeDropdown(false);
                   }}
                 >
-                  English
-                </NavDropdown.Item>
+                  <NavDropdown.Item
+                    className="theme-header-item"
+                    onClick={() => {
+                      handleLanguageChange("en");
+                    }}
+                  >
+                    English
+                  </NavDropdown.Item>
 
-                <NavDropdown.Item
-                  className="theme-header-item"
-                  onClick={() => {
-                    i18n.changeLanguage("zh");
-                    useLocalStorageStore
-                      .getState()
-                      .setLanguageCookie("zh");
+                  <NavDropdown.Item
+                    className="theme-header-item"
+                    onClick={() => {
+                      handleLanguageChange("zh");
+                    }}
+                  >
+                    简体中文
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Item
+                    className="theme-header-item"
+                    onClick={() => {
+                      handleLanguageChange("jp");
+                    }}
+                  >
+                    日本語
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </div>
+
+              <div ref={themeDropdownHostRef}>
+                <NavDropdown
+                  title={t("mainpage.dropdown")}
+                  id="theme-dropdown"
+                  autoClose
+                  align="end"
+                  className="theme-header-dropdown theme-more-dropdown"
+                  show={isDesktopPointer ? showThemeDropdown : undefined}
+                  onToggle={(nextShow) => {
+                    if (!isDesktopPointer) return;
+                    setShowThemeDropdown(nextShow);
+                    if (nextShow) setShowLangDropdown(false);
                   }}
-                >
-                  简体中文
-                </NavDropdown.Item>
-
-                <NavDropdown.Item
-                  className="theme-header-item"
-                  onClick={() => {
-                    i18n.changeLanguage("jp");
-                    useLocalStorageStore
-                      .getState()
-                      .setLanguageCookie("jp");
-                  }}
-                >
-                  日本語
-                </NavDropdown.Item>
-              </NavDropdown>
-
-              <NavDropdown
-                title={t("mainpage.dropdown")}
-                id="theme-dropdown"
-                autoClose
-                align="end"
-                className="theme-header-dropdown theme-more-dropdown"
-              >
-                <div
-                  className="px-3 py-2"
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <div
-                    className="rounded-3 p-2 border mb-2"
-                    style={{
-                      backgroundColor: currentPalette.backgroundColor2,
-                      borderColor: currentPalette.borderColor,
-                      boxShadow: `0 6px 16px -10px ${currentPalette.extraColor2}`,
-                    }}
+                    className="px-3 py-2"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="d-flex gap-2">
-                    <Button
-                      onClick={prevTheme}
-                      variant="outline-secondary"
-                      className="px-3 fw-semibold"
+                    <div
+                      className="rounded-3 p-2 border mb-2"
                       style={{
+                        backgroundColor: currentPalette.backgroundColor2,
                         borderColor: currentPalette.borderColor,
-                        color: currentPalette.color2,
-                        backgroundColor: currentPalette.backgroundColor,
+                        boxShadow: `0 6px 16px -10px ${currentPalette.extraColor2}`,
                       }}
                     >
-                      ←
-                    </Button>
+                      <div className="d-flex gap-2">
+                        <Button
+                          onClick={prevTheme}
+                          variant="outline-secondary"
+                          className="px-3 fw-semibold"
+                          style={{
+                            borderColor: currentPalette.borderColor,
+                            color: currentPalette.color2,
+                            backgroundColor: currentPalette.backgroundColor,
+                          }}
+                        >
+                          ←
+                        </Button>
 
+                        <Button
+                          onClick={toggleTheme}
+                          className="flex-fill"
+                          style={{
+                            borderColor: currentPalette.borderColor,
+                            color: currentPalette.color,
+                            background: `linear-gradient(135deg, ${currentPalette.backgroundColor} 0%, ${currentPalette.backgroundColor2} 100%)`,
+                            boxShadow: `inset 0 0 0 1px ${currentPalette.borderColor}`,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {t("mainpage.theme")} {currentThemeName}
+                          {isCustomThemeActive ? "" : ` (${currentThemeModeLabel})`}{" "}
+                          {theme === "light" ? "🌙" : "☀️"}
+                        </Button>
+
+                        <Button
+                          onClick={nextTheme}
+                          variant="outline-secondary"
+                          className="px-3 fw-semibold"
+                          style={{
+                            borderColor: currentPalette.borderColor,
+                            color: currentPalette.color2,
+                            backgroundColor: currentPalette.backgroundColor,
+                          }}
+                        >
+                          →
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="text-center small opacity-75">
+                      {t("mainpage.theme_variant")} {currentTheme + 1}: {currentThemeName}
+                    </div>
+                  </div>
+
+                  <NavDropdown.Divider />
+
+                  <div
+                    className="px-3 py-2 d-flex align-items-center gap-2 flex-nowrap"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Button
-                      onClick={toggleTheme}
-                      className="flex-fill"
+                      variant="link"
+                      className="p-0 text-start text-decoration-none flex-grow-1 text-nowrap"
                       style={{
-                        borderColor: currentPalette.borderColor,
                         color: currentPalette.color,
-                        background: `linear-gradient(135deg, ${currentPalette.backgroundColor} 0%, ${currentPalette.backgroundColor2} 100%)`,
-                        boxShadow: `inset 0 0 0 1px ${currentPalette.borderColor}`,
-                        fontWeight: 600,
+                        minWidth: 0,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       }}
+                      onClick={openCustomThemeModal}
                     >
-                      {t("mainpage.theme")} {currentThemeName}
-                      {isCustomThemeActive ? "" : ` (${currentThemeModeLabel})`}{" "}
-                      {theme === "light" ? "🌙" : "☀️"}
+                      {t("mainpage.custom_theme.open")}
+                      {hasCustomTheme ? ` (${t("mainpage.custom_theme.updated")})` : ""}
                     </Button>
-
-                    <Button
-                      onClick={nextTheme}
-                      variant="outline-secondary"
-                      className="px-3 fw-semibold"
-                      style={{
-                        borderColor: currentPalette.borderColor,
-                        color: currentPalette.color2,
-                        backgroundColor: currentPalette.backgroundColor,
-                      }}
-                    >
-                      →
-                    </Button>
-                  </div>
+                    {hasCustomTheme ? (
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        onClick={removeCustomThemePalette}
+                      >
+                        {t("mainpage.custom_theme.remove")}
+                      </Button>
+                    ) : null}
                   </div>
 
-                  <div className="text-center small opacity-75">
-                    {t("mainpage.theme_variant")} {currentTheme + 1}: {currentThemeName}
-                  </div>
-                </div>
+                  <NavDropdown.Divider />
 
-                <NavDropdown.Divider />
+                  <NavDropdown.Item className="theme-header-item" href="./About">
+                    {t("mainpage.about")}
+                  </NavDropdown.Item>
 
-                <div
-                  className="px-3 py-2 d-flex align-items-center gap-2 flex-nowrap"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Button
-                    variant="link"
-                    className="p-0 text-start text-decoration-none flex-grow-1 text-nowrap"
-                    style={{
-                      color: currentPalette.color,
-                      minWidth: 0,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                    onClick={openCustomThemeModal}
+                  <NavDropdown.Item
+                    className="theme-header-item"
+                    href="https://github.com/MasaoMinn/MasaoMinn.github.io"
+                    target="_blank"
                   >
-                    {t("mainpage.custom_theme.open")}
-                    {hasCustomTheme ? ` (${t("mainpage.custom_theme.updated")})` : ""}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline-danger"
-                    disabled={!hasCustomTheme}
-                    onClick={removeCustomThemePalette}
-                  >
-                    {t("mainpage.custom_theme.remove")}
-                  </Button>
-                </div>
-
-                <NavDropdown.Divider />
-
-                <NavDropdown.Item className="theme-header-item" href="./About">
-                  {t("mainpage.about")}
-                </NavDropdown.Item>
-
-                <NavDropdown.Item
-                  className="theme-header-item"
-                  href="https://github.com/MasaoMinn/MasaoMinn.github.io"
-                  target="_blank"
-                >
-                  {t("mainpage.seeme")}
-                </NavDropdown.Item>
-              </NavDropdown>
+                    {t("mainpage.seeme")}
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </div>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -300,12 +416,9 @@ function BasicExample() {
                     onChange={(e) => updateDraftColor(key, e.target.value)}
                     style={{ width: "3rem", height: "2.25rem", padding: 2 }}
                   />
-                  <Form.Control
-                    type="text"
-                    value={customThemeDraft[key]}
-                    onChange={(e) => updateDraftColor(key, e.target.value)}
-                    placeholder="#000000"
-                  />
+                  <span
+                    className="w-[10rem] select-none"
+                  >{customThemeDraft[key]}</span>
                 </div>
               </Form.Group>
             ))}

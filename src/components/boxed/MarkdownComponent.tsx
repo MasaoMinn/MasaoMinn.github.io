@@ -52,7 +52,7 @@ export default function MarkdownComponent({
           backgroundColor: "var(--secondary)",
           border: "1px solid var(--border)",
           boxShadow: "0 8px 20px rgba(0,0,0,0.10)",
-          padding: "1rem",
+          padding: "1rem 5rem 1rem 1rem",
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -60,13 +60,17 @@ export default function MarkdownComponent({
         <button
           type="button"
           onClick={handleCopy}
-          className="rounded-md px-2 py-1 text-xs transition-opacity duration-200"
+          className="z-10 rounded-md px-2 py-1 text-xs transition-opacity duration-200"
           style={{
+            position: "absolute",
+            right: "1rem",
+            top: "1rem",
             backgroundColor: "var(--background)",
             color: "var(--foreground)",
             border: "1px solid var(--border)",
-            cursor: 'pointer',
+            cursor: "pointer",
             opacity: isHovered || copied ? 1 : 0,
+            pointerEvents: isHovered || copied ? "auto" : "none",
           }}
         >
           {copied ? "Copied" : "Copy"}

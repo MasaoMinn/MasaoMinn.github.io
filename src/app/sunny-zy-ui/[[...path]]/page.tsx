@@ -1,3 +1,5 @@
+import { readFile } from "fs/promises";
+import path from "path";
 import { notFound } from "next/navigation";
 import { staticPaths, toPathKey } from "../component-routes";
 import MainPage from "./MainPage";
@@ -13,6 +15,21 @@ type SunnyZyUiCatchAllPageProps = {
 };
 
 const allowedPathSet = new Set(staticPaths.map(toPathKey));
+
+async function loadBubbleBoxSourceCode() {
+  const sourcePath = path.join(
+    process.cwd(),
+    "components",
+    "ui",
+    "matter",
+    "BubbleBox.tsx",
+  );
+  try {
+    return await readFile(sourcePath, "utf-8");
+  } catch {
+    return "";
+  }
+}
 
 export default async function SunnyZyUiCatchAllPage({
   params,
@@ -31,7 +48,8 @@ export default async function SunnyZyUiCatchAllPage({
 
   if (pathKey === "matter/bubble-box") {
     const BubbleBoxPreview = (await import("../matter/BubbleBoxPreview")).default;
-    return <BubbleBoxPreview />;
+    const bubbleBoxSourceCode = await loadBubbleBoxSourceCode();
+    return <BubbleBoxPreview bubbleBoxSourceCode={bubbleBoxSourceCode} />;
   }
 
   if (pathKey === "matter") {
