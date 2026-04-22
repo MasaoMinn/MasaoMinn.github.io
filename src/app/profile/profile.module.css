@@ -1,0 +1,157 @@
+.hireMeButton {
+  position: fixed;
+  z-index: 1040;
+  width: 5.4rem;
+  height: 5.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: linear-gradient(
+    150deg,
+    var(--theme-button-bg, var(--primary)) 0%,
+    var(--theme-button-bg-hover, var(--accent)) 100%
+  );
+  color: var(--foreground);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  isolation: isolate;
+  box-shadow:
+    0 12px 24px -10px rgba(0, 0, 0, 0.45),
+    0 4px 12px -5px rgba(255, 120, 170, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  animation: hireGlow 3.2s ease-in-out infinite;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.2s ease;
+}
+
+.hireMeButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 36%,
+    rgba(255, 255, 255, 0.2) 56%,
+    transparent 100%
+  );
+  opacity: 0.6;
+  animation: hireShimmer 4s linear infinite;
+}
+
+.hireMeButton::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 165, 205, 0.65);
+  opacity: 0;
+  transform: scale(0.88);
+  pointer-events: none;
+  animation: hirePulse 3.2s ease-out infinite;
+}
+
+.hireMeButton:hover {
+  transform: translateY(-2px) scale(1.04);
+  filter: saturate(1.06);
+  box-shadow:
+    0 16px 30px -10px rgba(0, 0, 0, 0.55),
+    0 8px 18px -5px rgba(255, 120, 170, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+.hireMeButton:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow:
+    0 8px 16px -10px rgba(0, 0, 0, 0.55),
+    inset 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.dragging,
+.dragging:hover,
+.dragging:active {
+  cursor: grabbing;
+  transform: scale(1.03);
+  filter: saturate(1.1);
+  animation: none;
+}
+
+.dragging::after {
+  animation: none;
+  opacity: 0.42;
+  transform: scale(1.04);
+}
+
+.wechatImage {
+  width: min(90vw, 26rem);
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: 0.8rem;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+@media (max-width: 576px) {
+  .hireMeButton {
+    width: 4.9rem;
+    height: 4.9rem;
+    font-size: 0.82rem;
+  }
+}
+
+@keyframes hireGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 12px 24px -10px rgba(0, 0, 0, 0.45),
+      0 4px 12px -5px rgba(255, 120, 170, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38);
+    filter: brightness(1);
+  }
+
+  50% {
+    box-shadow:
+      0 15px 28px -10px rgba(0, 0, 0, 0.54),
+      0 7px 18px -5px rgba(255, 120, 170, 0.68),
+      inset 0 1px 0 rgba(255, 255, 255, 0.52);
+    filter: brightness(1.04);
+  }
+}
+
+@keyframes hireShimmer {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateX(0);
+  }
+
+  50% {
+    opacity: 0.75;
+    transform: translateX(2px);
+  }
+}
+
+@keyframes hirePulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  15% {
+    opacity: 0.38;
+  }
+
+  70% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.16);
+  }
+}

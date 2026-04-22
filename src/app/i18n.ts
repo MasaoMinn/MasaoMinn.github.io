@@ -71,7 +71,7 @@ i18n
             },
             react_furry: {
               title: 'React & Furry',
-              description: 'React Fursona and react-furry-error for react developpers',
+              description: 'React Fursona declaration',
               persona: 'React Fursona',
               error: 'react-furry-error',
               hover: {
@@ -87,7 +87,7 @@ i18n
             },
             minigame: {
               title: 'Minigame',
-              description: 'H5 games written in JS .',
+              description: 'H5 games written in JS. They are written when I just started to study JS.',
               bwite: 'Black-White Iteration',
               color: 'My Sense Of Color Is Amazing',
               light: 'Light On The Lights(Two-player Battle)',

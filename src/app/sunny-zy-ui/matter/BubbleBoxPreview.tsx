@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { Bubbles, Trash } from "lucide-react";
 import styled from "styled-components";
+import MarkdownComponent from "@/components/boxed/MarkdownComponent";
 
 type EditableBubbleBoxProps = {
   content: BubbleProps[];
@@ -49,6 +50,9 @@ type BubbleVertex = {
   y: number;
 };
 type BubbleBoxTab = "preview" | "code";
+type BubbleBoxPreviewProps = {
+  bubbleBoxSourceCode?: string;
+};
 
 const SHAPES: BubbleShape[] = [
   "circle",
@@ -374,18 +378,42 @@ const ThemedBubbleCard = styled.div<{ $palette: ThemePalette }>`
 `;
 
 const ThemedTabsList = styled(TabsList) <{ $palette: ThemePalette }>`
-  background-color: ${({ $palette }) => $palette.backgroundColor};
-  color: ${({ $palette }) => $palette.color};
+  && {
+    border: 1px solid ${({ $palette }) => $palette.borderColor};
+    background: linear-gradient(
+      135deg,
+      ${({ $palette }) => $palette.backgroundColor2} 0%,
+      ${({ $palette }) => $palette.backgroundColor} 100%
+    ) !important;
+    color: ${({ $palette }) => $palette.color};
+    box-shadow: inset 0 0 0 1px ${({ $palette }) => $palette.borderColor}33;
+  }
 `;
 
 const ThemedTabsTrigger = styled(TabsTrigger) <{ $palette: ThemePalette }>`
   && {
+    border: 1px solid transparent;
+    background-color: transparent;
     color: ${({ $palette }) => $palette.color2};
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  &&:hover {
+    background-color: ${({ $palette }) => $palette.backgroundColor2};
+    color: ${({ $palette }) => $palette.color};
+  }
+  &&:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px ${({ $palette }) => $palette.extraColor2};
   }
   &&[data-state="active"] {
     background-color: ${({ $palette }) => $palette.extraColor};
     color: ${({ $palette }) => $palette.backgroundColor};
-    box-shadow: none;
+    border-color: ${({ $palette }) => $palette.borderColor};
+    box-shadow: 0 4px 10px -6px ${({ $palette }) => $palette.extraColor2};
   }
 `;
 
@@ -946,9 +974,10 @@ function ComponentConsole({
   );
 }
 
-export default function BubbleBoxPreview() {
+export default function BubbleBoxPreview({
+  bubbleBoxSourceCode = "",
+}: BubbleBoxPreviewProps) {
   const palette = getThemePalette();
-  const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
@@ -972,16 +1001,20 @@ export default function BubbleBoxPreview() {
   height={${FIXED_HEIGHT}}
 />`;
   }, [componentProps]);
-
-  const handleCopySource = async () => {
-    try {
-      await navigator.clipboard.writeText(bubbleBoxSource);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
-    } catch {
-      setCopied(false);
-    }
-  };
+  const downloadCommand = "pnpm dlx sunny-zy add matter/bubble-box";
+  const generatedSourceMarkdown = useMemo(
+    () => `\`\`\`tsx\n${bubbleBoxSource}\n\`\`\``,
+    [bubbleBoxSource],
+  );
+  const componentSourceMarkdown = useMemo(
+    () =>
+      `\`\`\`tsx\n${bubbleBoxSourceCode || "// BubbleBox source unavailable."}\n\`\`\``,
+    [bubbleBoxSourceCode],
+  );
+  const downloadCommandMarkdown = useMemo(
+    () => `\`\`\`bash\n${downloadCommand}\n\`\`\``,
+    [downloadCommand],
+  );
 
   const handleTabChange = (nextTab: string) => {
     const tab = nextTab === "code" ? "code" : "preview";
@@ -1008,22 +1041,30 @@ export default function BubbleBoxPreview() {
         style={{ borderColor: palette.borderColor }}
       >
         <span>Generated JSX</span>
-        <ThemedButton
-          palette={palette}
-          size="sm"
-          variant="outline"
-          type="button"
-          onClick={handleCopySource}
-        >
-          {copied ? "Copied" : "Copy"}
-        </ThemedButton>
       </div>
-      <pre
-        className="p-3 text-xs leading-6"
-        style={{ backgroundColor: palette.backgroundColor2, color: palette.color2 }}
+      <div className="px-2 pb-2">
+        <MarkdownComponent content={generatedSourceMarkdown} className="max-w-none" />
+      </div>
+    </div>
+  );
+
+  const componentSourcePanel = (
+    <div
+      className="group relative mt-4 overflow-x-auto rounded-lg border"
+      style={{
+        borderColor: palette.borderColor,
+        background: `linear-gradient(135deg, ${palette.backgroundColor2} 0%, ${palette.backgroundColor} 100%)`,
+      }}
+    >
+      <div
+        className="flex items-center justify-between border-b px-3 py-2 text-sm font-semibold"
+        style={{ borderColor: palette.borderColor }}
       >
-        <code>{bubbleBoxSource}</code>
-      </pre>
+        <span>components/ui/matter/BubbleBox.tsx</span>
+      </div>
+      <div className="px-2 pb-2">
+        <MarkdownComponent content={componentSourceMarkdown} className="max-w-none" />
+      </div>
     </div>
   );
 
@@ -1078,20 +1119,17 @@ export default function BubbleBoxPreview() {
           <div className="mt-4 space-y-4">
             <div
               className="rounded-lg border p-4"
-              style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor }}
+              style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor2 }}
             >
               <h3 className="text-lg font-semibold">Download Guide</h3>
               <p className="mt-1 text-sm" style={{ color: palette.extraColor2 }}>
                 Install dependencies then import the component in your page.
               </p>
-              <pre
-                className="mt-3 rounded-md border p-3 text-xs leading-6"
-                style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor2 }}
-              >
-                <code>{`pnpm add matter-js\npnpm add -D @types/matter-js\n\nimport BubbleBox from "@/components/ui/matter/BubbleBox";`}</code>
-              </pre>
+              <div className="mt-2">
+                <MarkdownComponent content={downloadCommandMarkdown} className="max-w-none" />
+              </div>
             </div>
-            {sourcePanel}
+            {componentSourcePanel}
           </div>
         </TabsContent>
       </Tabs>
