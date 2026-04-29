@@ -1,5 +1,3 @@
-import { readFile } from "fs/promises";
-import path from "path";
 import { notFound } from "next/navigation";
 import { staticPaths, toPathKey } from "../component-routes";
 import MainPage from "./MainPage";
@@ -15,21 +13,6 @@ type SunnyZyUiCatchAllPageProps = {
 };
 
 const allowedPathSet = new Set(staticPaths.map(toPathKey));
-
-async function loadBubbleBoxSourceCode() {
-  const sourcePath = path.join(
-    process.cwd(),
-    "components",
-    "ui",
-    "matter",
-    "BubbleBox.tsx",
-  );
-  try {
-    return await readFile(sourcePath, "utf-8");
-  } catch {
-    return "";
-  }
-}
 
 export default async function SunnyZyUiCatchAllPage({
   params,
@@ -47,9 +30,8 @@ export default async function SunnyZyUiCatchAllPage({
   }
 
   if (pathKey === "matter/bubble-box") {
-    const BubbleBoxPreview = (await import("../matter/BubbleBoxPreview")).default;
-    const bubbleBoxSourceCode = await loadBubbleBoxSourceCode();
-    return <BubbleBoxPreview bubbleBoxSourceCode={bubbleBoxSourceCode} />;
+    const BubbleBoxPlaygroundPage = (await import("../matter/BubbleBoxPlaygroundPage")).default;
+    return <BubbleBoxPlaygroundPage />;
   }
 
   if (pathKey === "matter") {
@@ -59,6 +41,7 @@ export default async function SunnyZyUiCatchAllPage({
         <p className="mt-3 text-sm text-slate-700">
           Matter component group. Choose a component in the catalog.
         </p>
+        {/* <BubblePreview /> */}
       </section>
     );
   }

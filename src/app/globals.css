@@ -196,3 +196,37 @@ pre code.hljs {
 .theme-more-dropdown .small {
   white-space: nowrap;
 }
+
+@keyframes slider-thumb-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+    box-shadow: var(--slider-thumb-shadow);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.08);
+    box-shadow:
+      var(--slider-thumb-shadow),
+      0 0 18px var(--slider-thumb-glow);
+  }
+}
+
+.slider-thumb-animated {
+  animation: slider-thumb-breathe 2.1s ease-in-out infinite;
+}
+
+.slider-thumb-animated:hover,
+.slider-thumb-animated:active {
+  transform: scale(1.1);
+  box-shadow:
+    var(--slider-thumb-shadow),
+    0 0 24px var(--slider-thumb-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider-thumb-animated {
+    animation: none;
+  }
+}

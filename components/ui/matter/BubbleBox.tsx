@@ -209,6 +209,7 @@ export function BubbleBox({
         background: "transparent",
       },
     });
+    render.canvas.style.background = "transparent";
 
     const bubbleCount = normalizedContent.length;
     const baseRadius = calculateBubbleRadius(
@@ -399,13 +400,20 @@ export function BubbleBox({
         boxSizing: "border-box",
         border: "1px solid #e2e8f0",
         overflow: "hidden",
-        background: "#f8fafc",
+        background: "transparent",
+        backgroundColor: "transparent",
         ...style,
       }}
     >
       <div
         ref={mountRef}
-        style={{ width: "100%", height: "100%", boxSizing: "border-box" }}
+        style={{
+          width: "100%",
+          height: "100%",
+          boxSizing: "border-box",
+          background: "transparent",
+          backgroundColor: "transparent",
+        }}
       />
     </div>
   );
