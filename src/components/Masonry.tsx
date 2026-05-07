@@ -84,6 +84,7 @@ interface Item {
   id: string;
   img: string;
   url: string;
+  description?: string;
 }
 
 interface GridItem extends ImageWithDimensions {
@@ -127,6 +128,9 @@ const Masonry: React.FC<MasonryProps> = ({
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
   const [imagesWithDimensions, setImagesWithDimensions] = useState<ImageWithDimensions[]>([]);
   const [imagesReady, setImagesReady] = useState(false);
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
+  const [activeTouchItemId, setActiveTouchItemId] = useState<string | null>(null);
 
   const getInitialPosition = (item: GridItem) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -163,6 +167,14 @@ const Masonry: React.FC<MasonryProps> = ({
       setImagesReady(true);
     });
   }, [items]);
+
+  useEffect(() => {
+    const media = window.matchMedia('(pointer: coarse)');
+    const update = () => setIsCoarsePointer(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   const grid = useMemo<GridItem[]>(() => {
     if (!width || imagesWithDimensions.length === 0) return [];
@@ -261,6 +273,9 @@ const Masonry: React.FC<MasonryProps> = ({
   }, []);
 
   const handleMouseEnter = (id: string, element: HTMLElement) => {
+    if (!isCoarsePointer) {
+      setHoveredItemId(id);
+    }
     if (scaleOnHover) {
       gsap.to(`[data-key="${id}"]`, {
         scale: hoverScale,
@@ -275,6 +290,7 @@ const Masonry: React.FC<MasonryProps> = ({
   };
 
   const handleMouseLeave = (id: string, element: HTMLElement) => {
+    setHoveredItemId(current => (current === id ? null : current));
     if (scaleOnHover) {
       gsap.to(`[data-key="${id}"]`, {
         scale: 1,
@@ -288,6 +304,15 @@ const Masonry: React.FC<MasonryProps> = ({
     }
   };
 
+  const handleItemClick = (item: GridItem) => {
+    if (isCoarsePointer && item.description) {
+      setActiveTouchItemId(current => (current === item.id ? null : item.id));
+      return;
+    }
+
+    window.open(item.url, '_blank', 'noopener');
+  };
+
   return (
     <div ref={containerRef} className="relative w-full h-full">
       {grid.map(item => (
@@ -296,16 +321,52 @@ const Masonry: React.FC<MasonryProps> = ({
           data-key={item.id}
           className="absolute box-content"
           style={{ willChange: 'transform, width, height, opacity' }}
-          onClick={() => window.open(item.url, '_blank', 'noopener')}
+          onClick={() => handleItemClick(item)}
           onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
         >
           <div
-            className="relative w-full h-full bg-cover bg-center rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] uppercase text-[10px] leading-[10px]"
+            className="relative h-full w-full overflow-hidden rounded-[10px] bg-cover bg-center uppercase text-[10px] leading-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)]"
             style={{ backgroundImage: `url(${item.img})` }}
           >
             {colorShiftOnHover && (
               <div className="color-overlay absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 pointer-events-none" />
+            )}
+            {item.description && (
+              <div
+                className="pointer-events-none"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '1rem',
+                  borderRadius: '10px',
+                  opacity: hoveredItemId === item.id || activeTouchItemId === item.id ? 1 : 0,
+                  background:
+                    'color-mix(in srgb, var(--theme-accent) 28%, transparent)',
+                  backdropFilter: 'brightness(0.82) saturate(1.08)',
+                  transition: 'opacity 200ms ease',
+                }}
+              >
+                <p
+                  className="normal-case text-white"
+                  style={{
+                    width: '100%',
+                    margin: 0,
+                    textAlign: 'center',
+                    fontSize: 'clamp(16px, 1.45vw, 20px)',
+                    fontWeight: 700,
+                    lineHeight: 1.45,
+                    textShadow: '0 2px 5px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {item.description}
+                </p>
+              </div>
             )}
           </div>
         </div>

@@ -178,7 +178,15 @@ I enjoy exploring new technologies and also turning ideas into real products.
           },
           react_furry: {
             download: 'Download',
-            get: 'get persona'
+            get: 'get persona',
+            gallery: {
+              react_explain: 'Overview of the React Fursona concept and visual setup.',
+              moji: 'Expression and mascot style reference for React Fursona.',
+              not_found: 'Furry-themed not found state and fallback artwork.',
+              hook: 'Hook usage illustration for runtime behavior.',
+              nani: 'Reaction artwork for surprising or unexpected states.',
+              base: 'Base visual template for the React Fursona assets.',
+            },
           },
           reactFurryError: {
             ...reactFurryErrorI18n.en,
@@ -335,6 +343,14 @@ I enjoy exploring new technologies and also turning ideas into real products.
           react_furry: {
             download: '下载',
             get: '获取兽设',
+            gallery: {
+              react_explain: 'React Fursona 的概念说明与视觉设定图。',
+              moji: 'React Fursona 的表情与角色风格参考图。',
+              not_found: '拟兽主题的未找到状态与兜底插图。',
+              hook: '用于说明运行时行为的 Hook 使用示意图。',
+              nani: '用于意外状态或惊讶反馈的反应插图。',
+              base: 'React Fursona 资源的基础视觉模板。',
+            },
           },
           reactFurryError: {
             ...reactFurryErrorI18n.zh
@@ -496,6 +512,14 @@ I enjoy exploring new technologies and also turning ideas into real products.
           react_furry: {
             download: 'ダウンロード',
             get: '擬獣設定を取得する',
+            gallery: {
+              react_explain: 'React Fursona のコンセプトとビジュアル設定の概要です。',
+              moji: 'React Fursona の表情とマスコットスタイルの参考です。',
+              not_found: 'ケモノテーマの Not Found 状態とフォールバック画像です。',
+              hook: '実行時の挙動を説明する Hook 利用例です。',
+              nani: '予想外の状態や驚きの反応に使うイラストです。',
+              base: 'React Fursona アセットの基本ビジュアルテンプレートです。',
+            },
           },
           reactFurryError: {
             ...reactFurryErrorI18n.jp

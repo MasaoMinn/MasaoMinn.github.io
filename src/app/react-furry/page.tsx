@@ -15,30 +15,36 @@ export default function ReactFurryRootPage() {
       id: "0",
       img: baseUrl + 'ReactExplain.png',
       url: baseUrl + 'ReactExplain.png',
+      description: t('react_furry.gallery.react_explain'),
     },
     {
       id: "1",
       img: baseUrl + 'react-furry-moji.png',
       url: baseUrl + 'react-furry-moji.png',
+      description: t('react_furry.gallery.moji'),
     },
     {
       id: "2",
       img: baseUrl + 'not_found.png',
       url: baseUrl + 'not_found.png',
+      description: t('react_furry.gallery.not_found'),
     },
     {
       id: "3",
       img: baseUrl + 'hook.png',
       url: baseUrl + 'hook.png',
+      description: t('react_furry.gallery.hook'),
     },
     {
       id: "4",
       img: baseUrl + 'nani.png',
       url: baseUrl + 'nani.png',
+      description: t('react_furry.gallery.nani'),
     }, {
       id: "5",
       img: baseUrl + 'base.png',
       url: baseUrl + 'base.png',
+      description: t('react_furry.gallery.base'),
     }
 
   ];
