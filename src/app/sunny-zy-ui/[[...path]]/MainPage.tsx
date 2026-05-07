@@ -5,7 +5,7 @@ export default function MainPage() {
   const { t } = useTranslation();
   return (
     <section className="rounded-xl border border-slate-300/60 bg-white/60 p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold">{t("sunnyZyUi.mainPage.title")}</h1>
+      <div className="cursor-pointer" onClick={() => { window.open('https://github.com/MasaoMinn/sunny-ui', '_blank') }}><h1 className="text-2xl font-semibold">{t("sunnyZyUi.mainPage.title")}</h1></div>
       <p className="mt-3 text-sm text-slate-700">
         {t("sunnyZyUi.mainPage.description")}
       </p>

@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './globals.css'
 import './i18n';
 import Header from "@/components/layout/Header";
+import CursorLabProvider from "@/components/boxed/CursorLabProvider";
 
 export const metadata: Metadata = {
   title: "Sunny_ZY's website",
@@ -47,8 +48,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${playpenSans.variable} ${kiwiMaru.variable} ${kiwiMaru.className}`}>
         <ThemeProvider>
-          <Header />
-          {children}
+          <CursorLabProvider>
+            <Header />
+            {children}
+          </CursorLabProvider>
         </ThemeProvider>
       </body>
     </html>

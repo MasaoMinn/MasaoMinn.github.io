@@ -28,6 +28,14 @@ i18n
           mainpage: {
             title: 'Sunny_Tangetsu - Static Resource Site',
             description: 'Curated entrances for my projects. Choose a lane and jump in.',
+            introduction: `# Sunny_湛月
+
+Passionate about technology and creation, with a focus on frontend, UI design, and AI applications.
+
+Currently learning English and Japanese continuously, hoping to connect with broader cultures through language.
+
+I enjoy exploring new technologies and also turning ideas into real products.
+`,
             dropdown: 'More',
             about: 'About Me',
             seeme: 'See me on Github',
@@ -67,6 +75,44 @@ i18n
                 backgroundColor2: 'Panel Background',
                 color2: 'Secondary Text',
                 extraColor2: 'Secondary Accent',
+              },
+            },
+            cursor: {
+              title: 'CursorLab',
+              reset: 'Reset',
+              enable: 'Enable cursor effects',
+              click_effect: 'Click burst effect',
+              cursor_shape: 'Mouse shape',
+              trail_shape: 'Trail shape',
+              trail_type: 'Trail shape',
+              pointer_style: 'Pointer style',
+              size: 'Trail size',
+              thickness: 'Trail thickness',
+              delay: 'Trail delay',
+              cursor_shapes: {
+                circle: 'Circle',
+                'circle-filled': 'Circle Filled',
+                square: 'Square',
+                'square-filled': 'Square Filled',
+                triangle: 'Triangle',
+                star: 'Star',
+                dot: 'Dot',
+              },
+              trail_types: {
+                circle: 'Circle',
+                'circle-filled': 'Circle Filled',
+                square: 'Square',
+                'square-filled': 'Square Filled',
+                triangle: 'Triangle',
+                star: 'Star',
+                dot: 'Dot',
+              },
+              pointer_styles: {
+                default: 'Default',
+                crosshair: 'Crosshair',
+                grab: 'Grab',
+                copy: 'Copy',
+                none: 'Hidden',
               },
             },
             react_furry: {
@@ -148,6 +194,15 @@ i18n
           mainpage: {
             title: 'Sunny_湛月 - 静态资源网站',
             description: '这是一个静态资源网站，用于展示我的各种各样的项目',
+            introduction: `# Sunny_湛月
+
+热爱技术与创作的开发者, 关注前端、UI 设计与 AI 应用
+
+在持续学习英语与日语，希望能够通过语言接触更广阔的世界与文化
+
+喜欢有趣的新技术，也喜欢把灵感真正做出来
+
+`,
             dropdown: '更多',
             about: '关于我',
             seeme: '我的 Github',
@@ -187,6 +242,44 @@ i18n
                 backgroundColor2: '面板背景色',
                 color2: '次级文字色',
                 extraColor2: '次级强调色',
+              },
+            },
+            cursor: {
+              title: 'CursorLab',
+              reset: '重置',
+              enable: '启用鼠标效果',
+              click_effect: '点击扩散特效',
+              cursor_shape: '鼠标形状',
+              trail_shape: '尾迹形状',
+              trail_type: '尾迹形状',
+              pointer_style: '鼠标样式',
+              size: '尾迹大小',
+              thickness: '尾迹粗细',
+              delay: '尾迹延迟',
+              cursor_shapes: {
+                circle: '圆环',
+                'circle-filled': '实心圆',
+                square: '方框',
+                'square-filled': '实心方块',
+                triangle: '三角形',
+                star: '星形',
+                dot: '点',
+              },
+              trail_types: {
+                circle: '圆环',
+                'circle-filled': '实心圆',
+                square: '方框',
+                'square-filled': '实心方块',
+                triangle: '三角形',
+                star: '星形',
+                dot: '点',
+              },
+              pointer_styles: {
+                default: '默认',
+                crosshair: '十字准星',
+                grab: '抓取',
+                copy: '复制',
+                none: '隐藏',
               },
             },
             react_furry: {
@@ -264,6 +357,14 @@ i18n
           mainpage: {
             title: 'Sunny_湛月 - 静的リソースサイト',
             description: 'これは静的リソースサイトです。ここでは、私の各種プロジェクトを示しています。',
+            introduction: `# Sunny_湛月
+
+技術と創作が好きな開発者で、フロントエンド、UI デザイン、AI 応用に関心があります。
+
+英語と日本語を継続的に学び、言語を通じてより広い世界や文化に触れたいと考えています。
+
+新しい技術を試すことが好きで、アイデアを実際の形にすることも大切にしています。
+`,
             dropdown: 'そのうえ',
             about: '私について',
             seeme: 'Github',
@@ -303,6 +404,44 @@ i18n
                 backgroundColor2: 'パネル背景色',
                 color2: 'サブ文字色',
                 extraColor2: 'サブアクセント',
+              },
+            },
+            cursor: {
+              title: 'CursorLab',
+              reset: 'リセット',
+              enable: 'カーソル効果を有効化',
+              click_effect: 'クリック拡散エフェクト',
+              cursor_shape: 'カーソル形状',
+              trail_shape: 'トレイル形状',
+              trail_type: 'トレイル形状',
+              pointer_style: 'カーソルスタイル',
+              size: 'トレイルサイズ',
+              thickness: 'トレイル太さ',
+              delay: 'トレイル遅延',
+              cursor_shapes: {
+                circle: '円',
+                'circle-filled': '塗りつぶし円',
+                square: '四角',
+                'square-filled': '塗りつぶし四角',
+                triangle: '三角',
+                star: '星',
+                dot: 'ドット',
+              },
+              trail_types: {
+                circle: '円',
+                'circle-filled': '塗りつぶし円',
+                square: '四角',
+                'square-filled': '塗りつぶし四角',
+                triangle: '三角',
+                star: '星',
+                dot: 'ドット',
+              },
+              pointer_styles: {
+                default: 'デフォルト',
+                crosshair: 'クロスヘア',
+                grab: 'グラブ',
+                copy: 'コピー',
+                none: '非表示',
               },
             },
             react_furry: {

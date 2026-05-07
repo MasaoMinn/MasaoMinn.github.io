@@ -301,9 +301,11 @@ const getVerticesOrDefault = (vertices: BubbleProps["vertices"]): BubbleVertex[]
 const createSliderThemeStyle = (palette: ThemePalette) =>
 ({
   "--slider-track-color": palette.borderColor,
+  "--slider-track-border": palette.borderColor,
   "--slider-range-color": palette.extraColor,
-  "--slider-thumb-bg": palette.backgroundColor,
-  "--slider-thumb-border": palette.extraColor,
+  "--slider-thumb-bg": palette.extraColor2,
+  "--slider-thumb-border": palette.color,
+  "--slider-thumb-glow": palette.extraColor,
 } as CSSProperties);
 
 const ThemedFieldSet = styled(FieldSet) <{ $palette: ThemePalette }>`
@@ -374,25 +376,25 @@ const ThemedInput = styled(Input) <{ $palette: ThemePalette }>`
 
 const ThemedBubbleCard = styled.div<{ $palette: ThemePalette }>`
   border-color: ${({ $palette }) => $palette.borderColor};
-  background-color: ${({ $palette }) => $palette.backgroundColor2};
+  background-color: ${({ $palette }) => $palette.backgroundColor};
 `;
 
 const ThemedTabsList = styled(TabsList) <{ $palette: ThemePalette }>`
   && {
-    border: 1px solid ${({ $palette }) => $palette.borderColor};
-    background: linear-gradient(
-      135deg,
-      ${({ $palette }) => $palette.backgroundColor2} 0%,
-      ${({ $palette }) => $palette.backgroundColor} 100%
-    ) !important;
+    border: 2px solid ${({ $palette }) => $palette.borderColor};
+    border-radius: 9999px;
+    background-color: ${({ $palette }) => $palette.backgroundColor} !important;
     color: ${({ $palette }) => $palette.color};
-    box-shadow: inset 0 0 0 1px ${({ $palette }) => $palette.borderColor}33;
+    box-shadow:
+      inset 0 0 0 1px ${({ $palette }) => $palette.borderColor}55,
+      0 2px 8px -4px ${({ $palette }) => $palette.extraColor2};
   }
 `;
 
 const ThemedTabsTrigger = styled(TabsTrigger) <{ $palette: ThemePalette }>`
   && {
     border: 1px solid transparent;
+    border-radius: 9999px;
     background-color: transparent;
     color: ${({ $palette }) => $palette.color2};
     transition:
@@ -412,8 +414,10 @@ const ThemedTabsTrigger = styled(TabsTrigger) <{ $palette: ThemePalette }>`
   &&[data-state="active"] {
     background-color: ${({ $palette }) => $palette.extraColor};
     color: ${({ $palette }) => $palette.backgroundColor};
-    border-color: ${({ $palette }) => $palette.borderColor};
-    box-shadow: 0 4px 10px -6px ${({ $palette }) => $palette.extraColor2};
+    border-color: ${({ $palette }) => $palette.color};
+    box-shadow:
+      0 0 0 1px ${({ $palette }) => $palette.borderColor},
+      0 6px 14px -8px ${({ $palette }) => $palette.extraColor2};
   }
 `;
 
@@ -1080,8 +1084,15 @@ export default function BubbleBoxPreview({
       <Tabs value={activeTab} onValueChange={handleTabChange} className="mt-2">
         <div className="m-4 flex items-center justify-between gap-4">
           <h1 className="m-0 text-2xl font-semibold">BubbleBox</h1>
-          <ThemedTabsList className="h-10 rounded-md p-1" $palette={palette}>
+          <ThemedTabsList className="h-11 rounded-full p-1" $palette={palette}>
             <ThemedTabsTrigger value="preview" $palette={palette}>Preview</ThemedTabsTrigger>
+            <span
+              aria-hidden="true"
+              className="mx-1 select-none text-sm font-semibold"
+              style={{ color: palette.borderColor }}
+            >
+              |
+            </span>
             <ThemedTabsTrigger value="code" $palette={palette}>Code</ThemedTabsTrigger>
           </ThemedTabsList>
         </div>
