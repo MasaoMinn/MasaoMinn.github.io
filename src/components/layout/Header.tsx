@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
@@ -12,6 +12,10 @@ import {
   type ThemePalette,
   useTheme,
 } from "@/components/boxed/ThemeProvider";
+import {
+  CURSOR_TRAIL_TYPES,
+  useCursorLab,
+} from "@/components/boxed/CursorLabProvider";
 import { useTranslation } from "react-i18next";
 import i18n from "@/app/i18n";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
@@ -106,6 +110,7 @@ function BasicExample() {
     setCustomThemePalette,
     removeCustomThemePalette,
   } = useTheme();
+  const { cursorSettings, setCursorSettings, resetCursorSettings } = useCursorLab();
   const { t } = useTranslation();
   const [showCustomThemeModal, setShowCustomThemeModal] = useState(false);
   const [isDesktopPointer, setIsDesktopPointer] = useState(false);
@@ -124,6 +129,14 @@ function BasicExample() {
     defaultValue: theme,
   });
   const isCustomThemeActive = currentThemeNameKey === "custom";
+  const cursorTrailOptions = useMemo(
+    () =>
+      CURSOR_TRAIL_TYPES.map((value) => ({
+        value,
+        label: t(`mainpage.cursor.trail_types.${value}`, { defaultValue: value }),
+      })),
+    [t],
+  );
 
   const openCustomThemeModal = () => {
     setCustomThemeDraft(normalizePalette(currentPalette));
@@ -371,6 +384,146 @@ function BasicExample() {
                         {t("mainpage.custom_theme.remove")}
                       </Button>
                     ) : null}
+                  </div>
+
+                  <NavDropdown.Divider />
+
+                  <div
+                    className="px-3 py-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div
+                      className="rounded-3 p-2 border"
+                      style={{
+                        backgroundColor: currentPalette.backgroundColor2,
+                        borderColor: currentPalette.borderColor,
+                        boxShadow: `0 6px 16px -10px ${currentPalette.extraColor2}`,
+                      }}
+                    >
+                      <div className="mb-2 d-flex align-items-center justify-content-between gap-2">
+                        <div className="fw-semibold small">
+                          {t("mainpage.cursor.title")}
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline-secondary"
+                          onClick={() => resetCursorSettings()}
+                          style={{
+                            borderColor: currentPalette.borderColor,
+                            color: currentPalette.color2,
+                            backgroundColor: currentPalette.backgroundColor,
+                          }}
+                        >
+                          {t("mainpage.cursor.reset")}
+                        </Button>
+                      </div>
+
+                      <div className="d-flex flex-column gap-2">
+                        <Form.Check
+                          type="switch"
+                          id="cursorlab-enable"
+                          label={t("mainpage.cursor.enable")}
+                          checked={cursorSettings.enabled}
+                          onChange={(event) =>
+                            setCursorSettings({ enabled: event.target.checked })
+                          }
+                        />
+                        <Form.Check
+                          type="switch"
+                          id="cursorlab-click"
+                          label={t("mainpage.cursor.click_effect")}
+                          checked={cursorSettings.clickEffect}
+                          disabled={!cursorSettings.enabled}
+                          onChange={(event) =>
+                            setCursorSettings({ clickEffect: event.target.checked })
+                          }
+                        />
+
+                        <Form.Group>
+                          <Form.Label className="small mb-1">
+                            {t("mainpage.cursor.trail_shape")}
+                          </Form.Label>
+                          <Form.Select
+                            size="sm"
+                            value={cursorSettings.trailType}
+                            disabled={!cursorSettings.enabled}
+                            onChange={(event) =>
+                              setCursorSettings({
+                                trailType: event.target.value as (typeof CURSOR_TRAIL_TYPES)[number],
+                              })
+                            }
+                            style={{
+                              backgroundColor: currentPalette.backgroundColor,
+                              color: currentPalette.color2,
+                              borderColor: currentPalette.borderColor,
+                            }}
+                          >
+                            {cursorTrailOptions.map((item) => (
+                              <option key={item.value} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group>
+                          <div className="d-flex justify-content-between small">
+                            <span>{t("mainpage.cursor.size")}</span>
+                            <span>{cursorSettings.size}px</span>
+                          </div>
+                          <Form.Range
+                            min={8}
+                            max={48}
+                            step={1}
+                            value={cursorSettings.size}
+                            disabled={!cursorSettings.enabled}
+                            onChange={(event) =>
+                              setCursorSettings({
+                                size: Number(event.target.value),
+                              })
+                            }
+                          />
+                        </Form.Group>
+
+                        <Form.Group>
+                          <div className="d-flex justify-content-between small">
+                            <span>{t("mainpage.cursor.thickness")}</span>
+                            <span>{cursorSettings.thickness}</span>
+                          </div>
+                          <Form.Range
+                            min={1}
+                            max={8}
+                            step={1}
+                            value={cursorSettings.thickness}
+                            disabled={!cursorSettings.enabled}
+                            onChange={(event) =>
+                              setCursorSettings({
+                                thickness: Number(event.target.value),
+                              })
+                            }
+                          />
+                        </Form.Group>
+
+                        <Form.Group>
+                          <div className="d-flex justify-content-between small">
+                            <span>{t("mainpage.cursor.delay")}</span>
+                            <span>{cursorSettings.delay.toFixed(2)}</span>
+                          </div>
+                          <Form.Range
+                            min={0.02}
+                            max={0.35}
+                            step={0.01}
+                            value={cursorSettings.delay}
+                            disabled={!cursorSettings.enabled}
+                            onChange={(event) =>
+                              setCursorSettings({
+                                delay: Number(event.target.value),
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </div>
+                    </div>
                   </div>
 
                   <NavDropdown.Divider />

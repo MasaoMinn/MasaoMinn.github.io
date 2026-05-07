@@ -44,6 +44,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      cursorlab:
+        specifier: ^1.1.1
+        version: 1.1.1
       gsap:
         specifier: ^3.14.2
         version: 3.14.2
@@ -1390,6 +1393,10 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  cursorlab@1.1.1:
+    resolution: {integrity: sha512-oNg+rO1OqgzyjxVr7Kthfb3PKMUWVYpKxUovrjB9FQrawIkG/TP57CArYpCduD4nXX+PbVsVgs5+9zwi5kt9Sg==}
+    hasBin: true
 
   damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -4074,6 +4081,8 @@ snapshots:
       postcss-value-parser: 4.2.0
 
   csstype@3.2.3: {}
+
+  cursorlab@1.1.1: {}
 
   damerau-levenshtein@1.0.8: {}
 

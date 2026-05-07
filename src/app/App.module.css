@@ -70,6 +70,84 @@
   color: var(--theme-fg-2);
 }
 
+.profileCard {
+  position: relative;
+  z-index: 1;
+  width: min(72rem, 100%);
+  height: 19rem;
+  margin: 0 auto 1.2rem;
+  padding: 0.9rem;
+  border-radius: 1.18rem;
+  border: 1px solid color-mix(in srgb, var(--theme-border) 76%, var(--theme-accent) 24%);
+  background:
+    linear-gradient(175deg,
+      color-mix(in srgb, var(--theme-accent) 8%, var(--theme-bg-2)) 0%,
+      color-mix(in srgb, var(--theme-accent-2) 6%, var(--background)) 52%,
+      color-mix(in srgb, var(--theme-bg-2) 92%, transparent) 100%);
+  box-shadow:
+    0 14px 30px color-mix(in srgb, var(--theme-accent) 14%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 28%, transparent);
+  display: flex;
+  gap: 0.85rem;
+}
+
+.profileAvatarPanel {
+  flex: 0 0 17rem;
+  width: 17rem;
+  height: 100%;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--theme-border) 66%, var(--theme-accent) 34%);
+  background: color-mix(in srgb, var(--theme-bg-2) 92%, transparent);
+}
+
+.profileAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.profileIntroPanel {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  text-align: left;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--theme-border) 72%, transparent);
+  background: color-mix(in srgb, var(--theme-bg-2) 88%, transparent);
+  padding: 0.8rem 0.9rem;
+}
+
+.profileMarkdown {
+  max-width: none;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--foreground);
+  text-align: left;
+}
+
+.profileMarkdown :global(h3) {
+  margin-top: 0;
+  margin-bottom: 0.65rem;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.profileMarkdown :global(ul) {
+  margin: 0.2rem 0 0.75rem;
+  padding-left: 1.1rem;
+}
+
+.profileMarkdown :global(li) {
+  margin: 0.2rem 0;
+}
+
+.profileMarkdown :global(p) {
+  margin: 0.4rem 0 0;
+}
+
 .groupCard {
   --group-accent: var(--theme-accent);
   position: relative;
@@ -224,6 +302,24 @@
     margin-bottom: 1.2rem;
   }
 
+  .profileCard {
+    height: auto;
+    padding: 0.72rem;
+    display: grid;
+    gap: 0.72rem;
+  }
+
+  .profileAvatarPanel {
+    width: 100%;
+    flex: none;
+    height: 12rem;
+  }
+
+  .profileIntroPanel {
+    height: auto;
+    max-height: none;
+  }
+
   .masonry {
     max-width: 100%;
     column-count: 1;
@@ -242,6 +338,27 @@
   .groupCard {
     border-radius: 1rem;
     padding: 0.86rem;
+  }
+
+  .profileCard {
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .profileAvatarPanel {
+    height: 10.6rem;
+  }
+
+  .profileIntroPanel {
+    padding: 0.66rem 0.72rem;
+  }
+
+  .profileMarkdown {
+    font-size: 0.9rem;
+  }
+
+  .profileMarkdown :global(h3) {
+    font-size: 1.06rem;
   }
 }
 

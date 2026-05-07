@@ -2,10 +2,12 @@
 import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Link from "next/link";
+import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
 import { CookieModal } from "@/components/layout/modals/CookieModal";
+import MarkdownComponent from "@/components/boxed/MarkdownComponent";
 import styles from "./App.module.css";
 
 type IconKind =
@@ -145,6 +147,8 @@ const LinkIcon = ({ icon }: { icon: IconKind }) => {
 const App = () => {
   const { t } = useTranslation();
   const { modal, showModal } = useModalStore();
+
+  const developerIntroMarkdown = t("mainpage.introduction");
 
   // 检查并显示cookie同意弹窗
   useEffect(() => {
@@ -349,6 +353,25 @@ const App = () => {
         <h1 className={styles.pageTitle}>{t("mainpage.title")}</h1>
         <p className={styles.pageDescription}>{t("mainpage.description")}</p>
       </header>
+
+      <section className={styles.profileCard} aria-label="Developer profile">
+        <div className={styles.profileAvatarPanel}>
+          <Image
+            src="/head.svg"
+            alt="Site developer avatar"
+            width={360}
+            height={360}
+            className={styles.profileAvatar}
+            priority
+          />
+        </div>
+        <div className={styles.profileIntroPanel}>
+          <MarkdownComponent
+            content={developerIntroMarkdown}
+            className={styles.profileMarkdown}
+          />
+        </div>
+      </section>
 
       <div className={styles.masonry}>
         {linkGroups.map((group) => (
