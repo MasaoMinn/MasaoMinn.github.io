@@ -1,0 +1,22 @@
+name = "masaominn-site"
+main = "src/index.ts"
+compatibility_date = "2026-07-06"
+
+[vars]
+CORS_ORIGINS = "http://localhost:3000,http://localhost:8787,https://masaominn.github.io"
+UNLOCK_TOKEN_TTL_SECONDS = "1800"
+
+[assets]
+directory = "../../out"
+binding = "ASSETS"
+not_found_handling = "404-page"
+
+[[d1_databases]]
+binding = "PICTURE_DB"
+database_name = "masao-picture-db"
+database_id = "replace-with-cloudflare-d1-database-id"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "PICTURE_BUCKET"
+bucket_name = "masao-picture-images"

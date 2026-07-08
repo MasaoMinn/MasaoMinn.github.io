@@ -82,6 +82,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               reset: 'Reset',
               enable: 'Enable cursor effects',
               click_effect: 'Click burst effect',
+              trail_effect: 'Mouse trail effect',
               cursor_shape: 'Mouse shape',
               trail_shape: 'Trail shape',
               trail_type: 'Trail shape',
@@ -89,6 +90,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               size: 'Trail size',
               thickness: 'Trail thickness',
               delay: 'Trail delay',
+              trail_length: 'Trail length',
               cursor_shapes: {
                 circle: 'Circle',
                 'circle-filled': 'Circle Filled',
@@ -257,6 +259,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               reset: '重置',
               enable: '启用鼠标效果',
               click_effect: '点击扩散特效',
+              trail_effect: '鼠标移动尾迹',
               cursor_shape: '鼠标形状',
               trail_shape: '尾迹形状',
               trail_type: '尾迹形状',
@@ -264,6 +267,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               size: '尾迹大小',
               thickness: '尾迹粗细',
               delay: '尾迹延迟',
+              trail_length: '尾迹长度',
               cursor_shapes: {
                 circle: '圆环',
                 'circle-filled': '实心圆',
@@ -427,6 +431,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               reset: 'リセット',
               enable: 'カーソル効果を有効化',
               click_effect: 'クリック拡散エフェクト',
+              trail_effect: 'マウストレイル効果',
               cursor_shape: 'カーソル形状',
               trail_shape: 'トレイル形状',
               trail_type: 'トレイル形状',
@@ -434,6 +439,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               size: 'トレイルサイズ',
               thickness: 'トレイル太さ',
               delay: 'トレイル遅延',
+              trail_length: 'トレイル長さ',
               cursor_shapes: {
                 circle: '円',
                 'circle-filled': '塗りつぶし円',

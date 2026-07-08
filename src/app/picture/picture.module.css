@@ -1,0 +1,450 @@
+.page {
+  min-height: 100vh;
+  padding: 2rem clamp(1rem, 3vw, 3rem) 4rem;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 14%, transparent), transparent 28rem),
+    var(--background);
+  color: var(--foreground);
+}
+
+.hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1180px;
+  margin: 0 auto 1.25rem;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.subtitle {
+  max-width: 42rem;
+  margin: 0.75rem 0 0;
+  color: color-mix(in srgb, var(--foreground) 68%, transparent);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.adminLink {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.adminLink:hover,
+.adminLink:focus-visible {
+  color: var(--primary-foreground);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.adminLink svg,
+.heroActions svg,
+.visibilityBadge svg,
+.albumIcon svg,
+.emptyState svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.error,
+.modalError,
+.success {
+  border: 1px solid color-mix(in srgb, #b42318 42%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, #b42318 9%, var(--card));
+  color: #8f1d13;
+}
+
+.error,
+.success {
+  max-width: 1180px;
+  margin: 0 auto 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.success {
+  border-color: color-mix(in srgb, #2f7d46 42%, transparent);
+  background: color-mix(in srgb, #2f7d46 10%, var(--card));
+  color: #215c34;
+}
+
+.modalError {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.75rem;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(17rem, 21rem) minmax(0, 1fr);
+  gap: 1rem;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.albumRail,
+.galleryPanel,
+.adminPanel {
+  border: 1px solid color-mix(in srgb, var(--border) 74%, transparent);
+  border-radius: 0.75rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, transparent), color-mix(in srgb, var(--secondary) 94%, transparent));
+  box-shadow: 0 18px 34px -30px color-mix(in srgb, var(--primary) 48%, transparent);
+}
+
+.albumRail {
+  padding: 1rem;
+}
+
+.railHeader,
+.galleryHeader,
+.adminHeader,
+.adminToolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.railHeader h2,
+.galleryHeader h2,
+.adminHeader h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.railHeader span,
+.galleryHeader p,
+.albumDesc,
+.albumStats,
+.emptyText,
+.emptyState span,
+.adminHint,
+.smallMeta {
+  color: color-mix(in srgb, var(--foreground) 62%, transparent);
+}
+
+.albumList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.albumCard {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--border) 58%, transparent);
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--card) 72%, transparent);
+  color: inherit;
+  padding: 0.75rem;
+  text-align: left;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.albumCard:hover,
+.albumCard:focus-visible,
+.albumCardActive {
+  border-color: color-mix(in srgb, var(--primary) 64%, var(--border));
+  background: color-mix(in srgb, var(--accent) 17%, var(--card));
+  transform: translateY(-1px);
+}
+
+.albumIcon {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
+  color: var(--primary);
+}
+
+.albumMeta {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.albumName {
+  overflow: hidden;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.albumDesc {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.albumStats {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+}
+
+.galleryPanel {
+  min-height: 34rem;
+  padding: clamp(1rem, 2vw, 1.35rem);
+}
+
+.galleryHeader {
+  margin-bottom: 1rem;
+}
+
+.galleryHeader p {
+  margin: 0.3rem 0 0;
+  line-height: 1.6;
+}
+
+.visibilityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card) 72%, transparent);
+  color: var(--primary);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
+.photoGrid {
+  column-count: 3;
+  column-gap: 0.85rem;
+}
+
+.photoItem {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 0.85rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 56%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--secondary) 88%, transparent);
+}
+
+.photoItem img {
+  display: block;
+  width: 100%;
+  min-height: 10rem;
+  object-fit: cover;
+}
+
+.photoItem figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  min-height: 4.5rem;
+  align-items: flex-end;
+  padding: 1rem;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(0.35rem);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.photoItem:hover figcaption,
+.photoItem:focus-within figcaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.photoItem figcaption span {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.emptyText {
+  margin: 1rem 0 0;
+  line-height: 1.6;
+}
+
+.emptyState {
+  display: flex;
+  min-height: 24rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--secondary) 58%, transparent);
+  padding: 2rem;
+  text-align: center;
+}
+
+.emptyState svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--primary);
+}
+
+.emptyState p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.adminPage {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.adminGrid {
+  display: grid;
+  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.adminPanel {
+  padding: 1rem;
+}
+
+.adminPanel form,
+.adminStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.adminHeader {
+  margin-bottom: 1rem;
+}
+
+.adminHint {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.imageRow {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--border) 54%, transparent);
+  border-radius: 0.65rem;
+  padding: 0.6rem;
+}
+
+.imageRow img {
+  width: 4.5rem;
+  height: 3.5rem;
+  border-radius: 0.45rem;
+  object-fit: cover;
+}
+
+.privateThumb {
+  display: flex;
+  width: 4.5rem;
+  height: 3.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--secondary) 62%, transparent);
+  color: var(--primary);
+}
+
+.imageRow p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.smallMeta {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .shell,
+  .adminGrid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero {
+    align-items: flex-start;
+  }
+
+  .heroActions {
+    justify-content: flex-start;
+  }
+
+  .photoGrid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-inline: 0.75rem;
+  }
+
+  .photoGrid {
+    column-count: 1;
+  }
+
+  .formRow,
+  .imageRow {
+    grid-template-columns: 1fr;
+  }
+
+  .imageRow img {
+    width: 100%;
+    height: 11rem;
+  }
+
+  .privateThumb {
+    width: 100%;
+    height: 8rem;
+  }
+}

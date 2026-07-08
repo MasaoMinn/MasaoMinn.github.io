@@ -1,0 +1,3 @@
+PRIVATE_ALBUM_KEY=change-this-private-view-key
+ADMIN_ALBUM_KEY=change-this-admin-key
+UNLOCK_TOKEN_SECRET=change-this-long-random-token-signing-secret

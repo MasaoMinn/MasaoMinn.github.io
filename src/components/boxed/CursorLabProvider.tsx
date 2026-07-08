@@ -39,21 +39,25 @@ export type CursorPointerStyle = (typeof CURSOR_POINTER_STYLES)[number];
 export type CursorLabSettings = {
   enabled: boolean;
   clickEffect: boolean;
+  trailEffect: boolean;
   trailType: CursorTrailType;
   pointerStyle: CursorPointerStyle;
   size: number;
   thickness: number;
   delay: number;
+  trailLength: number;
 };
 
 const DEFAULT_CURSORLAB_SETTINGS: CursorLabSettings = {
   enabled: true,
   clickEffect: true,
+  trailEffect: true,
   trailType: "circle",
   pointerStyle: "default",
   size: 18,
   thickness: 2,
   delay: 0.06,
+  trailLength: 4,
 };
 
 type CursorLabContextType = {
@@ -83,6 +87,13 @@ type CursorLabStaticApi = {
 };
 
 type CursorLabCtor = new () => CursorLabStaticApi;
+
+type CursorLabPosition = { x: number; y: number };
+
+type CursorLabInternalApi = CursorLabStaticApi & {
+  mousePosition?: CursorLabPosition;
+  targetPosition?: CursorLabPosition;
+};
 
 declare global {
   interface Window {
@@ -117,6 +128,10 @@ const normalizeCursorSettings = (
       typeof source.clickEffect === "boolean"
         ? source.clickEffect
         : DEFAULT_CURSORLAB_SETTINGS.clickEffect,
+    trailEffect:
+      typeof source.trailEffect === "boolean"
+        ? source.trailEffect
+        : DEFAULT_CURSORLAB_SETTINGS.trailEffect,
     trailType: isTrailType(source.trailType)
       ? source.trailType
       : DEFAULT_CURSORLAB_SETTINGS.trailType,
@@ -135,6 +150,10 @@ const normalizeCursorSettings = (
       typeof source.delay === "number"
         ? clamp(source.delay, 0.02, 0.35)
         : DEFAULT_CURSORLAB_SETTINGS.delay,
+    trailLength:
+      typeof source.trailLength === "number"
+        ? Math.round(clamp(source.trailLength, 1, 8))
+        : DEFAULT_CURSORLAB_SETTINGS.trailLength,
   };
 };
 
@@ -213,6 +232,29 @@ const applyCursorDelay = (cursorLab: CursorLabStaticApi, delay: number) => {
   if (hasCursorLabInstance() && isObjectRecord(window.cursorLabInstance)) {
     (window.cursorLabInstance as { trailDelayValue?: number }).trailDelayValue = delay;
   }
+};
+
+const syncCursorPosition = (
+  cursorLab: CursorLabStaticApi,
+  position: CursorLabPosition | null,
+) => {
+  if (!position) return;
+  const internal = cursorLab as CursorLabInternalApi;
+  if (internal.mousePosition) {
+    internal.mousePosition.x = position.x;
+    internal.mousePosition.y = position.y;
+  }
+  if (internal.targetPosition) {
+    internal.targetPosition.x = position.x;
+    internal.targetPosition.y = position.y;
+  }
+};
+
+const restoreNativeCursor = () => {
+  if (typeof document === "undefined") return;
+  document.documentElement.classList.remove("cursorlab-hide-native");
+  document.documentElement.style.cursor = "";
+  document.body.style.cursor = "";
 };
 
 const toInternalTrailDelay = (uiDelay: number) =>
@@ -309,11 +351,23 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
   const [cursorLabReady, setCursorLabReady] = useState(false);
   const cursorLabRef = useRef<CursorLabStaticApi | null>(null);
   const tailInstancesRef = useRef<CursorLabStaticApi[]>([]);
+  const latestPointerPositionRef = useRef<CursorLabPosition | null>(null);
 
   const destroyTailInstances = useCallback(() => {
     for (const instance of tailInstancesRef.current) {
       try {
         instance.destroy();
+      } catch {
+        // ignore
+      }
+    }
+    tailInstancesRef.current = [];
+  }, []);
+
+  const stopTailInstances = useCallback(() => {
+    for (const instance of tailInstancesRef.current) {
+      try {
+        instance.setDefault();
       } catch {
         // ignore
       }
@@ -340,6 +394,24 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
     setCursorSettingsState(parseCursorSettings(stored));
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const updatePointerPosition = (event: PointerEvent | MouseEvent) => {
+      latestPointerPositionRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+    };
+
+    window.addEventListener("pointermove", updatePointerPosition, { passive: true });
+    window.addEventListener("mousemove", updatePointerPosition, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", updatePointerPosition);
+      window.removeEventListener("mousemove", updatePointerPosition);
+    };
+  }, [hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -379,6 +451,7 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
       if (cursorLabRef.current && hasCursorLabInstance()) {
         cursorLabRef.current.destroy();
       }
+      restoreNativeCursor();
       cursorLabRef.current = null;
       setCursorLabReady(false);
     };
@@ -392,9 +465,11 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
       root.classList.add(className);
       return () => {
         root.classList.remove(className);
+        restoreNativeCursor();
       };
     }
     root.classList.remove(className);
+    restoreNativeCursor();
     return;
   }, [cursorSettings.enabled, hydrated]);
 
@@ -407,9 +482,11 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
       destroyTailInstances();
       cursorLab.setDefault();
       cursorLab.setNormalCursor();
+      restoreNativeCursor();
       return;
     }
 
+    syncCursorPosition(cursorLab, latestPointerPositionRef.current);
     applyCursorConfig(cursorLab, cursorSettings, currentPalette.extraColor);
     cursorLab.startTrail();
   }, [cursorLabReady, cursorSettings.enabled, currentPalette.extraColor, destroyTailInstances, hydrated]);
@@ -431,8 +508,8 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
   ]);
 
   useEffect(() => {
-    if (!hydrated || !cursorSettings.enabled) {
-      destroyTailInstances();
+    if (!hydrated || !cursorSettings.enabled || !cursorSettings.trailEffect) {
+      stopTailInstances();
       return;
     }
 
@@ -442,34 +519,44 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
       const TailCtor = await readCursorLabCtor();
       if (!TailCtor || cancelled) return;
 
-      destroyTailInstances();
+      const tailCount = cursorSettings.trailLength;
+      while (tailInstancesRef.current.length > tailCount) {
+        const instance = tailInstancesRef.current.pop();
+        if (instance) {
+          instance.setDefault();
+        }
+      }
 
-      const tailCount = 4;
-      const nextInstances: CursorLabStaticApi[] = [];
-      for (let i = 0; i < tailCount; i += 1) {
+      while (tailInstancesRef.current.length < tailCount) {
+        const i = tailInstancesRef.current.length;
         const instance = new TailCtor();
+        syncCursorPosition(instance, latestPointerPositionRef.current);
         applyTailCursorConfig(instance, cursorSettings, currentPalette.extraColor, i);
         instance.startTrail();
-        nextInstances.push(instance);
+        tailInstancesRef.current.push(instance);
       }
-      tailInstancesRef.current = nextInstances;
+
+      tailInstancesRef.current.forEach((instance, index) => {
+        applyTailCursorConfig(instance, cursorSettings, currentPalette.extraColor, index);
+      });
     };
 
     void run();
 
     return () => {
       cancelled = true;
-      destroyTailInstances();
     };
   }, [
     cursorSettings.delay,
     cursorSettings.enabled,
+    cursorSettings.trailEffect,
+    cursorSettings.trailLength,
     cursorSettings.size,
     cursorSettings.thickness,
     cursorSettings.trailType,
     currentPalette.extraColor,
-    destroyTailInstances,
     hydrated,
+    stopTailInstances,
   ]);
 
   useEffect(() => {

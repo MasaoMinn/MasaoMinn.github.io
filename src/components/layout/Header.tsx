@@ -438,6 +438,16 @@ function BasicExample() {
                             setCursorSettings({ clickEffect: event.target.checked })
                           }
                         />
+                        <Form.Check
+                          type="switch"
+                          id="cursorlab-trail-effect"
+                          label={t("mainpage.cursor.trail_effect")}
+                          checked={cursorSettings.trailEffect}
+                          disabled={!cursorSettings.enabled}
+                          onChange={(event) =>
+                            setCursorSettings({ trailEffect: event.target.checked })
+                          }
+                        />
 
                         <Form.Group>
                           <Form.Label className="small mb-1">
@@ -464,6 +474,25 @@ function BasicExample() {
                               </option>
                             ))}
                           </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group>
+                          <div className="d-flex justify-content-between small">
+                            <span>{t("mainpage.cursor.trail_length")}</span>
+                            <span>{cursorSettings.trailLength}</span>
+                          </div>
+                          <Form.Range
+                            min={1}
+                            max={8}
+                            step={1}
+                            value={cursorSettings.trailLength}
+                            disabled={!cursorSettings.enabled || !cursorSettings.trailEffect}
+                            onChange={(event) =>
+                              setCursorSettings({
+                                trailLength: Number(event.target.value),
+                              })
+                            }
+                          />
                         </Form.Group>
 
                         <Form.Group>
