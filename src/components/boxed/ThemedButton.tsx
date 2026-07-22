@@ -1,5 +1,5 @@
 import { Button, type ButtonProps } from "@/components/ui/button";
-import type { ThemePalette } from "@/app/sunny-zy-ui/theme-style";
+import type { ThemePalette } from "@/app/tools/sunny-zy-ui/theme-style";
 import styled, { css } from "styled-components";
 
 type ThemedButtonProps = ButtonProps & {

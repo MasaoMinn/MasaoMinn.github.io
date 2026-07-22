@@ -45,10 +45,10 @@ const collectExpandableKeys = (node: RouteTreeNode): string[] => {
 };
 
 const normalizePathSegments = (pathname: string) => {
-  if (pathname === "/sunny-zy-ui") {
+  if (pathname === "/tools/sunny-zy-ui") {
     return [];
   }
-  const prefix = "/sunny-zy-ui/";
+  const prefix = "/tools/sunny-zy-ui/";
   if (!pathname.startsWith(prefix)) {
     return [];
   }
@@ -142,7 +142,7 @@ export default function Catalog() {
   );
 
   const currentPathSegments = useMemo(
-    () => normalizePathSegments(pathname ?? "/sunny-zy-ui"),
+    () => normalizePathSegments(pathname ?? "/tools/sunny-zy-ui"),
     [pathname],
   );
 
@@ -182,7 +182,7 @@ export default function Catalog() {
       >
 
         <Link
-          href="/sunny-zy-ui"
+          href="/tools/sunny-zy-ui"
           className="mb-3 block rounded-md border px-3 py-2 text-sm font-semibold transition-opacity hover:opacity-90"
           style={{
             color: palette.color2,

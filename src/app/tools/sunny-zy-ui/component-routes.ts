@@ -18,9 +18,9 @@ export const toPathKey = (segments: string[]) => segments.join("/");
 
 export const routeToHref = (segments: string[]) => {
   if (segments.length === 0) {
-    return "/sunny-zy-ui";
+    return "/tools/sunny-zy-ui";
   }
-  return `/sunny-zy-ui/${segments.join("/")}`;
+  return `/tools/sunny-zy-ui/${segments.join("/")}`;
 };
 
 const routeMap = new Map(

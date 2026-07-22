@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import path from "path";
-import BubbleBoxPlaygroundClient from "../sunny-zy-ui/matter/BubbleBoxPlaygroundClient";
+import BubbleBoxPlaygroundClient from "../tools/sunny-zy-ui/matter/BubbleBoxPlaygroundClient";
 
 async function loadBubbleBoxSourceCode() {
   const sourcePath = path.join(

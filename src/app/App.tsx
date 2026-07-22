@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
@@ -30,13 +31,15 @@ type LinkItem = {
   caption: string;
   href: string;
   icon: IconKind;
+  image?: string;
   kind: "internal" | "external";
+  tags: string[];
 };
 
 type LinkGroup = {
   id: string;
+  icon: IconKind;
   title: string;
-  themeLabel: string;
   description: string;
   accent: string;
   links: LinkItem[];
@@ -167,8 +170,8 @@ const App = () => {
   const linkGroups: LinkGroup[] = [
     {
       id: "react-furry",
+      icon: "fox",
       title: t("mainpage.react_furry.title"),
-      themeLabel: "Persona Lab",
       description: t("mainpage.react_furry.description"),
       accent: "#ff7d9a",
       links: [
@@ -177,13 +180,17 @@ const App = () => {
           caption: t("mainpage.react_furry.hover.persona"),
           href: "/react-furry",
           icon: "fox",
+          image: "/mainpage/projects/react-furry.png",
           kind: "internal",
+          tags: ["React", "Fursona", "Copyright"],
         }, {
           label: t("mainpage.tools.furry"),
           caption: t("mainpage.tools.hover.furry"),
           href: "/Furry",
           icon: "chat",
+          image: "/mainpage/projects/furry-ai-state.png",
           kind: "internal",
+          tags: ["Contact", "Furry", "Social"],
         },
 
       ],
@@ -191,8 +198,8 @@ const App = () => {
     },
     {
       id: "minigame",
+      icon: "maze",
       title: t("mainpage.minigame.title"),
-      themeLabel: "Arcade Pulse",
       description: t("mainpage.minigame.description"),
       accent: "#f7b733",
       links: [
@@ -201,53 +208,62 @@ const App = () => {
           caption: t("mainpage.minigame.hover.bwite"),
           href: "/BWIte/index.html",
           icon: "grid",
+          image: "/mainpage/projects/BWIte.png",
           kind: "internal",
+          tags: ["JavaScript", "H5", "Puzzle"],
         },
         {
           label: t("mainpage.minigame.color"),
           caption: t("mainpage.minigame.hover.color"),
           href: "/Color/index.html",
           icon: "palette",
+          image: "/mainpage/projects/Color.png",
           kind: "internal",
+          tags: ["JavaScript", "H5", "Color"],
         },
         {
           label: t("mainpage.minigame.light"),
           caption: t("mainpage.minigame.hover.light"),
           href: "/LightMaze",
           icon: "maze",
+          image: "/mainpage/projects/Light.png",
           kind: "internal",
+          tags: ["JavaScript", "H5", "2 Players"],
         },
       ],
       animationDelay: "0.08s",
     },
     {
       id: "tools",
+      icon: "cube",
       title: t("mainpage.tools.title"),
-      themeLabel: "Toolkit Forge",
       description: t("mainpage.tools.description"),
       accent: "#47c2ff",
       links: [
         {
           label: "sunny-zy-ui",
           caption: t("mainpage.tools.hover.sunny_zy_ui"),
-          href: "/sunny-zy-ui",
+          href: "/tools/sunny-zy-ui",
           icon: "cube",
           kind: "internal",
+          tags: ["React", "UI", "Components"],
         },
         {
           label: t("mainpage.react_furry.error"),
           caption: t("mainpage.react_furry.hover.error"),
-          href: "/react-furry-error",
+          href: "/tools/react-furry-error",
           icon: "bug",
+          image: "/mainpage/projects/furry-ts-error.png",
           kind: "internal",
+          tags: ["React", "npm", "Error Handling"],
         },
       ],
       animationDelay: "0.14s",
     },
     {
       id: "vercel",
+      icon: "cloud",
       title: t("mainpage.vercel.title"),
-      themeLabel: "Cloud Launchpad",
       description: t("mainpage.vercel.description"),
       accent: "#9f8dff",
       links: [
@@ -257,6 +273,7 @@ const App = () => {
           href: "https://masaominn.vercel.app/",
           icon: "mirror",
           kind: "external",
+          tags: ["Mirror", "Next.js", "Vercel"],
         },
         {
           label: t("mainpage.vercel.personal"),
@@ -264,6 +281,7 @@ const App = () => {
           href: "https://kinotsuki.vercel.app/",
           icon: "cloud",
           kind: "external",
+          tags: ["Portfolio", "Full Stack", "Vercel"],
         },
         {
           label: t("mainpage.vercel.make_your_oc_alive"),
@@ -271,24 +289,40 @@ const App = () => {
           href: "https://make-your-oc-alive.vercel.app/",
           icon: "rocket",
           kind: "external",
+          tags: ["AI", "Character", "Vercel"],
         },
       ],
       animationDelay: "0.2s",
     },
   ];
 
-  const renderLinkItem = (item: LinkItem) => {
+  const renderProject = (item: LinkItem) => {
     const content = (
       <>
-        <span className={styles.iconBadge}>
-          <LinkIcon icon={item.icon} />
+        <span className={styles.itemIcon} aria-hidden="true">
+          {item.image ? (
+            <Image
+              src={item.image}
+              alt=""
+              width={256}
+              height={256}
+              className={styles.itemIconImage}
+            />
+          ) : (
+            <LinkIcon icon={item.icon} />
+          )}
         </span>
-        <span className={styles.linkCopy}>
-          <span className={styles.linkLabel}>{item.label}</span>
-          <span className={styles.linkCaption}>{item.caption}</span>
+        <span className={styles.itemContent}>
+          <strong className={styles.itemTitle}>{item.label}</strong>
+          <span className={styles.itemDescription}>{item.caption}</span>
         </span>
-        <span className={styles.linkArrow} aria-hidden="true">
-          ↗
+        <span className={styles.itemTags} aria-label={`${item.label} tags`}>
+          {item.tags.map((tag) => (
+            <span className={styles.itemTag} key={tag}>{tag}</span>
+          ))}
+        </span>
+        <span className={styles.itemArrow} aria-hidden="true">
+          <ArrowRight />
         </span>
       </>
     );
@@ -297,7 +331,7 @@ const App = () => {
       return (
         <a
           href={item.href}
-          className={styles.linkItem}
+          className={styles.projectLink}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -307,7 +341,7 @@ const App = () => {
     }
 
     return (
-      <Link href={item.href} className={styles.linkItem}>
+      <Link href={item.href} className={styles.projectLink}>
         {content}
       </Link>
     );
@@ -316,7 +350,7 @@ const App = () => {
   const renderGroup = (group: LinkGroup) => {
     return (
       <section
-        className={styles.groupCard}
+        className={styles.projectGroup}
         style={
           {
             "--group-accent": group.accent,
@@ -325,14 +359,18 @@ const App = () => {
         }
       >
         <div className={styles.groupHeader}>
-          {/* <p className={styles.themeTag}>{group.themeLabel}</p> */}
-          <h2 className={styles.groupTitle}>{group.title}</h2>
-          <p className={styles.groupDescription}>{group.description}</p>
+          <div className={styles.groupIcon} aria-hidden="true">
+            <LinkIcon icon={group.icon} />
+          </div>
+          <div className={styles.groupCopy}>
+            <h2 className={styles.groupTitle}>{group.title}</h2>
+            <p className={styles.groupDescription}>{group.description}</p>
+          </div>
         </div>
-        <div className={styles.linkList}>
+        <div className={styles.groupProjects} aria-label={`${group.title} links`}>
           {group.links.map((item) => (
-            <div key={`${group.id}-${item.label}`} className={styles.linkRow}>
-              {renderLinkItem(item)}
+            <div key={`${group.id}-${item.label}`} className={styles.projectItemRow}>
+              {renderProject(item)}
             </div>
           ))}
         </div>
@@ -373,9 +411,9 @@ const App = () => {
         </div>
       </section>
 
-      <div className={styles.masonry}>
+      <div className={styles.projectList}>
         {linkGroups.map((group) => (
-          <div className={styles.masonryItem} key={group.id}>
+          <div className={styles.projectItem} key={group.id}>
             {renderGroup(group)}
           </div>
         ))}

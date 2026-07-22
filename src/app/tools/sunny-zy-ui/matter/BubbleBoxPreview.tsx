@@ -4,9 +4,9 @@ import { type CSSProperties, type WheelEvent, useMemo, useState } from "react";
 import BubbleBox, {
   type BubbleProps,
   type BubbleShape,
-} from "../../../../components/ui/matter/BubbleBox";
+} from "../../../../../components/ui/matter/BubbleBox";
 import { ThemedButton } from "@/components/boxed/ThemedButton";
-import { getThemePalette, type ThemePalette } from "@/app/sunny-zy-ui/theme-style";
+import { getThemePalette, type ThemePalette } from "@/app/tools/sunny-zy-ui/theme-style";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Field,

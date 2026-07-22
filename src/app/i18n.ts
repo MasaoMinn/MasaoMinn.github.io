@@ -3,8 +3,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { reactFurryErrorI18n } from './react-furry-error/i18n';
-import { SunnyZyUiI18n } from './sunny-zy-ui/i18n';
+import { SunnyZyUiI18n } from './tools/sunny-zy-ui/i18n';
 
 i18n
   .use(LanguageDetector)
@@ -180,9 +179,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
             download: 'Download',
             get: 'get persona'
           },
-          reactFurryError: {
-            ...reactFurryErrorI18n.en,
-          },
           sunnyZyUi: {
             ...SunnyZyUiI18n.en,
           },
@@ -335,9 +331,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
           react_furry: {
             download: '下载',
             get: '获取兽设',
-          },
-          reactFurryError: {
-            ...reactFurryErrorI18n.zh
           },
           sunnyZyUi: {
             ...SunnyZyUiI18n.zh
@@ -496,9 +489,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
           react_furry: {
             download: 'ダウンロード',
             get: '擬獣設定を取得する',
-          },
-          reactFurryError: {
-            ...reactFurryErrorI18n.jp
           },
           sunnyZyUi: {
             ...SunnyZyUiI18n.jp
