@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
-import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -183,16 +182,7 @@ const App = () => {
           image: "/mainpage/projects/react-furry.png",
           kind: "internal",
           tags: ["React", "Fursona", "Copyright"],
-        }, {
-          label: t("mainpage.tools.furry"),
-          caption: t("mainpage.tools.hover.furry"),
-          href: "/Furry",
-          icon: "chat",
-          image: "/mainpage/projects/furry-ai-state.png",
-          kind: "internal",
-          tags: ["Contact", "Furry", "Social"],
         },
-
       ],
       animationDelay: "0.02s",
     },
@@ -257,42 +247,17 @@ const App = () => {
           kind: "internal",
           tags: ["React", "npm", "Error Handling"],
         },
+        {
+          label: "Furry AI State",
+          caption: "Open the Furry AI State project documentation.",
+          href: "/furry-ai-state",
+          icon: "chat",
+          image: "/mainpage/projects/furry-ai-state.png",
+          kind: "internal",
+          tags: ["AI", "Furry", "State"],
+        },
       ],
       animationDelay: "0.14s",
-    },
-    {
-      id: "vercel",
-      icon: "cloud",
-      title: t("mainpage.vercel.title"),
-      description: t("mainpage.vercel.description"),
-      accent: "#9f8dff",
-      links: [
-        {
-          label: t("mainpage.vercel.mirror"),
-          caption: t("mainpage.vercel.hover.mirror"),
-          href: "https://masaominn.vercel.app/",
-          icon: "mirror",
-          kind: "external",
-          tags: ["Mirror", "Next.js", "Vercel"],
-        },
-        {
-          label: t("mainpage.vercel.personal"),
-          caption: t("mainpage.vercel.hover.personal"),
-          href: "https://kinotsuki.vercel.app/",
-          icon: "cloud",
-          kind: "external",
-          tags: ["Portfolio", "Full Stack", "Vercel"],
-        },
-        {
-          label: t("mainpage.vercel.make_your_oc_alive"),
-          caption: t("mainpage.vercel.hover.make_your_oc_alive"),
-          href: "https://make-your-oc-alive.vercel.app/",
-          icon: "rocket",
-          kind: "external",
-          tags: ["AI", "Character", "Vercel"],
-        },
-      ],
-      animationDelay: "0.2s",
     },
   ];
 
@@ -327,23 +292,15 @@ const App = () => {
       </>
     );
 
-    if (item.kind === "external") {
-      return (
-        <a
-          href={item.href}
-          className={styles.projectLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {content}
-        </a>
-      );
-    }
-
     return (
-      <Link href={item.href} className={styles.projectLink}>
+      <a
+        href={item.href}
+        className={styles.projectLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {content}
-      </Link>
+      </a>
     );
   };
 
