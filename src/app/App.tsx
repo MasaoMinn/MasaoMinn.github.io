@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
+import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -177,11 +178,20 @@ const App = () => {
         {
           label: t("mainpage.react_furry.persona"),
           caption: t("mainpage.react_furry.hover.persona"),
-          href: "/react-furry",
+          href: "/react-fursona",
           icon: "fox",
           image: "/mainpage/projects/react-furry.png",
           kind: "internal",
           tags: ["React", "Fursona", "Copyright"],
+        },
+        {
+          label: t("mainpage.react_furry.all_fursonas"),
+          caption: t("mainpage.react_furry.hover.all_fursonas"),
+          href: "https://gallery.tangetsu.top/#fursona",
+          icon: "profile",
+          image: "/mainpage/projects/all-fursonas.png",
+          kind: "external",
+          tags: ["Fursona", "Gallery", "Original Character"],
         },
       ],
       animationDelay: "0.02s",
@@ -262,6 +272,10 @@ const App = () => {
   ];
 
   const renderProject = (item: LinkItem) => {
+    const opensInNewTab =
+      item.href === "/furry-ai-state" ||
+      item.href === "/tools/react-furry-error";
+
     const content = (
       <>
         <span className={styles.itemIcon} aria-hidden="true">
@@ -292,15 +306,23 @@ const App = () => {
       </>
     );
 
+    if (opensInNewTab) {
+      return (
+        <a
+          href={item.href}
+          className={styles.projectLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {content}
+        </a>
+      );
+    }
+
     return (
-      <a
-        href={item.href}
-        className={styles.projectLink}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <Link href={item.href} className={styles.projectLink}>
         {content}
-      </a>
+      </Link>
     );
   };
 
@@ -365,6 +387,11 @@ const App = () => {
             content={developerIntroMarkdown}
             className={styles.profileMarkdown}
           />
+          <div className={styles.profileActions}>
+            <Link href="/Furry" className={styles.contactButton}>
+              {t("mainpage.contact")}
+            </Link>
+          </div>
         </div>
       </section>
 

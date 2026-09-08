@@ -1,20 +1,19 @@
 "use client";
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-// import Picture from '@/components/boxed/Picture';
-// import GradientText from '@/components/GradientText';
-import { Image } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import ThemedButton from '@/components/boxed/ThemedButton';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+import type { ReactNode } from "react";
+import { Col, Container, Image, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import ThemedButton from "@/components/boxed/ThemedButton";
+
+export default function ReactFursonaLayout({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
+
   return (
     <Container fluid className="theme-page min-vh-100 text-center py-8">
       <Row className="mb-8 justify-content-center">
         <Col xs={1}>
           <ThemedButton onClick={() => window.history.back()}>
-            {t('mainpage.back')}
+            {t("mainpage.back")}
           </ThemedButton>
         </Col>
         <Col>
@@ -30,15 +29,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </Row>
       <Row className="mb-12">
         <Col>
-          <h1 className="lead mt-4" style={{ maxWidth: '50vw', margin: '0 auto', fontFamily: 'var(--font-playpen-sans), sans-serif' }}>
-            {t('mainpage.react_furry.title')}
+          <h1
+            className="lead mt-4"
+            style={{
+              maxWidth: "50vw",
+              margin: "0 auto",
+              fontFamily: "var(--font-playpen-sans), sans-serif",
+            }}
+          >
+            {t("mainpage.react_furry.title")}
           </h1>
         </Col>
       </Row>
 
       {children}
-
-
     </Container>
   );
 }

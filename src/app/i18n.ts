@@ -41,6 +41,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
             theme: 'Theme',
             theme_variant: 'Theme Variant',
             back: 'Back',
+            contact: 'Contact Me',
             theme_modes: {
               light: 'Light',
               dark: 'Dark',
@@ -115,12 +116,14 @@ I enjoy exploring new technologies and also turning ideas into real products.
               },
             },
             react_furry: {
-              title: 'React & Furry',
+              title: 'Fursona Showcase',
               description: 'React Fursona declaration',
               persona: 'React Fursona',
+              all_fursonas: 'All My Fursonas',
               error: 'react-furry-error',
               hover: {
                 persona: 'The React Fursona details and copyright declaration',
+                all_fursonas: 'Browse the complete collection of my fursonas.',
                 error: 'Open documentation for react-furry-error package.',
               },
             },
@@ -154,7 +157,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               },
             },
             furry: {
-              intro: "Hello! This is Kino Tsuki, a blue furry fox, living in Guangzhou China.I'm excited to connect with you here! Feel free to reach out to add me as a friend. Looking forward to chatting and sharing our furry interests!"
+              intro: "Senior Software Engineering student 🏫 and AI full-stack engineer based in Guangzhou. I post fursuit photos and niche furry fan creations 🐾. DMs and new friends are always welcome 👀 English👌 / 日本語N1️⃣"
             },
             vercel: {
               title: 'My websites on Vercel',
@@ -177,7 +180,28 @@ I enjoy exploring new technologies and also turning ideas into real products.
           },
           react_furry: {
             download: 'Download',
-            get: 'get persona'
+            get: 'get persona',
+            album: 'Go to React Fursona Album',
+          },
+          furry_contact: {
+            title: 'Contact Me',
+            profile_title: 'Kino Tsuki',
+            hint: 'Hover over an icon to see the platform name, then click to visit.',
+            visit: 'Visit {{platform}}',
+            icon_alt: '{{platform}} icon',
+            carousel_alt: 'Furry profile photo {{index}}',
+            qr_tabs_label: 'Contact QR codes',
+            qr_alt: '{{platform}} QR code',
+            platforms: {
+              x: 'X',
+              personal_website: 'Personal Website',
+              pixiv: 'pixiv',
+              deviantart: 'DeviantArt',
+              strayfawnstudio: 'Stray Fawn Studio',
+              qq: 'QQ',
+              xiaohongshu: 'Xiaohongshu',
+              douyin: 'Douyin',
+            },
           },
           sunnyZyUi: {
             ...SunnyZyUiI18n.en,
@@ -205,6 +229,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
             theme: '主题',
             theme_variant: '主题变体',
             back: '返回',
+            contact: '联系我',
             theme_modes: {
               light: '浅色',
               dark: '深色',
@@ -279,12 +304,14 @@ I enjoy exploring new technologies and also turning ideas into real products.
               },
             },
             react_furry: {
-              title: 'React 拟兽兽设',
+              title: '兽设展示',
               description: 'React拟兽兽设说明,与react-furry-error包的使用说明',
               persona: 'React拟兽兽设',
+              all_fursonas: '我的全部兽设',
               error: 'react-furry-error',
               hover: {
                 persona: '查看 React 拟兽兽设展示页面。',
+                all_fursonas: '浏览我的全部兽设作品。',
                 error: '打开 react-furry-error 包的使用文档。',
               },
             },
@@ -312,7 +339,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               },
             },
             furry: {
-              intro: "你好！我是湛月，一只生活在中国广州的蓝色兽设狐狸。很高兴能在这里与你联系！欢迎随时联系我加为好友。期待与你聊天并分享furry的乐趣！"
+              intro: "软件工程大四学生🏫，AI全干工程师，坐标广州 发一些兽装照片和冷门的furry同人二创🐾 欢迎私信和扩列👀 English👌/日本語N1️⃣"
             },
             vercel: {
               title: '我的 Vercel 网站',
@@ -331,6 +358,27 @@ I enjoy exploring new technologies and also turning ideas into real products.
           react_furry: {
             download: '下载',
             get: '获取兽设',
+            album: '前往兽设设定集',
+          },
+          furry_contact: {
+            title: '联系我',
+            profile_title: '湛月',
+            hint: '悬停图标查看平台名称，点击后访问对应主页。',
+            visit: '前往{{platform}}',
+            icon_alt: '{{platform}}图标',
+            carousel_alt: '兽设照片 {{index}}',
+            qr_tabs_label: '联系方式二维码',
+            qr_alt: '{{platform}}二维码',
+            platforms: {
+              x: 'X',
+              personal_website: '个人网站',
+              pixiv: 'pixiv',
+              deviantart: 'DeviantArt',
+              strayfawnstudio: 'Stray Fawn Studio',
+              qq: 'QQ',
+              xiaohongshu: '小红书',
+              douyin: '抖音',
+            },
           },
           sunnyZyUi: {
             ...SunnyZyUiI18n.zh
@@ -364,6 +412,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
             theme: '色気',
             theme_variant: 'テーマバリエーション',
             back: '戻る',
+            contact: '連絡する',
             theme_modes: {
               light: 'ライト',
               dark: 'ダーク',
@@ -438,12 +487,14 @@ I enjoy exploring new technologies and also turning ideas into real products.
               },
             },
             react_furry: {
-              title: 'リアクト ファーソナ',
+              title: 'ファーソナ展示',
               description: 'Reactのファー(擬獣)設定説明とreact-furry-error パッケージの使用説明',
               persona: 'Reactのファー(擬獣)設定',
+              all_fursonas: '私のすべてのファーソナ',
               error: 'react-furry-error',
               hover: {
                 persona: 'React のファーソナ紹介ページを表示します。',
+                all_fursonas: '私のファーソナ作品をすべて表示します。',
                 error: 'react-furry-error パッケージのドキュメントを開きます。',
               },
             },
@@ -471,7 +522,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               },
             },
             furry: {
-              intro: "こんにちは！私はキノツキ、広州に住む青いケモノの狐です。ここであなたとつながることができてうれしいです！友達追加のためにいつでも連絡してください。お話ししたり、ケモノの興味を共有したりするのを楽しみにしています！"
+              intro: "ソフトウェア工学専攻の大学4年生🏫。広州在住のAIフルスタックエンジニアです。着ぐるみ写真やニッチなFurry二次創作を投稿しています🐾。DM・友達追加歓迎👀 English👌／日本語N1️⃣"
             },
             vercel: {
               title: '私の Vercel サイト',
@@ -489,6 +540,27 @@ I enjoy exploring new technologies and also turning ideas into real products.
           react_furry: {
             download: 'ダウンロード',
             get: '擬獣設定を取得する',
+            album: 'Reactファーソナ設定集へ',
+          },
+          furry_contact: {
+            title: '連絡先',
+            profile_title: 'キノツキ',
+            hint: 'アイコンにカーソルを合わせるとサービス名が表示され、クリックすると移動します。',
+            visit: '{{platform}}へ移動',
+            icon_alt: '{{platform}}のアイコン',
+            carousel_alt: 'ファーソナ写真 {{index}}',
+            qr_tabs_label: '連絡先QRコード',
+            qr_alt: '{{platform}}のQRコード',
+            platforms: {
+              x: 'X',
+              personal_website: '個人サイト',
+              pixiv: 'pixiv',
+              deviantart: 'DeviantArt',
+              strayfawnstudio: 'Stray Fawn Studio',
+              qq: 'QQ',
+              xiaohongshu: '小紅書',
+              douyin: 'Douyin',
+            },
           },
           sunnyZyUi: {
             ...SunnyZyUiI18n.jp

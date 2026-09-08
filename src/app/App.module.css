@@ -148,6 +148,36 @@
   margin: 0.4rem 0 0;
 }
 
+.profileActions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.9rem;
+}
+
+.contactButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--theme-border);
+  border-radius: 0.75rem;
+  background: var(--theme-button-bg, var(--primary));
+  color: var(--primary-foreground);
+  font-weight: 650;
+  text-decoration: none;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-accent) 18%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.contactButton:hover,
+.contactButton:focus-visible {
+  transform: translateY(-1px);
+  background: var(--theme-button-bg-hover, var(--accent));
+  color: var(--accent-foreground);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--theme-accent) 24%, transparent);
+}
+
 .projectGroup {
   --group-accent: var(--theme-accent);
   position: relative;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Carousel, Image } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 const fursuitImages = [
   'furry1.jpg',
   'furry2.png',
@@ -28,6 +29,8 @@ const fursuitImages = [
 ];
 
 const FursuitCarousel: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <Carousel>
       {fursuitImages.map((image, index) => (
@@ -35,7 +38,7 @@ const FursuitCarousel: React.FC = () => {
           <Image
             className="d-block w-100"
             src={`/fursuit/${image}`}
-            alt={`Fursuit ${index + 1}`}
+            alt={t('furry_contact.carousel_alt', { index: index + 1 })}
           />
         </Carousel.Item>
       ))}
