@@ -4,6 +4,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { SunnyZyUiI18n } from './tools/sunny-zy-ui/i18n';
+import { ExperienceI18n } from './experience-i18n';
 
 i18n
   .use(LanguageDetector)
@@ -23,17 +24,26 @@ i18n
     resources: {
       en: {
         translation: {
+          experience: ExperienceI18n.en,
           lang: 'Language',
           mainpage: {
-            title: 'Sunny_Tangetsu - Static Resource Site',
+            title: 'Sunny_Tangetsu',
             description: 'Curated entrances for my projects. Choose a lane and jump in.',
-            introduction: `# Sunny_湛月
+            introduction: `I am **Sunny_Tangetsu**, currently a **senior** student majoring in **Software Engineering** at **South China University of Technology**.
 
-Passionate about technology and creation, with a focus on frontend, UI design, and AI applications.
+In high school, I fell in love with *C++* programming competitions, which is also the reason I chose this major.
 
-Currently learning English and Japanese continuously, hoping to connect with broader cultures through language.
+I am learning full-stack development using the **PERN (PostgreSQL, Express.js, React.js, Node.js) stack** with Next.js as the framework, and this page is my first frontend project.
 
-I enjoy exploring new technologies and also turning ideas into real products.
+I am currently learning **English** *(TOEFL 100, C1)* and **Japanese** *(JLPT N1)*. In the future, I plan to study other languages, such as Spanish and French.
+
+In my free time, I enjoy painting or making practical tools. I find great satisfaction in the sense of achievement after completing a small project.
+
+The character on the left is my **furry** design. It was my first furry, obtained when I was in my second year of high school
+
+My motto: **Motivated but not stressed, tense but not anxious, swift but not frantic.**.
+
+You can find my contact information below in the "Contact Me" section
 `,
             dropdown: 'More',
             about: 'About Me',
@@ -82,22 +92,10 @@ I enjoy exploring new technologies and also turning ideas into real products.
               reset: 'Reset',
               enable: 'Enable cursor effects',
               click_effect: 'Click burst effect',
-              cursor_shape: 'Mouse shape',
               trail_shape: 'Trail shape',
-              trail_type: 'Trail shape',
-              pointer_style: 'Pointer style',
               size: 'Trail size',
               thickness: 'Trail thickness',
               delay: 'Trail delay',
-              cursor_shapes: {
-                circle: 'Circle',
-                'circle-filled': 'Circle Filled',
-                square: 'Square',
-                'square-filled': 'Square Filled',
-                triangle: 'Triangle',
-                star: 'Star',
-                dot: 'Dot',
-              },
               trail_types: {
                 circle: 'Circle',
                 'circle-filled': 'Circle Filled',
@@ -106,13 +104,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
                 triangle: 'Triangle',
                 star: 'Star',
                 dot: 'Dot',
-              },
-              pointer_styles: {
-                default: 'Default',
-                crosshair: 'Crosshair',
-                grab: 'Grab',
-                copy: 'Copy',
-                none: 'Hidden',
               },
             },
             react_furry: {
@@ -124,14 +115,7 @@ I enjoy exploring new technologies and also turning ideas into real products.
               hover: {
                 persona: 'The React Fursona details and copyright declaration',
                 all_fursonas: 'Browse the complete collection of my fursonas.',
-                error: 'Open documentation for react-furry-error package.',
               },
-            },
-            cookie: {
-              title: 'Would You Accpet My Cookies ?',
-              content: 'If you reject, I will ask you again next session. If you accept, nothing happens because this is a static website and I`ve no cookie for you. I just want to show you how cute I am.',
-              accept: 'Accept',
-              reject: 'Reject',
             },
             minigame: {
               title: 'Minigame',
@@ -148,28 +132,14 @@ I enjoy exploring new technologies and also turning ideas into real products.
             tools: {
               title: 'Tools',
               description: 'Useful tools',
-              tobe: 'Stay Tuned',
-              furry: 'Contact Me',
               hover: {
                 sunny_zy_ui: 'Browse Sunny-ZY-UI components and interactive previews.',
-                furry: 'Open furry contact and related tools page.',
-                tobe: 'Placeholder entry for upcoming tools.',
+                react_furry_error: 'An npm package that captures React development errors and displays them in a furry-themed overlay to help with debugging.',
+                furry_ai_state: 'A VS Code extension that connects to an AI coding agent through MCP and uses companion illustrations to show its current phase, status, and active file.',
               },
             },
             furry: {
               intro: "Senior Software Engineering student 🏫 and AI full-stack engineer based in Guangzhou. I post fursuit photos and niche furry fan creations 🐾. DMs and new friends are always welcome 👀 English👌 / 日本語N1️⃣"
-            },
-            vercel: {
-              title: 'My websites on Vercel',
-              description: 'My sites on Vercel enable back-end actions.I use it to host my full-stack sites.',
-              mirror: 'Mirror Site of this',
-              personal: 'My Personal Website',
-              make_your_oc_alive: 'Make Your OC Alive',
-              hover: {
-                mirror: 'Open the Vercel mirror of this site in a new tab.',
-                personal: 'Visit Kino Tsuki personal website on Vercel(Under Construction)',
-                make_your_oc_alive: 'Open Make Your OC Alive project site(deprecated)',
-              },
             },
           },
           cookie: {
@@ -180,7 +150,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
           },
           react_furry: {
             download: 'Download',
-            get: 'get persona',
             album: 'Go to React Fursona Album',
           },
           furry_contact: {
@@ -210,17 +179,26 @@ I enjoy exploring new technologies and also turning ideas into real products.
       },
       zh: {
         translation: {
+          experience: ExperienceI18n.zh,
           lang: '语言',
           mainpage: {
-            title: 'Sunny_湛月 - 静态资源网站',
+            title: 'Sunny_湛月',
             description: '这是一个静态资源网站，用于展示我的各种各样的项目',
-            introduction: `# Sunny_湛月
+            introduction: `我是 **Sunny_Tangetsu**, 目前是**华南理工大学**软件工程专业的**大四**学生。
 
-热爱技术与创作的开发者, 关注前端、UI 设计与 AI 应用
+高中时我爱上了 *C++* 编程竞赛，这也是我选择这个专业的原因。
 
-在持续学习英语与日语，希望能够通过语言接触更广阔的世界与文化
+我正在学习 **PERN ( PostgreSQL, Express.js, React.js, Node.js), Next.js** 为框架的全栈开发，这个页面是我的第一个前端作品。
 
-喜欢有趣的新技术，也喜欢把灵感真正做出来
+我正在学习**英语** *(TOEFL 100, C1)* 和**日语** *(JLPT N1)*. 我将来打算学习其他语种，如西班牙语和法语。
+
+空闲时，我会画画或制作实用工具。我很享受完成一个小项目后的成就感。
+
+左边的角色是我的的**furry**兽设. 它是我的第一只兽设, 在我高二时得到。
+
+我的座右铭：**有动力而无压力，紧张而不焦虑, 迅速而不慌乱**。
+
+你可以在下面的"联系我"找到我的联系方式.
 
 `,
             dropdown: '更多',
@@ -270,22 +248,10 @@ I enjoy exploring new technologies and also turning ideas into real products.
               reset: '重置',
               enable: '启用鼠标效果',
               click_effect: '点击扩散特效',
-              cursor_shape: '鼠标形状',
               trail_shape: '尾迹形状',
-              trail_type: '尾迹形状',
-              pointer_style: '鼠标样式',
               size: '尾迹大小',
               thickness: '尾迹粗细',
               delay: '尾迹延迟',
-              cursor_shapes: {
-                circle: '圆环',
-                'circle-filled': '实心圆',
-                square: '方框',
-                'square-filled': '实心方块',
-                triangle: '三角形',
-                star: '星形',
-                dot: '点',
-              },
               trail_types: {
                 circle: '圆环',
                 'circle-filled': '实心圆',
@@ -294,13 +260,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
                 triangle: '三角形',
                 star: '星形',
                 dot: '点',
-              },
-              pointer_styles: {
-                default: '默认',
-                crosshair: '十字准星',
-                grab: '抓取',
-                copy: '复制',
-                none: '隐藏',
               },
             },
             react_furry: {
@@ -312,7 +271,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
               hover: {
                 persona: '查看 React 拟兽兽设展示页面。',
                 all_fursonas: '浏览我的全部兽设作品。',
-                error: '打开 react-furry-error 包的使用文档。',
               },
             },
             minigame: {
@@ -330,34 +288,19 @@ I enjoy exploring new technologies and also turning ideas into real products.
             tools: {
               title: '工具',
               description: '这里是我写的一些工具。',
-              tobe: '敬请期待',
-              furry: 'LXFS',
               hover: {
                 sunny_zy_ui: '浏览 Sunny-ZY-UI 组件及交互预览。',
-                furry: '打开 furry 联系与相关工具页面。',
-                tobe: '预留入口，后续将添加更多工具。',
+                react_furry_error: '这是一个用于捕获 React 开发错误的 npm 包，通过兽设风格的错误浮层展示报错信息，帮助开发者定位问题。',
+                furry_ai_state: '这是一个通过 MCP 连接 AI 编程代理的 VS Code 扩展，以兽设插画展示代理的工作阶段、状态消息和当前文件。',
               },
             },
             furry: {
               intro: "软件工程大四学生🏫，AI全干工程师，坐标广州 发一些兽装照片和冷门的furry同人二创🐾 欢迎私信和扩列👀 English👌/日本語N1️⃣"
             },
-            vercel: {
-              title: '我的 Vercel 网站',
-              description: '我的 Vercel 网站启用后端操作。我用它来托管我的全栈网站。',
-              mirror: '这个网站的镜像',
-              personal: '我的个人网站',
-              make_your_oc_alive: 'Make Your OC Alive',
-              hover: {
-                mirror: '在新标签页打开本站的 Vercel 镜像。',
-                personal: '访问 Kino Tsuki 的个人网站。',
-                make_your_oc_alive: '打开 Make Your OC Alive 项目站点。',
-              },
-            },
 
           },
           react_furry: {
             download: '下载',
-            get: '获取兽设',
             album: '前往兽设设定集',
           },
           furry_contact: {
@@ -394,17 +337,26 @@ I enjoy exploring new technologies and also turning ideas into real products.
       },
       jp: {
         translation: {
+          experience: ExperienceI18n.jp,
           lang: '言語',
           mainpage: {
-            title: 'Sunny_湛月 - 静的リソースサイト',
+            title: 'Sunny_湛月',
             description: 'これは静的リソースサイトです。ここでは、私の各種プロジェクトを示しています。',
-            introduction: `# Sunny_湛月
+            introduction: `私は**Sunny_Tangetsu**と申します。現在は**华南理工大学**のソフトウェア工学専攻の**4年生**です。
 
-技術と創作が好きな開発者で、フロントエンド、UI デザイン、AI 応用に関心があります。
+高校時代、私は *C++* プログラミングコンテストに魅せられ、それがこの専攻を選んだ理由でもある。
 
-英語と日本語を継続的に学び、言語を通じてより広い世界や文化に触れたいと考えています。
+私は **PERN（PostgreSQL, Express.js, React.js, Node.js）** をフレームワークとするフルスタック開発を学んでおり、このページは私の最初のフロントエンド作品です。
 
-新しい技術を試すことが好きで、アイデアを実際の形にすることも大切にしています。
+私は現在**英語**（TOEFL 100点、C1レベル）と**日本語**（JLPT 1級）を学んでいます。将来的にはスペイン語やフランス語などの他の言語も学びたいと考えています。
+
+暇なときは、絵を描いたり実用的な道具を作ったりします。小さなプロジェクトを完成させた後の達成感を楽しんでいます。
+
+左側のキャラクターは私の**ファーリー**兽设です。それは私の最初の兽设で、高校2年生の時に手に入れたものです。
+
+私の座右の銘：**やる気があってもプレッシャーなく、緊張していても不安なく、迅速で慌てずに**。
+
+下記の「連絡する」より私の連絡先をご確認ください
 `,
             dropdown: 'そのうえ',
             about: '私について',
@@ -453,22 +405,10 @@ I enjoy exploring new technologies and also turning ideas into real products.
               reset: 'リセット',
               enable: 'カーソル効果を有効化',
               click_effect: 'クリック拡散エフェクト',
-              cursor_shape: 'カーソル形状',
               trail_shape: 'トレイル形状',
-              trail_type: 'トレイル形状',
-              pointer_style: 'カーソルスタイル',
               size: 'トレイルサイズ',
               thickness: 'トレイル太さ',
               delay: 'トレイル遅延',
-              cursor_shapes: {
-                circle: '円',
-                'circle-filled': '塗りつぶし円',
-                square: '四角',
-                'square-filled': '塗りつぶし四角',
-                triangle: '三角',
-                star: '星',
-                dot: 'ドット',
-              },
               trail_types: {
                 circle: '円',
                 'circle-filled': '塗りつぶし円',
@@ -477,13 +417,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
                 triangle: '三角',
                 star: '星',
                 dot: 'ドット',
-              },
-              pointer_styles: {
-                default: 'デフォルト',
-                crosshair: 'クロスヘア',
-                grab: 'グラブ',
-                copy: 'コピー',
-                none: '非表示',
               },
             },
             react_furry: {
@@ -495,7 +428,6 @@ I enjoy exploring new technologies and also turning ideas into real products.
               hover: {
                 persona: 'React のファーソナ紹介ページを表示します。',
                 all_fursonas: '私のファーソナ作品をすべて表示します。',
-                error: 'react-furry-error パッケージのドキュメントを開きます。',
               },
             },
             minigame: {
@@ -513,33 +445,18 @@ I enjoy exploring new technologies and also turning ideas into real products.
             tools: {
               title: '工具',
               description: '役に立つ工具',
-              tobe: '乞うご期待',
-              furry: '連絡先',
               hover: {
                 sunny_zy_ui: 'Sunny-ZY-UI コンポーネントとプレビューを表示します。',
-                furry: 'furry 関連の連絡・ツールページを開きます。',
-                tobe: '今後追加予定のツール用プレースホルダーです。',
+                react_furry_error: 'React 開発中のエラーを捕捉し、ファーソナを使ったエラーオーバーレイで内容を表示してデバッグを支援する npm パッケージです。',
+                furry_ai_state: 'MCP 経由で AI コーディングエージェントと連携し、ファーソナのイラストで作業段階、ステータスメッセージ、現在のファイルを表示する VS Code 拡張機能です。',
               },
             },
             furry: {
               intro: "ソフトウェア工学専攻の大学4年生🏫。広州在住のAIフルスタックエンジニアです。着ぐるみ写真やニッチなFurry二次創作を投稿しています🐾。DM・友達追加歓迎👀 English👌／日本語N1️⃣"
             },
-            vercel: {
-              title: '私の Vercel サイト',
-              description: 'Vercel サイトはバックエンド操作を有効にしていて、それを使って私のフルスタックサイトをホストしております。',
-              mirror: 'このサイトのミラー',
-              personal: '私の個人サイト',
-              make_your_oc_alive: 'Make Your OC Alive',
-              hover: {
-                mirror: 'このサイトの Vercel ミラーを新しいタブで開きます。',
-                personal: 'Kino Tsuki の個人サイトを表示します。',
-                make_your_oc_alive: 'Make Your OC Alive プロジェクトサイトを開きます。',
-              },
-            },
           },
           react_furry: {
             download: 'ダウンロード',
-            get: '擬獣設定を取得する',
             album: 'Reactファーソナ設定集へ',
           },
           furry_contact: {

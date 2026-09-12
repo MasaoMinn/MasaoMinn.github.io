@@ -3,12 +3,13 @@ import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useModalStore } from "@/store/ModalStore";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
 import { CookieModal } from "@/components/layout/modals/CookieModal";
 import MarkdownComponent from "@/components/boxed/MarkdownComponent";
+import ExperienceTabs from "@/components/layout/ExperienceTabs";
 import styles from "./App.module.css";
 
 type IconKind =
@@ -182,7 +183,7 @@ const App = () => {
           icon: "fox",
           image: "/mainpage/projects/react-furry.png",
           kind: "internal",
-          tags: ["React", "Fursona", "Copyright"],
+          tags: ["React", "Fursona", "Furry"],
         },
         {
           label: t("mainpage.react_furry.all_fursonas"),
@@ -191,47 +192,10 @@ const App = () => {
           icon: "profile",
           image: "/mainpage/projects/all-fursonas.png",
           kind: "external",
-          tags: ["Fursona", "Gallery", "Original Character"],
+          tags: ["Fursona", "Gallery", "OC", "Furry"],
         },
       ],
       animationDelay: "0.02s",
-    },
-    {
-      id: "minigame",
-      icon: "maze",
-      title: t("mainpage.minigame.title"),
-      description: t("mainpage.minigame.description"),
-      accent: "#f7b733",
-      links: [
-        {
-          label: t("mainpage.minigame.bwite"),
-          caption: t("mainpage.minigame.hover.bwite"),
-          href: "/BWIte/index.html",
-          icon: "grid",
-          image: "/mainpage/projects/BWIte.png",
-          kind: "internal",
-          tags: ["JavaScript", "H5", "Puzzle"],
-        },
-        {
-          label: t("mainpage.minigame.color"),
-          caption: t("mainpage.minigame.hover.color"),
-          href: "/Color/index.html",
-          icon: "palette",
-          image: "/mainpage/projects/Color.png",
-          kind: "internal",
-          tags: ["JavaScript", "H5", "Color"],
-        },
-        {
-          label: t("mainpage.minigame.light"),
-          caption: t("mainpage.minigame.hover.light"),
-          href: "/LightMaze",
-          icon: "maze",
-          image: "/mainpage/projects/Light.png",
-          kind: "internal",
-          tags: ["JavaScript", "H5", "2 Players"],
-        },
-      ],
-      animationDelay: "0.08s",
     },
     {
       id: "tools",
@@ -250,21 +214,58 @@ const App = () => {
         },
         {
           label: t("mainpage.react_furry.error"),
-          caption: t("mainpage.react_furry.hover.error"),
+          caption: t("mainpage.tools.hover.react_furry_error"),
           href: "/tools/react-furry-error",
           icon: "bug",
           image: "/mainpage/projects/furry-ts-error.png",
           kind: "internal",
-          tags: ["React", "npm", "Error Handling"],
+          tags: ["React", "npm package", "dev"],
         },
         {
           label: "Furry AI State",
-          caption: "Open the Furry AI State project documentation.",
+          caption: t("mainpage.tools.hover.furry_ai_state"),
           href: "/furry-ai-state",
           icon: "chat",
           image: "/mainpage/projects/furry-ai-state.png",
           kind: "internal",
-          tags: ["AI", "Furry", "State"],
+          tags: ["AI", "Furry", "Agent", "MCP tool"],
+        },
+      ],
+      animationDelay: "0.08s",
+    },
+    {
+      id: "minigame",
+      icon: "maze",
+      title: t("mainpage.minigame.title"),
+      description: t("mainpage.minigame.description"),
+      accent: "#f7b733",
+      links: [
+        {
+          label: t("mainpage.minigame.bwite"),
+          caption: t("mainpage.minigame.hover.bwite"),
+          href: "/BWIte/index.html",
+          icon: "grid",
+          image: "/mainpage/projects/BWIte.png",
+          kind: "internal",
+          tags: ["JavaScript", "H5"],
+        },
+        {
+          label: t("mainpage.minigame.color"),
+          caption: t("mainpage.minigame.hover.color"),
+          href: "/Color/index.html",
+          icon: "palette",
+          image: "/mainpage/projects/Color.png",
+          kind: "internal",
+          tags: ["JavaScript", "H5"],
+        },
+        {
+          label: t("mainpage.minigame.light"),
+          caption: t("mainpage.minigame.hover.light"),
+          href: "/LightMaze",
+          icon: "maze",
+          image: "/mainpage/projects/Light.png",
+          kind: "internal",
+          tags: ["JavaScript", "H5", "2 Players"],
         },
       ],
       animationDelay: "0.14s",
@@ -328,8 +329,9 @@ const App = () => {
 
   const renderGroup = (group: LinkGroup) => {
     return (
-      <section
+      <details
         className={styles.projectGroup}
+        open={group.id !== "minigame"}
         style={
           {
             "--group-accent": group.accent,
@@ -337,7 +339,7 @@ const App = () => {
           } as React.CSSProperties
         }
       >
-        <div className={styles.groupHeader}>
+        <summary className={styles.groupHeader}>
           <div className={styles.groupIcon} aria-hidden="true">
             <LinkIcon icon={group.icon} />
           </div>
@@ -345,7 +347,8 @@ const App = () => {
             <h2 className={styles.groupTitle}>{group.title}</h2>
             <p className={styles.groupDescription}>{group.description}</p>
           </div>
-        </div>
+          <ChevronDown className={styles.groupChevron} aria-hidden="true" />
+        </summary>
         <div className={styles.groupProjects} aria-label={`${group.title} links`}>
           {group.links.map((item) => (
             <div key={`${group.id}-${item.label}`} className={styles.projectItemRow}>
@@ -353,7 +356,7 @@ const App = () => {
             </div>
           ))}
         </div>
-      </section>
+      </details>
     );
   };
 
@@ -394,6 +397,8 @@ const App = () => {
           </div>
         </div>
       </section>
+
+      <ExperienceTabs />
 
       <div className={styles.projectList}>
         {linkGroups.map((group) => (

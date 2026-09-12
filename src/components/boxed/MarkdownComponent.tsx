@@ -9,12 +9,14 @@ interface MarkdownComponentProps {
   content: string;
   className?: string;
   loadingText?: string;
+  linkTarget?: "_blank" | "_self";
 }
 
 export default function MarkdownComponent({
   content,
   className = "prose max-w-none prose-headings:text-[var(--foreground)] prose-p:text-[var(--foreground)] prose-strong:text-[var(--foreground)] prose-li:text-[var(--foreground)] prose-a:text-[var(--primary)] prose-code:text-[var(--foreground)] prose-hr:border-[var(--border)]",
   loadingText = "Loading...",
+  linkTarget,
 }: MarkdownComponentProps) {
   const displayContent = content || loadingText;
 
@@ -84,6 +86,11 @@ export default function MarkdownComponent({
   /* ---------------- markdown components ---------------- */
 
   const components: Components = {
+    a: ({ children, href, title }) => (
+      <a href={href} title={title} target={linkTarget} rel={linkTarget === "_blank" ? "noopener noreferrer" : undefined}>
+        {children}
+      </a>
+    ),
     pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
 
     code: ({ className, children, ...props }) => {

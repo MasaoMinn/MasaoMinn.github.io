@@ -1,4 +1,4 @@
-// react-furry-error路由专用的i18n翻译文件
+// Sunny-ZY-UI 路由专用的 i18n 翻译文件
 export const SunnyZyUiI18n = {
   en: {
     mainPage: {
@@ -8,9 +8,7 @@ export const SunnyZyUiI18n = {
       components: "Existing components"
     },
     matter: {
-      description: "Components based on physics engine matter-js",
       bubbleBox: {
-        description: "BubbleBox component description page.",
         props: "BubbleBoxProps Explanation",
       }
     }
