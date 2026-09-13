@@ -17,11 +17,14 @@ The homepage uses a separate Cloudflare Worker and D1 database in
 `workers/site-metrics`. D1 counts one homepage visit per anonymous browser and
 Shanghai calendar day, and stores one like per project, browser, and day.
 
-For local development:
+For local D1 development:
 
 1. Copy `.env.example` to `.env.local`.
 2. Run `pnpm metrics:migrate:local` once to create the local D1 tables.
 3. Run `pnpm metrics:dev` alongside `pnpm dev`.
+
+Without the environment override, local frontend previews use the deployed
+Worker.
 
 Production builds use the deployed site metrics Worker by default. Set
 `NEXT_PUBLIC_SITE_METRICS_API_URL` only when a deployment needs to override that

@@ -33,14 +33,28 @@ function allowedOrigins(env: Env): Set<string> {
   return new Set(env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean));
 }
 
+function isLoopbackOrigin(origin: string): boolean {
+  try {
+    const url = new URL(origin);
+    return (url.protocol === "http:" || url.protocol === "https:")
+      && (url.hostname === "localhost" || url.hostname === "127.0.0.1" || url.hostname === "[::1]");
+  } catch {
+    return false;
+  }
+}
+
+function isAllowedOrigin(origin: string, env: Env): boolean {
+  return allowedOrigins(env).has(origin) || isLoopbackOrigin(origin);
+}
+
 function isOriginAllowed(request: Request, env: Env): boolean {
   const origin = request.headers.get("Origin");
-  return origin === null || allowedOrigins(env).has(origin);
+  return origin === null || isAllowedOrigin(origin, env);
 }
 
 function addCors(response: Response, request: Request, env: Env): Response {
   const origin = request.headers.get("Origin");
-  if (!origin || !allowedOrigins(env).has(origin)) {
+  if (!origin || !isAllowedOrigin(origin, env)) {
     return response;
   }
 

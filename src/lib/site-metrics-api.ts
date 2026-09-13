@@ -3,9 +3,7 @@ const DEFAULT_PRODUCTION_API_URL = "https://masaominn-site-metrics.2134361910.wo
 
 const API_BASE_URL = configuredApiUrl
   ? configuredApiUrl.replace(/\/+$/, "")
-  : process.env.NODE_ENV === "development"
-    ? "http://127.0.0.1:8787"
-    : DEFAULT_PRODUCTION_API_URL;
+  : DEFAULT_PRODUCTION_API_URL;
 
 const VISITOR_ID_KEY = "masaominn_site_metrics_visitor_id";
 
