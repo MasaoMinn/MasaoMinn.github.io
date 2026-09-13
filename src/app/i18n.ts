@@ -28,22 +28,22 @@ i18n
           lang: 'Language',
           mainpage: {
             title: 'Sunny_Tangetsu',
-            description: 'Curated entrances for my projects. Choose a lane and jump in.',
-            introduction: `I am **Sunny_Tangetsu**, currently a **senior** student majoring in **Software Engineering** at **South China University of Technology**.
+            description: 'This is a static resource website showcasing my various projects.',
+            introduction: `I am **Sunny_Tangetsu**, currently a **senior** majoring in **Software Engineering** at **South China University of Technology**.
 
 In high school, I fell in love with *C++* programming competitions, which is also the reason I chose this major.
 
-I am learning full-stack development using the **PERN (PostgreSQL, Express.js, React.js, Node.js) stack** with Next.js as the framework, and this page is my first frontend project.
+I am studying full-stack development with **PERN (PostgreSQL, Express.js, React.js, Node.js)** and Next.js. This page is my first frontend project.
 
 I am currently learning **English** *(TOEFL 100, C1)* and **Japanese** *(JLPT N1)*. In the future, I plan to study other languages, such as Spanish and French.
 
 In my free time, I enjoy painting or making practical tools. I find great satisfaction in the sense of achievement after completing a small project.
 
-The character on the left is my **furry** design. It was my first furry, obtained when I was in my second year of high school
+The character on the left is my **furry** character. It was my first fursona, which I received in my second year of high school.
 
-My motto: **Motivated but not stressed, tense but not anxious, swift but not frantic.**.
+My motto: **Stay motivated without pressure, tense without anxiety, and act swiftly without panic.**
 
-You can find my contact information below in the "Contact Me" section
+You can find my contact information in the "Contact Me" section below.
 `,
             dropdown: 'More',
             about: 'About Me',
@@ -108,34 +108,35 @@ You can find my contact information below in the "Contact Me" section
             },
             react_furry: {
               title: 'Fursona Showcase',
-              description: 'React Fursona declaration',
+              description: 'An introduction to my React fursona.',
               persona: 'React Fursona',
               all_fursonas: 'All My Fursonas',
               error: 'react-furry-error',
               hover: {
-                persona: 'The React Fursona details and copyright declaration',
-                all_fursonas: 'Browse the complete collection of my fursonas.',
+                persona: 'View my React fursona.',
+                all_fursonas: 'Browse all of my fursona works.',
               },
             },
             minigame: {
-              title: 'Minigame',
-              description: 'H5 games written in JS. They are written when I just started to study JS.',
+              title: 'H5 Minigames',
+              description: 'These are minigames I made when I was first learning frontend development. AI coding tools did not exist then, so I typed all the code myself. The mobile support and UI are both pretty bad QAQ',
               bwite: 'Black-White Iteration',
               color: 'My Sense Of Color Is Amazing',
               light: 'Light On The Lights(Two-player Battle)',
               hover: {
-                bwite: 'the Black-White Iteration web game.',
-                color: 'the color perception mini game.',
-                light: 'the LightMaze two-player battle game.',
+                bwite: 'The Brain: Black-White Iteration',
+                color: 'My Sense of Color Is Amazing',
+                light: 'The Brain: Light Up a New World',
               },
             },
             tools: {
               title: 'Tools',
-              description: 'Useful tools',
+              description: 'Here are some tools I have made.',
               hover: {
-                sunny_zy_ui: 'Browse Sunny-ZY-UI components and interactive previews.',
-                react_furry_error: 'An npm package that captures React development errors and displays them in a furry-themed overlay to help with debugging.',
-                furry_ai_state: 'A VS Code extension that connects to an AI coding agent through MCP and uses companion illustrations to show its current phase, status, and active file.',
+                sunny_zy_ui: 'Browse Sunny-ZY-UI components and interactive previews. It currently contains only one UI component.',
+                react_furry_error: 'A project for visualizing React development-time and runtime errors through an error overlay featuring furry illustrations.',
+                furry_ai_state: 'A VS Code extension that connects to AI coding agents through MCP and visualizes agent states such as thinking, planning, coding, testing, errors, and completion with furry illustrations, adding some fun for vibe-coding developers.',
+                furry_agent_pet: 'The Windows desktop application version of furry-ai-state, reusing furry-mcp capabilities and state animations.',
               },
             },
             furry: {
@@ -143,18 +144,18 @@ You can find my contact information below in the "Contact Me" section
             },
           },
           cookie: {
-            title: 'Would You Accpet My Cookies ?',
-            content: 'If you reject, I will ask you again next session. If you accept, nothing happens because this is a static website and I`ve no cookie for you. I just want to show you how cute I am.',
+            title: 'Would You Accept My Cookies?',
+            content: 'If you decline, I will ask again in your next session. If you accept, I still have no cookies to give you because this is a static website. I just want you to see how cute I am.',
             accept: 'Accept',
             reject: 'Reject',
           },
           react_furry: {
             download: 'Download',
-            album: 'Go to React Fursona Album',
+            album: 'Go to the Fursona Reference Album',
           },
           furry_contact: {
             title: 'Contact Me',
-            profile_title: 'Kino Tsuki',
+            profile_title: 'Tangetsu',
             hint: 'Hover over an icon to see the platform name, then click to visit.',
             visit: 'Visit {{platform}}',
             icon_alt: '{{platform}} icon',
@@ -174,6 +175,12 @@ You can find my contact information below in the "Contact Me" section
           },
           sunnyZyUi: {
             ...SunnyZyUiI18n.en,
+          },
+          redirects: {
+            furry_agent_pet: {
+              message: 'Redirecting to the furry-agent-pet GitHub repository. If you are not redirected automatically,',
+              link: 'click here',
+            },
           },
         }
       },
@@ -264,34 +271,35 @@ You can find my contact information below in the "Contact Me" section
             },
             react_furry: {
               title: '兽设展示',
-              description: 'React拟兽兽设说明,与react-furry-error包的使用说明',
+              description: 'React拟兽兽设说明',
               persona: 'React拟兽兽设',
               all_fursonas: '我的全部兽设',
               error: 'react-furry-error',
               hover: {
-                persona: '查看 React 拟兽兽设展示页面。',
-                all_fursonas: '浏览我的全部兽设作品。',
+                persona: '查看 React 拟兽兽设',
+                all_fursonas: '浏览我的全部兽设作品',
               },
             },
             minigame: {
-              title: '小游戏',
-              description: '这里是我写的一些H5小游戏。',
+              title: 'H5小游戏',
+              description: '这里是我初学前端时写的一些小游戏. 当时还没有AI编程, 所有代码都是手敲的. 移动端的适配很糟糕, UI也很糟糕 QAQ',
               bwite: '黑白迭代',
               color: '我色感贼6',
               light: '点灯新世界(双人游戏)',
               hover: {
-                bwite: '启动黑白迭代网页游戏。',
-                color: '开始色彩感知小游戏。',
-                light: '打开 LightMaze 双人对战游戏。',
+                bwite: '最强大脑-黑白迭代',
+                color: '我色感贼6',
+                light: '最强大脑-点灯新世界',
               },
             },
             tools: {
               title: '工具',
               description: '这里是我写的一些工具。',
               hover: {
-                sunny_zy_ui: '浏览 Sunny-ZY-UI 组件及交互预览。',
-                react_furry_error: '这是一个用于捕获 React 开发错误的 npm 包，通过兽设风格的错误浮层展示报错信息，帮助开发者定位问题。',
-                furry_ai_state: '这是一个通过 MCP 连接 AI 编程代理的 VS Code 扩展，以兽设插画展示代理的工作阶段、状态消息和当前文件。',
+                sunny_zy_ui: '浏览 Sunny-ZY-UI 组件及交互预览。虽然目前只有1个UI组件.',
+                react_furry_error: '这是一个用于可视化 React 开发时和运行时错误的项目, 通过furry插画的错误浮层展示报错信息.',
+                furry_ai_state: '这是一个通过 MCP 连接 AI 编程代理的 VS Code 扩展, 以furry插画展示agent的状态(思考,规划,编写代码,测试,错误,完成等), 为Vibe Coding 的开发者提供一些乐趣',
+                furry_agent_pet: '这是 furry-ai-state 的 Windows 桌面应用版本, 复用了 furry-mcp 能力和状态动画.',
               },
             },
             furry: {
@@ -326,6 +334,12 @@ You can find my contact information below in the "Contact Me" section
           sunnyZyUi: {
             ...SunnyZyUiI18n.zh
           },
+          redirects: {
+            furry_agent_pet: {
+              message: '正在前往 furry-agent-pet 的 GitHub 仓库. 如果没有自动跳转, 请',
+              link: '点击这里',
+            },
+          },
           cookie: {
             title: '是否接受我的Cookie ?',
             content: '如果你拒绝,我会在下次会话中再次询问。如果您接受,我也没有cookie给你,因为这是个静态网站。我只是想让你看看我有多可爱。',
@@ -341,27 +355,27 @@ You can find my contact information below in the "Contact Me" section
           lang: '言語',
           mainpage: {
             title: 'Sunny_湛月',
-            description: 'これは静的リソースサイトです。ここでは、私の各種プロジェクトを示しています。',
-            introduction: `私は**Sunny_Tangetsu**と申します。現在は**华南理工大学**のソフトウェア工学専攻の**4年生**です。
+            description: 'これは、私のさまざまなプロジェクトを紹介する静的リソースサイトです。',
+            introduction: `私は**Sunny_Tangetsu**です。現在、**華南理工大学**でソフトウェア工学を専攻する**4年生**です。
 
-高校時代、私は *C++* プログラミングコンテストに魅せられ、それがこの専攻を選んだ理由でもある。
+高校時代に *C++* のプログラミングコンテストに夢中になり、それがこの専攻を選んだ理由でもあります。
 
-私は **PERN（PostgreSQL, Express.js, React.js, Node.js）** をフレームワークとするフルスタック開発を学んでおり、このページは私の最初のフロントエンド作品です。
+私は **PERN（PostgreSQL, Express.js, React.js, Node.js）** とNext.jsを使ったフルスタック開発を学んでいます。このページは私の最初のフロントエンド作品です。
 
-私は現在**英語**（TOEFL 100点、C1レベル）と**日本語**（JLPT 1級）を学んでいます。将来的にはスペイン語やフランス語などの他の言語も学びたいと考えています。
+私は現在、**英語**（TOEFL 100、C1）と**日本語**（JLPT N1）を学んでいます。将来はスペイン語やフランス語など、ほかの言語も学ぶ予定です。
 
-暇なときは、絵を描いたり実用的な道具を作ったりします。小さなプロジェクトを完成させた後の達成感を楽しんでいます。
+暇なときは、絵を描いたり実用的なツールを作ったりしています。小さなプロジェクトを完成させたときの達成感が好きです。
 
-左側のキャラクターは私の**ファーリー**兽设です。それは私の最初の兽设で、高校2年生の時に手に入れたものです。
+左側のキャラクターは私の**ファーソナ**です。高校2年生のときに迎えた、私にとって最初のファーソナです。
 
-私の座右の銘：**やる気があってもプレッシャーなく、緊張していても不安なく、迅速で慌てずに**。
+私の座右の銘：**プレッシャーなく意欲を持ち、不安なく緊張感を保ち、慌てず素早く行動する。**
 
-下記の「連絡する」より私の連絡先をご確認ください
+下の「連絡する」から私の連絡先をご確認いただけます。
 `,
-            dropdown: 'そのうえ',
+            dropdown: 'その他',
             about: '私について',
-            seeme: 'Github',
-            theme: '色気',
+            seeme: 'GitHubを見る',
+            theme: 'テーマ',
             theme_variant: 'テーマバリエーション',
             back: '戻る',
             contact: '連絡する',
@@ -421,34 +435,35 @@ You can find my contact information below in the "Contact Me" section
             },
             react_furry: {
               title: 'ファーソナ展示',
-              description: 'Reactのファー(擬獣)設定説明とreact-furry-error パッケージの使用説明',
-              persona: 'Reactのファー(擬獣)設定',
+              description: 'Reactファーソナの紹介',
+              persona: 'Reactファーソナ',
               all_fursonas: '私のすべてのファーソナ',
               error: 'react-furry-error',
               hover: {
-                persona: 'React のファーソナ紹介ページを表示します。',
-                all_fursonas: '私のファーソナ作品をすべて表示します。',
+                persona: 'Reactファーソナを表示します。',
+                all_fursonas: '私のファーソナ作品をすべて閲覧します。',
               },
             },
             minigame: {
-              title: 'ゲーム',
-              description: 'ここは私が書いたゲームです。',
+              title: 'H5ミニゲーム',
+              description: 'フロントエンドを学び始めた頃に作ったミニゲームです。当時はAIコーディングがなく、すべてのコードを手で入力しました。モバイル対応もUIもかなりひどいです QAQ',
               bwite: '黒白の交替',
               color: '私の色感覚が最高だ',
               light: '電気をつける挑戦(二人のゲーム)',
               hover: {
-                bwite: '黒白イテレーションのWebゲームを起動します。',
-                color: '色覚ミニゲームを開始します。',
-                light: 'LightMaze の2人対戦ゲームを開きます。',
+                bwite: '最強大脳・黒白イテレーション',
+                color: '私の色彩感覚は最高',
+                light: '最強大脳・新世界を照らせ',
               },
             },
             tools: {
-              title: '工具',
-              description: '役に立つ工具',
+              title: 'ツール',
+              description: '私が作ったツールを紹介します。',
               hover: {
-                sunny_zy_ui: 'Sunny-ZY-UI コンポーネントとプレビューを表示します。',
-                react_furry_error: 'React 開発中のエラーを捕捉し、ファーソナを使ったエラーオーバーレイで内容を表示してデバッグを支援する npm パッケージです。',
-                furry_ai_state: 'MCP 経由で AI コーディングエージェントと連携し、ファーソナのイラストで作業段階、ステータスメッセージ、現在のファイルを表示する VS Code 拡張機能です。',
+                sunny_zy_ui: 'Sunny-ZY-UIのコンポーネントとインタラクティブなプレビューを表示します。現在、UIコンポーネントは1つだけです。',
+                react_furry_error: 'Reactの開発時および実行時のエラーを、ファーリーイラスト入りのエラーオーバーレイで可視化するプロジェクトです。',
+                furry_ai_state: 'MCPを通じてAIコーディングエージェントと連携し、思考、計画、コーディング、テスト、エラー、完了などの状態をファーリーイラストで可視化するVS Code拡張機能です。Vibe Codingを楽しむ開発者に遊び心を届けます。',
+                furry_agent_pet: 'furry-ai-stateのWindowsデスクトップアプリ版で、furry-mcpの機能と状態アニメーションを再利用しています。',
               },
             },
             furry: {
@@ -457,11 +472,11 @@ You can find my contact information below in the "Contact Me" section
           },
           react_furry: {
             download: 'ダウンロード',
-            album: 'Reactファーソナ設定集へ',
+            album: 'ファーソナ設定集へ',
           },
           furry_contact: {
             title: '連絡先',
-            profile_title: 'キノツキ',
+            profile_title: '湛月',
             hint: 'アイコンにカーソルを合わせるとサービス名が表示され、クリックすると移動します。',
             visit: '{{platform}}へ移動',
             icon_alt: '{{platform}}のアイコン',
@@ -482,9 +497,15 @@ You can find my contact information below in the "Contact Me" section
           sunnyZyUi: {
             ...SunnyZyUiI18n.jp
           },
+          redirects: {
+            furry_agent_pet: {
+              message: 'furry-agent-petのGitHubリポジトリへ移動しています。自動的に移動しない場合は、',
+              link: 'こちらをクリックしてください',
+            },
+          },
           cookie: {
             title: 'Cookieを受け入れますか？',
-            content: 'もし拒否した場合は、次のセッションで再度質問します。受け入れた場合は、これは静的サイトであるため、Cookieを与えられないということだ. 私は、あなたが私をどのくらい好きであるかを示すために、このサイトを訪れたことを願っています。',
+            content: '拒否すると、次のセッションでもう一度お尋ねします。受け入れても、このサイトは静的サイトなので渡せるCookieはありません。ただ、私がどれほどかわいいか見てほしいだけです。',
             accept: '受け入れる',
             reject: '拒否する',
           }
