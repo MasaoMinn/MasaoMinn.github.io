@@ -23,9 +23,9 @@ For local development:
 2. Run `pnpm metrics:migrate:local` once to create the local D1 tables.
 3. Run `pnpm metrics:dev` alongside `pnpm dev`.
 
-For production, deploy the Worker, apply the D1 migrations remotely, and set the
-GitHub Actions repository variable `NEXT_PUBLIC_SITE_METRICS_API_URL` to the
-Worker URL before building the Pages site.
+Production builds use the deployed site metrics Worker by default. Set
+`NEXT_PUBLIC_SITE_METRICS_API_URL` only when a deployment needs to override that
+endpoint.
 
 The September 2026 dependency update uses current stable application packages.
 ESLint stays on 9.39.5 because the React, import, and accessibility plugins used

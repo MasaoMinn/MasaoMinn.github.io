@@ -1,10 +1,11 @@
 const configuredApiUrl = process.env.NEXT_PUBLIC_SITE_METRICS_API_URL?.trim();
+const DEFAULT_PRODUCTION_API_URL = "https://masaominn-site-metrics.2134361910.workers.dev";
 
 const API_BASE_URL = configuredApiUrl
   ? configuredApiUrl.replace(/\/+$/, "")
   : process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:8787"
-    : null;
+    : DEFAULT_PRODUCTION_API_URL;
 
 const VISITOR_ID_KEY = "masaominn_site_metrics_visitor_id";
 
@@ -32,10 +33,6 @@ function getVisitorId(): string {
 }
 
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  if (!API_BASE_URL) {
-    throw new Error("Site metrics API is not configured.");
-  }
-
   const visitorId = getVisitorId();
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
