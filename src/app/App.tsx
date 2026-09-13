@@ -10,6 +10,11 @@ import { useLocalStorageStore } from "@/store/LocalStorageStore";
 import { CookieModal } from "@/components/layout/modals/CookieModal";
 import MarkdownComponent from "@/components/boxed/MarkdownComponent";
 import ExperienceTabs from "@/components/layout/ExperienceTabs";
+import {
+  ProjectLikeButton,
+  SiteMetricsProvider,
+  SiteVisitCounter,
+} from "@/components/home/SiteMetrics";
 import styles from "./App.module.css";
 
 type IconKind =
@@ -28,6 +33,7 @@ type IconKind =
   | "rocket";
 
 type LinkItem = {
+  id: string;
   label: string;
   caption: string;
   href: string;
@@ -177,6 +183,7 @@ const App = () => {
       accent: "#ff7d9a",
       links: [
         {
+          id: "react-fursona",
           label: t("mainpage.react_furry.persona"),
           caption: t("mainpage.react_furry.hover.persona"),
           href: "/react-fursona",
@@ -186,6 +193,7 @@ const App = () => {
           tags: ["React", "Fursona", "Furry"],
         },
         {
+          id: "fursona-gallery",
           label: t("mainpage.react_furry.all_fursonas"),
           caption: t("mainpage.react_furry.hover.all_fursonas"),
           href: "https://gallery.tangetsu.top/#fursona",
@@ -205,6 +213,7 @@ const App = () => {
       accent: "#47c2ff",
       links: [
         {
+          id: "sunny-zy-ui",
           label: "sunny-zy-ui",
           caption: t("mainpage.tools.hover.sunny_zy_ui"),
           href: "/tools/sunny-zy-ui",
@@ -213,6 +222,7 @@ const App = () => {
           tags: ["React", "UI", "Components"],
         },
         {
+          id: "react-furry-error",
           label: t("mainpage.react_furry.error"),
           caption: t("mainpage.tools.hover.react_furry_error"),
           href: "/tools/react-furry-error",
@@ -222,6 +232,7 @@ const App = () => {
           tags: ["React", "npm package", "dev"],
         },
         {
+          id: "furry-ai-state",
           label: "Furry AI State",
           caption: t("mainpage.tools.hover.furry_ai_state"),
           href: "/furry-ai-state",
@@ -231,6 +242,7 @@ const App = () => {
           tags: ["AI", "Furry", "Agent", "MCP tool"],
         },
         {
+          id: "furry-agent-pet",
           label: "furry-agent-pet",
           caption: t("mainpage.tools.hover.furry_agent_pet"),
           href: "/tools/furry-agent-pet",
@@ -249,6 +261,7 @@ const App = () => {
       accent: "#f7b733",
       links: [
         {
+          id: "bwite",
           label: t("mainpage.minigame.bwite"),
           caption: t("mainpage.minigame.hover.bwite"),
           href: "/BWIte/index.html",
@@ -258,6 +271,7 @@ const App = () => {
           tags: ["JavaScript", "H5"],
         },
         {
+          id: "color-sense",
           label: t("mainpage.minigame.color"),
           caption: t("mainpage.minigame.hover.color"),
           href: "/Color/index.html",
@@ -267,6 +281,7 @@ const App = () => {
           tags: ["JavaScript", "H5"],
         },
         {
+          id: "light-maze",
           label: t("mainpage.minigame.light"),
           caption: t("mainpage.minigame.hover.light"),
           href: "/LightMaze",
@@ -359,8 +374,9 @@ const App = () => {
         </summary>
         <div className={styles.groupProjects} aria-label={`${group.title} links`}>
           {group.links.map((item) => (
-            <div key={`${group.id}-${item.label}`} className={styles.projectItemRow}>
+            <div key={item.id} className={styles.projectItemRow}>
               {renderProject(item)}
+              <ProjectLikeButton projectId={item.id} projectName={item.label} />
             </div>
           ))}
         </div>
@@ -369,10 +385,11 @@ const App = () => {
   };
 
   return (
-    <Container
-      className={`${styles.appShell} min-vh-100 text-center theme-page`}
-      fluid
-    >
+    <SiteMetricsProvider>
+      <Container
+        className={`${styles.appShell} min-vh-100 text-center theme-page`}
+        fluid
+      >
       <div className={styles.backdropAura} aria-hidden="true" />
       <div className={styles.backdropGrid} aria-hidden="true" />
 
@@ -380,6 +397,7 @@ const App = () => {
         {/* <p className={styles.pageEyebrow}>Personal Launchpad</p> */}
         <h1 className={styles.pageTitle}>{t("mainpage.title")}</h1>
         <p className={styles.pageDescription}>{t("mainpage.description")}</p>
+        <SiteVisitCounter />
       </header>
 
       <section className={styles.profileCard} aria-label="Developer profile">
@@ -417,7 +435,8 @@ const App = () => {
       </div>
 
       <CookieModal show={isCookieModalVisible} />
-    </Container>
+      </Container>
+    </SiteMetricsProvider>
   );
 }
 export default App;

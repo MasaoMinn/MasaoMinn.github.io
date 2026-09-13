@@ -52,6 +52,12 @@ You can find my contact information in the "Contact Me" section below.
             theme_variant: 'Theme Variant',
             back: 'Back',
             contact: 'Contact Me',
+            metrics: {
+              total_visits: 'Total visits',
+              like_project: 'Like {{project}}',
+              liked_project: 'You liked {{project}} today',
+              already_liked_today: 'You already liked this project today.',
+            },
             theme_modes: {
               light: 'Light',
               dark: 'Dark',
@@ -215,6 +221,12 @@ You can find my contact information in the "Contact Me" section below.
             theme_variant: '主题变体',
             back: '返回',
             contact: '联系我',
+            metrics: {
+              total_visits: '累计访问',
+              like_project: '为{{project}}点赞',
+              liked_project: '今天已为{{project}}点赞',
+              already_liked_today: '今天已经为这个项目点过赞了',
+            },
             theme_modes: {
               light: '浅色',
               dark: '深色',
@@ -379,6 +391,12 @@ You can find my contact information in the "Contact Me" section below.
             theme_variant: 'テーマバリエーション',
             back: '戻る',
             contact: '連絡する',
+            metrics: {
+              total_visits: '累計アクセス',
+              like_project: '{{project}}にいいね',
+              liked_project: '今日は{{project}}にいいね済み',
+              already_liked_today: '今日はすでにこのプロジェクトにいいねしています。',
+            },
             theme_modes: {
               light: 'ライト',
               dark: 'ダーク',

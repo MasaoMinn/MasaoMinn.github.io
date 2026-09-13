@@ -311,7 +311,9 @@
 }
 
 .projectItemRow {
+  position: relative;
   min-width: 0;
+  height: 100%;
 }
 
 .projectLink {
@@ -322,6 +324,7 @@
   align-items: center;
   gap: 0.9rem;
   width: 100%;
+  height: 100%;
   min-height: 5.2rem;
   text-decoration: none;
   border-radius: 0.55rem;
@@ -412,6 +415,7 @@
   gap: 0.38rem;
   margin-top: 0.15rem;
   padding-top: 0.7rem;
+  padding-right: 5rem;
   border-top: 1px solid color-mix(in srgb, var(--group-accent) 22%, var(--theme-border));
 }
 
@@ -557,7 +561,8 @@
   .itemTags {
     grid-column: 1;
     grid-row: 3;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-right: 4.75rem;
   }
 
   .itemArrow {

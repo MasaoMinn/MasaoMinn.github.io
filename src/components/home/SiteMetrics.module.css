@@ -1,0 +1,163 @@
+.visitCounter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.62rem;
+  min-height: 2.65rem;
+  margin-top: 1rem;
+  padding: 0.48rem 0.86rem;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 40%, var(--theme-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-accent) 9%, var(--theme-bg-2));
+  color: var(--theme-fg-2);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--theme-accent) 12%, transparent);
+  font-size: 0.88rem;
+}
+
+.visitCounter svg {
+  width: 1.08rem;
+  height: 1.08rem;
+  color: var(--theme-accent);
+}
+
+.visitCounter strong {
+  color: var(--foreground);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.likeControl {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.75rem;
+  z-index: 3;
+}
+
+.likeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  min-width: 3.8rem;
+  height: 2.25rem;
+  padding: 0 0.68rem;
+  border: 1px solid color-mix(in srgb, var(--group-accent) 48%, var(--theme-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--group-accent) 7%, var(--theme-bg-2));
+  color: color-mix(in srgb, var(--group-accent) 76%, var(--foreground));
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.likeButton svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke-width: 1.9;
+}
+
+.likeButton:hover,
+.likeButton:focus-visible {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--group-accent) 16%, var(--theme-bg-2));
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--group-accent) 22%, transparent);
+}
+
+.likeButton:focus-visible {
+  outline: 2px solid var(--group-accent);
+  outline-offset: 2px;
+}
+
+.likeButton:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.likeButton.liked {
+  background: color-mix(in srgb, var(--group-accent) 22%, var(--theme-bg-2));
+  color: color-mix(in srgb, var(--group-accent) 88%, white);
+}
+
+.particleLayer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.particle {
+  --particle-color: var(--group-accent);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--particle-color);
+  box-shadow: 0 0 7px color-mix(in srgb, var(--group-accent) 70%, transparent);
+  animation: likeBurst 0.72s cubic-bezier(0.18, 0.67, 0.28, 1) var(--particle-delay) forwards;
+}
+
+.particle:nth-child(3n + 2) {
+  --particle-color: color-mix(in srgb, var(--group-accent) 62%, white);
+  width: 0.32rem;
+  height: 0.32rem;
+}
+
+.particle:nth-child(3n) {
+  --particle-color: white;
+  width: 0.28rem;
+  height: 0.28rem;
+}
+
+.duplicateToast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 30;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  padding: 0.7rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--group-accent) 42%, var(--theme-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--group-accent) 12%, var(--theme-bg-2));
+  color: var(--foreground);
+  box-shadow: 0 10px 30px color-mix(in srgb, black 48%, transparent);
+  font-size: 0.86rem;
+  animation: toastEnter 0.2s ease both;
+}
+
+@keyframes likeBurst {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.55);
+  }
+  72% {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--particle-x)), calc(-50% + var(--particle-y))) scale(1.1);
+  }
+}
+
+@keyframes toastEnter {
+  from { opacity: 0; transform: translate(-50%, 0.7rem); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particleLayer { display: none; }
+  .duplicateToast { animation: none; }
+  .likeButton { transition: none; }
+}
+
+@media (max-width: 576px) {
+  .visitCounter { margin-top: 0.8rem; }
+  .likeControl { right: 0.68rem; bottom: 0.68rem; }
+}

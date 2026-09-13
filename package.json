@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "metrics:types": "wrangler types workers/site-metrics/worker-configuration.d.ts --config workers/site-metrics/wrangler.jsonc",
+    "metrics:migrate:local": "wrangler d1 migrations apply site-metrics-db --local --config workers/site-metrics/wrangler.jsonc",
+    "metrics:migrate:remote": "wrangler d1 migrations apply site-metrics-db --remote --config workers/site-metrics/wrangler.jsonc",
+    "metrics:dev": "wrangler dev --local --config workers/site-metrics/wrangler.jsonc",
+    "metrics:check": "wrangler deploy --dry-run --config workers/site-metrics/wrangler.jsonc",
+    "metrics:deploy": "wrangler deploy --config workers/site-metrics/wrangler.jsonc"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.15",
@@ -44,6 +50,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "5.20260911.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/matter-js": "^0.20.2",
     "@types/node": "^22.20.2",
@@ -53,6 +60,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4.3.3",
-    "typescript": "npm:@typescript/typescript6@^6.0.2"
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "wrangler": "4.131.1"
   }
 }

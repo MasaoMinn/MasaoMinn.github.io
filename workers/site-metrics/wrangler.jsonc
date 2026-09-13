@@ -1,0 +1,25 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "masaominn-site-metrics",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://masaominn.github.io,https://tangetsu.top,http://localhost:3000,http://127.0.0.1:3000"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "site-metrics-db",
+      "database_id": "04e0168b-4e82-4c31-90d2-61154eddc250",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    }
+  }
+}
