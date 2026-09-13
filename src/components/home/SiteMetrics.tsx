@@ -10,6 +10,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { Eye, Heart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -185,10 +186,11 @@ export function ProjectLikeButton({ projectId, projectName }: { projectId: strin
           ))}
         </span>
       )}
-      {showDuplicateMessage && (
+      {showDuplicateMessage && createPortal(
         <div className={styles.duplicateToast} role="status">
           {t("mainpage.metrics.already_liked_today")}
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

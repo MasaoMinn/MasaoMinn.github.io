@@ -14,8 +14,8 @@ Use Node.js 24 and pnpm 11.16.0, matching the deployment workflow.
 ## Site metrics backend
 
 The homepage uses a separate Cloudflare Worker and D1 database in
-`workers/site-metrics`. D1 stores the total homepage visit count and one like per
-project, anonymous browser, and Shanghai calendar day.
+`workers/site-metrics`. D1 counts one homepage visit per anonymous browser and
+Shanghai calendar day, and stores one like per project, browser, and day.
 
 For local development:
 

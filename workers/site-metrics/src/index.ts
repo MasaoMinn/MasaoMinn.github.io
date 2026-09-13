@@ -114,17 +114,26 @@ async function getMetrics(request: Request, env: Env): Promise<Response> {
   });
 }
 
-async function recordVisit(env: Env): Promise<Response> {
-  const counter = await env.DB.prepare(`
-    INSERT INTO page_counters (path, total_views, updated_at)
-    VALUES (?, 1, CURRENT_TIMESTAMP)
-    ON CONFLICT(path) DO UPDATE SET
-      total_views = total_views + 1,
-      updated_at = CURRENT_TIMESTAMP
-    RETURNING total_views
-  `).bind(HOME_PATH).first<{ total_views: number }>();
+async function recordVisit(request: Request, env: Env): Promise<Response> {
+  const visitorId = visitorIdFrom(request);
+  if (!visitorId) {
+    return json({ error: "invalid_visitor_id" }, { status: 400 });
+  }
 
-  return json({ totalViews: Number(counter?.total_views ?? 1) });
+  const visitorHash = await hashVisitorId(visitorId);
+  const today = shanghaiDay();
+  const insert = await env.DB.prepare(`
+    INSERT OR IGNORE INTO daily_page_visits (path, visitor_hash, visit_day)
+    VALUES (?, ?, ?)
+  `).bind(HOME_PATH, visitorHash, today).run();
+  const counter = await env.DB.prepare(
+    "SELECT total_views FROM page_counters WHERE path = ?",
+  ).bind(HOME_PATH).first<{ total_views: number }>();
+
+  return json({
+    totalViews: Number(counter?.total_views ?? 0),
+    counted: insert.meta.changes > 0,
+  });
 }
 
 async function addProjectLike(request: Request, env: Env, projectId: string): Promise<Response> {
@@ -172,7 +181,7 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
   }
 
   if (request.method === "POST" && url.pathname === "/api/visits") {
-    return recordVisit(env);
+    return recordVisit(request, env);
   }
 
   const likeMatch = url.pathname.match(/^\/api\/projects\/([^/]+)\/likes$/);

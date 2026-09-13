@@ -51,7 +51,7 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   return data;
 }
 
-export function recordPageVisit(): Promise<{ totalViews: number }> {
+export function recordPageVisit(): Promise<{ totalViews: number; counted: boolean }> {
   return apiRequest("/api/visits", { method: "POST" });
 }
 
