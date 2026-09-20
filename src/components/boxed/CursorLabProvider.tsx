@@ -17,9 +17,7 @@ const CURSORLAB_SETTINGS_KEY = "cursorlab.settings.v1";
 
 export const CURSOR_TRAIL_TYPES = [
   "circle",
-  "circle-filled",
   "square",
-  "square-filled",
   "triangle",
   "star",
   "dot",
@@ -82,7 +80,14 @@ type CursorLabStaticApi = {
   destroy: () => void;
 };
 
-type CursorLabCtor = new () => CursorLabStaticApi;
+type CursorLabInstance = CursorLabStaticApi & {
+  customCursorElement: HTMLElement | null;
+  mousePosition: { x: number; y: number };
+  targetPosition: { x: number; y: number };
+  trailType: CursorTrailType;
+};
+
+type CursorLabCtor = new () => CursorLabInstance;
 
 declare global {
   interface Window {
@@ -108,6 +113,7 @@ const normalizeCursorSettings = (
   raw: Partial<CursorLabSettings> | null | undefined,
 ): CursorLabSettings => {
   const source = raw ?? {};
+  const storedTrailType: unknown = source.trailType;
   return {
     enabled:
       typeof source.enabled === "boolean"
@@ -117,9 +123,14 @@ const normalizeCursorSettings = (
       typeof source.clickEffect === "boolean"
         ? source.clickEffect
         : DEFAULT_CURSORLAB_SETTINGS.clickEffect,
-    trailType: isTrailType(source.trailType)
-      ? source.trailType
-      : DEFAULT_CURSORLAB_SETTINGS.trailType,
+    trailType:
+      storedTrailType === "circle-filled"
+        ? "circle"
+        : storedTrailType === "square-filled"
+          ? "square"
+          : isTrailType(storedTrailType)
+            ? storedTrailType
+            : DEFAULT_CURSORLAB_SETTINGS.trailType,
     pointerStyle: isPointerStyle(source.pointerStyle)
       ? source.pointerStyle
       : DEFAULT_CURSORLAB_SETTINGS.pointerStyle,
@@ -133,7 +144,7 @@ const normalizeCursorSettings = (
         : DEFAULT_CURSORLAB_SETTINGS.thickness,
     delay:
       typeof source.delay === "number"
-        ? clamp(source.delay, 0.02, 0.35)
+        ? clamp(source.delay, 0, 0.6)
         : DEFAULT_CURSORLAB_SETTINGS.delay,
   };
 };
@@ -210,13 +221,7 @@ const applyCursorDelay = (cursorLab: CursorLabStaticApi, delay: number) => {
   }
 
   maybeTrailDelay.trailDelayValue = delay;
-  if (hasCursorLabInstance() && isObjectRecord(window.cursorLabInstance)) {
-    (window.cursorLabInstance as { trailDelayValue?: number }).trailDelayValue = delay;
-  }
 };
-
-const toInternalTrailDelay = (uiDelay: number) =>
-  clamp(0.37 - uiDelay, 0.02, 0.35);
 
 const hexToRgba = (hex: string, alpha: number) => {
   const normalized = hex.trim().toLowerCase();
@@ -265,31 +270,28 @@ const applyCursorConfig = (
     .setThickness(settings.thickness)
     .setCustomStyle(buildTrailStyle(settings.trailType));
 
-  applyCursorDelay(cursor, toInternalTrailDelay(settings.delay));
+  applyCursorDelay(cursor, 1);
   // User要求只显示自定义光标，不显示原生鼠标。
   applyCursorPointerStyle(cursor, "none");
 };
 
 const applyTailCursorConfig = (
-  cursorLab: CursorLabStaticApi,
+  cursorLab: CursorLabInstance,
   settings: CursorLabSettings,
   trailColor: string,
   index: number,
 ) => {
-  const size = Math.max(8, settings.size - (index + 1) * 2.8);
-  const thickness = Math.max(1, settings.thickness - index * 0.55);
   const alpha = Math.max(0.18, 0.56 - index * 0.12);
-  const delay = clamp(toInternalTrailDelay(settings.delay) + 0.04 * (index + 1), 0.02, 0.35);
+  const delay = 1 / (1 + settings.delay * 10 * (index + 1));
   const color = hexToRgba(trailColor, alpha);
 
   const cursor = cursorLab
     .setCursorTrail(settings.trailType)
     .setColor(color)
-    .setSize(size)
-    .setThickness(thickness);
+    .setSize(settings.size)
+    .setThickness(settings.thickness);
 
   applyCursorDelay(cursor, delay);
-  applyCursorPointerStyle(cursor, "none");
 };
 
 export function useCursorLab() {
@@ -308,7 +310,8 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
   const [hydrated, setHydrated] = useState(false);
   const [cursorLabReady, setCursorLabReady] = useState(false);
   const cursorLabRef = useRef<CursorLabStaticApi | null>(null);
-  const tailInstancesRef = useRef<CursorLabStaticApi[]>([]);
+  const tailInstancesRef = useRef<CursorLabInstance[]>([]);
+  const tailConfigRef = useRef({ settings: cursorSettings, color: currentPalette.extraColor });
 
   const destroyTailInstances = useCallback(() => {
     for (const instance of tailInstancesRef.current) {
@@ -379,6 +382,7 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
       if (cursorLabRef.current && hasCursorLabInstance()) {
         cursorLabRef.current.destroy();
       }
+      document.body.style.removeProperty("cursor");
       cursorLabRef.current = null;
       setCursorLabReady(false);
     };
@@ -388,7 +392,7 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
     if (!hydrated) return;
     const className = "cursorlab-hide-native";
     const root = document.documentElement;
-    if (cursorSettings.enabled) {
+    if (cursorSettings.enabled && cursorLabReady) {
       root.classList.add(className);
       return () => {
         root.classList.remove(className);
@@ -396,7 +400,7 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
     }
     root.classList.remove(className);
     return;
-  }, [cursorSettings.enabled, hydrated]);
+  }, [cursorSettings.enabled, cursorLabReady, hydrated]);
 
   useEffect(() => {
     if (!hydrated || !cursorLabReady) return;
@@ -406,13 +410,13 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
     if (!cursorSettings.enabled) {
       destroyTailInstances();
       cursorLab.setDefault();
-      cursorLab.setNormalCursor();
+      document.body.style.removeProperty("cursor");
       return;
     }
 
     applyCursorConfig(cursorLab, cursorSettings, currentPalette.extraColor);
     cursorLab.startTrail();
-  }, [cursorLabReady, cursorSettings.enabled, currentPalette.extraColor, destroyTailInstances, hydrated]);
+  }, [cursorLabReady, cursorSettings.enabled, cursorSettings.trailType, currentPalette.extraColor, destroyTailInstances, hydrated]);
 
   useEffect(() => {
     if (!hydrated || !cursorLabReady || !cursorSettings.enabled) return;
@@ -431,12 +435,22 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
   ]);
 
   useEffect(() => {
-    if (!hydrated || !cursorSettings.enabled) {
-      destroyTailInstances();
-      return;
+    tailConfigRef.current = { settings: cursorSettings, color: currentPalette.extraColor };
+    for (const [index, instance] of tailInstancesRef.current.entries()) {
+      const shapeChanged = instance.trailType !== cursorSettings.trailType;
+      applyTailCursorConfig(instance, cursorSettings, currentPalette.extraColor, index);
+      if (shapeChanged) instance.startTrail();
     }
+  }, [
+    cursorSettings,
+    currentPalette.extraColor,
+  ]);
+
+  useEffect(() => {
+    if (!hydrated || !cursorSettings.enabled) return;
 
     let cancelled = false;
+    let animationFrame = 0;
 
     const run = async () => {
       const TailCtor = await readCursorLabCtor();
@@ -445,32 +459,42 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
       destroyTailInstances();
 
       const tailCount = 4;
-      const nextInstances: CursorLabStaticApi[] = [];
+      const nextInstances: CursorLabInstance[] = [];
+      const { settings, color } = tailConfigRef.current;
       for (let i = 0; i < tailCount; i += 1) {
         const instance = new TailCtor();
-        applyTailCursorConfig(instance, cursorSettings, currentPalette.extraColor, i);
+        applyTailCursorConfig(instance, settings, color, i);
         instance.startTrail();
         nextInstances.push(instance);
       }
       tailInstancesRef.current = nextInstances;
+
+      const updateTailSizes = () => {
+        for (const instance of nextInstances) {
+          const element = instance.customCursorElement;
+          if (!element) continue;
+          const distance = Math.hypot(
+            instance.mousePosition.x - instance.targetPosition.x,
+            instance.mousePosition.y - instance.targetPosition.y,
+          );
+          const scale = 1 / (1 + distance / (tailConfigRef.current.settings.size * 2));
+          element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+          element.style.opacity = String(Math.min(1, distance / 6));
+        }
+        animationFrame = requestAnimationFrame(updateTailSizes);
+      };
+
+      animationFrame = requestAnimationFrame(updateTailSizes);
     };
 
     void run();
 
     return () => {
       cancelled = true;
+      cancelAnimationFrame(animationFrame);
       destroyTailInstances();
     };
-  }, [
-    cursorSettings.delay,
-    cursorSettings.enabled,
-    cursorSettings.size,
-    cursorSettings.thickness,
-    cursorSettings.trailType,
-    currentPalette.extraColor,
-    destroyTailInstances,
-    hydrated,
-  ]);
+  }, [cursorSettings.enabled, destroyTailInstances, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;

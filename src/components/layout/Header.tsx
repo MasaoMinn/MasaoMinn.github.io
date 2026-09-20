@@ -485,24 +485,27 @@ function BasicExample() {
                           />
                         </Form.Group>
 
-                        <Form.Group>
-                          <div className="d-flex justify-content-between small">
-                            <span>{t("mainpage.cursor.thickness")}</span>
-                            <span>{cursorSettings.thickness}</span>
-                          </div>
-                          <Form.Range
-                            min={1}
-                            max={8}
-                            step={1}
-                            value={cursorSettings.thickness}
-                            disabled={!cursorSettings.enabled}
-                            onChange={(event) =>
-                              setCursorSettings({
-                                thickness: Number(event.target.value),
-                              })
-                            }
-                          />
-                        </Form.Group>
+                        {(cursorSettings.trailType === "circle" ||
+                          cursorSettings.trailType === "square") && (
+                          <Form.Group>
+                            <div className="d-flex justify-content-between small">
+                              <span>{t("mainpage.cursor.thickness")}</span>
+                              <span>{cursorSettings.thickness}</span>
+                            </div>
+                            <Form.Range
+                              min={1}
+                              max={8}
+                              step={1}
+                              value={cursorSettings.thickness}
+                              disabled={!cursorSettings.enabled}
+                              onChange={(event) =>
+                                setCursorSettings({
+                                  thickness: Number(event.target.value),
+                                })
+                              }
+                            />
+                          </Form.Group>
+                        )}
 
                         <Form.Group>
                           <div className="d-flex justify-content-between small">
@@ -510,8 +513,8 @@ function BasicExample() {
                             <span>{cursorSettings.delay.toFixed(2)}</span>
                           </div>
                           <Form.Range
-                            min={0.02}
-                            max={0.35}
+                            min={0}
+                            max={0.6}
                             step={0.01}
                             value={cursorSettings.delay}
                             disabled={!cursorSettings.enabled}

@@ -61,6 +61,7 @@ export const CookieModal: React.FC<CookieModalProps> = ({ show }) => {
         alt="Cookie"
         width={500}
         height={400}
+        loading="eager"
         className="mb-4 mx-auto d-block"
         style={{ backgroundColor: "var(--background)" }}
       />
