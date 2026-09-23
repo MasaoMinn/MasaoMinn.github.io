@@ -12,6 +12,7 @@ import {
 } from "react";
 import { useTheme } from "@/components/boxed/ThemeProvider";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
+import { createClickParticles } from "./clickParticles";
 
 const CURSORLAB_SETTINGS_KEY = "cursorlab.settings.v1";
 
@@ -23,6 +24,9 @@ export const CURSOR_TRAIL_TYPES = [
   "dot",
 ] as const;
 
+export const CURSOR_CLICK_TYPES = ["pulse", "particles"] as const;
+export const CURSOR_CLICK_INTENSITIES = ["soft", "normal", "lively"] as const;
+
 export const CURSOR_POINTER_STYLES = [
   "default",
   "crosshair",
@@ -32,11 +36,17 @@ export const CURSOR_POINTER_STYLES = [
 ] as const;
 
 export type CursorTrailType = (typeof CURSOR_TRAIL_TYPES)[number];
+export type CursorClickShape = "cursor" | CursorTrailType;
+export type CursorClickType = (typeof CURSOR_CLICK_TYPES)[number];
+export type CursorClickIntensity = (typeof CURSOR_CLICK_INTENSITIES)[number];
 export type CursorPointerStyle = (typeof CURSOR_POINTER_STYLES)[number];
 
 export type CursorLabSettings = {
   enabled: boolean;
   clickEffect: boolean;
+  clickShape: CursorClickShape;
+  clickType: CursorClickType;
+  clickIntensity: CursorClickIntensity;
   trailType: CursorTrailType;
   pointerStyle: CursorPointerStyle;
   size: number;
@@ -47,6 +57,9 @@ export type CursorLabSettings = {
 const DEFAULT_CURSORLAB_SETTINGS: CursorLabSettings = {
   enabled: true,
   clickEffect: true,
+  clickShape: "cursor",
+  clickType: "pulse",
+  clickIntensity: "normal",
   trailType: "circle",
   pointerStyle: "default",
   size: 18,
@@ -105,6 +118,17 @@ const isTrailType = (value: unknown): value is CursorTrailType =>
   typeof value === "string" &&
   (CURSOR_TRAIL_TYPES as readonly string[]).includes(value);
 
+const isClickShape = (value: unknown): value is CursorClickShape =>
+  value === "cursor" || isTrailType(value);
+
+const isClickType = (value: unknown): value is CursorClickType =>
+  typeof value === "string" &&
+  (CURSOR_CLICK_TYPES as readonly string[]).includes(value);
+
+const isClickIntensity = (value: unknown): value is CursorClickIntensity =>
+  typeof value === "string" &&
+  (CURSOR_CLICK_INTENSITIES as readonly string[]).includes(value);
+
 const isPointerStyle = (value: unknown): value is CursorPointerStyle =>
   typeof value === "string" &&
   (CURSOR_POINTER_STYLES as readonly string[]).includes(value);
@@ -123,6 +147,15 @@ const normalizeCursorSettings = (
       typeof source.clickEffect === "boolean"
         ? source.clickEffect
         : DEFAULT_CURSORLAB_SETTINGS.clickEffect,
+    clickShape: isClickShape(source.clickShape)
+      ? source.clickShape
+      : DEFAULT_CURSORLAB_SETTINGS.clickShape,
+    clickType: isClickType(source.clickType)
+      ? source.clickType
+      : DEFAULT_CURSORLAB_SETTINGS.clickType,
+    clickIntensity: isClickIntensity(source.clickIntensity)
+      ? source.clickIntensity
+      : DEFAULT_CURSORLAB_SETTINGS.clickIntensity,
     trailType:
       storedTrailType === "circle-filled"
         ? "circle"
@@ -500,22 +533,57 @@ export default function CursorLabProvider({ children }: { children: ReactNode })
     if (!hydrated) return;
     if (!cursorSettings.enabled || !cursorSettings.clickEffect) return;
 
+    const particles = cursorSettings.clickType === "particles"
+      ? createClickParticles()
+      : null;
+
     const handlePointerDown = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
 
+      const shape = cursorSettings.clickShape === "cursor"
+        ? cursorSettings.trailType
+        : cursorSettings.clickShape;
+      if (cursorSettings.clickType === "particles") {
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          particles?.burst(
+            event.clientX,
+            event.clientY,
+            shape,
+            cursorSettings.clickIntensity,
+            currentPalette.extraColor2,
+          );
+        }
+        return;
+      }
+
       const burst = document.createElement("span");
-      burst.className = "cursorlab-click-burst";
+      burst.className = "cursorlab-click-shape cursorlab-click-burst";
+      burst.dataset.shape = shape;
+      burst.style.setProperty("--cursorlab-click-size", `${cursorSettings.size}px`);
+      burst.style.setProperty("--cursorlab-click-thickness", `${cursorSettings.thickness}px`);
       burst.style.left = `${event.clientX}px`;
       burst.style.top = `${event.clientY}px`;
-      document.body.appendChild(burst);
       burst.addEventListener("animationend", () => burst.remove(), { once: true });
+      document.body.appendChild(burst);
     };
 
     window.addEventListener("pointerdown", handlePointerDown, { passive: true });
     return () => {
       window.removeEventListener("pointerdown", handlePointerDown);
+      particles?.destroy();
     };
-  }, [cursorSettings.clickEffect, cursorSettings.enabled, hydrated]);
+  }, [
+    cursorSettings.clickEffect,
+    cursorSettings.clickIntensity,
+    cursorSettings.clickShape,
+    cursorSettings.clickType,
+    cursorSettings.enabled,
+    cursorSettings.size,
+    cursorSettings.thickness,
+    cursorSettings.trailType,
+    currentPalette.extraColor2,
+    hydrated,
+  ]);
 
   const contextValue = useMemo(
     () => ({

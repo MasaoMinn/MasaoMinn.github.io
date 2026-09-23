@@ -13,9 +13,22 @@ import {
   useTheme,
 } from "@/components/boxed/ThemeProvider";
 import {
+  CURSOR_CLICK_INTENSITIES,
+  CURSOR_CLICK_TYPES,
   CURSOR_TRAIL_TYPES,
+  type CursorClickShape,
+  type CursorClickIntensity,
+  type CursorClickType,
+  type CursorTrailType,
   useCursorLab,
 } from "@/components/boxed/CursorLabProvider";
+import {
+  CursorClickTypePreview,
+  CursorIntensityPreview,
+  CursorShapePreview,
+  CursorVisualSelect,
+  type CursorVisualOption,
+} from "@/components/boxed/CursorVisualSelect";
 import { useTranslation } from "react-i18next";
 import i18n from "@/app/i18n";
 import { useLocalStorageStore } from "@/store/LocalStorageStore";
@@ -56,6 +69,7 @@ const normalizePalette = (palette: ThemePalette): ThemePalette => ({
 });
 
 const DESKTOP_DROPDOWN_CLOSE_DISTANCE = 42;
+type CursorPickerKey = "cursorShape" | "clickType" | "clickShape" | "clickIntensity";
 
 type Point = { x: number; y: number };
 
@@ -116,6 +130,7 @@ function BasicExample() {
   const [isDesktopPointer, setIsDesktopPointer] = useState(false);
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
+  const [openCursorPicker, setOpenCursorPicker] = useState<CursorPickerKey | null>(null);
   const [customThemeDraft, setCustomThemeDraft] = useState<ThemePalette>(() =>
     normalizePalette(currentPalette)
   );
@@ -137,6 +152,50 @@ function BasicExample() {
       })),
     [t],
   );
+  const cursorShapeVisualOptions = useMemo<CursorVisualOption[]>(
+    () => cursorTrailOptions.map((item) => ({
+      value: item.value,
+      label: item.label,
+      preview: <CursorShapePreview shape={item.value} />,
+    })),
+    [cursorTrailOptions],
+  );
+  const clickTypeVisualOptions = useMemo<CursorVisualOption[]>(
+    () => CURSOR_CLICK_TYPES.map((value) => ({
+      value,
+      label: t(`mainpage.cursor.click_types.${value}`),
+      description: t(`mainpage.cursor.click_type_descriptions.${value}`),
+      preview: <CursorClickTypePreview type={value} />,
+    })),
+    [t],
+  );
+  const clickShapeVisualOptions = useMemo<CursorVisualOption[]>(
+    () => [
+      {
+        value: "cursor",
+        label: t("mainpage.cursor.follow_cursor_shape"),
+        description: t("mainpage.cursor.follow_cursor_shape_description"),
+        preview: <CursorShapePreview shape={cursorSettings.trailType} />,
+        wide: true,
+      },
+      ...cursorShapeVisualOptions,
+    ],
+    [cursorSettings.trailType, cursorShapeVisualOptions, t],
+  );
+  const clickIntensityVisualOptions = useMemo<CursorVisualOption[]>(
+    () => CURSOR_CLICK_INTENSITIES.map((value) => ({
+      value,
+      label: t(`mainpage.cursor.click_intensities.${value}`),
+      description: t(`mainpage.cursor.click_intensity_descriptions.${value}`),
+      preview: <CursorIntensityPreview intensity={value} />,
+      wide: value === "lively",
+    })),
+    [t],
+  );
+
+  const toggleCursorPicker = (key: CursorPickerKey) => {
+    setOpenCursorPicker((current) => current === key ? null : key);
+  };
 
   const openCustomThemeModal = () => {
     setCustomThemeDraft(normalizePalette(currentPalette));
@@ -305,7 +364,7 @@ function BasicExample() {
                         boxShadow: `0 6px 16px -10px ${currentPalette.extraColor2}`,
                       }}
                     >
-                      <div className="d-flex gap-2">
+                      <div className="theme-switcher-row d-flex gap-2">
                         <Button
                           onClick={prevTheme}
                           variant="outline-secondary"
@@ -407,7 +466,10 @@ function BasicExample() {
                         <Button
                           size="sm"
                           variant="outline-secondary"
-                          onClick={() => resetCursorSettings()}
+                          onClick={() => {
+                            resetCursorSettings();
+                            setOpenCursorPicker(null);
+                          }}
                           style={{
                             borderColor: currentPalette.borderColor,
                             color: currentPalette.color2,
@@ -424,47 +486,105 @@ function BasicExample() {
                           id="cursorlab-enable"
                           label={t("mainpage.cursor.enable")}
                           checked={cursorSettings.enabled}
-                          onChange={(event) =>
-                            setCursorSettings({ enabled: event.target.checked })
-                          }
+                          onChange={(event) => {
+                            setCursorSettings({ enabled: event.target.checked });
+                            if (!event.target.checked) setOpenCursorPicker(null);
+                          }}
                         />
+
+                        <CursorVisualSelect
+                          id="cursorlab-cursor-shape"
+                          label={t("mainpage.cursor.trail_shape")}
+                          value={cursorSettings.trailType}
+                          valueLabel={t(`mainpage.cursor.trail_types.${cursorSettings.trailType}`)}
+                          description={t("mainpage.cursor.shape_select_hint")}
+                          preview={<CursorShapePreview shape={cursorSettings.trailType} />}
+                          options={cursorShapeVisualOptions}
+                          expanded={openCursorPicker === "cursorShape"}
+                          disabled={!cursorSettings.enabled}
+                          onToggle={() => toggleCursorPicker("cursorShape")}
+                          onSelect={(value) => {
+                            setCursorSettings({ trailType: value as CursorTrailType });
+                            setOpenCursorPicker(null);
+                          }}
+                        />
+
                         <Form.Check
                           type="switch"
                           id="cursorlab-click"
                           label={t("mainpage.cursor.click_effect")}
                           checked={cursorSettings.clickEffect}
                           disabled={!cursorSettings.enabled}
-                          onChange={(event) =>
-                            setCursorSettings({ clickEffect: event.target.checked })
-                          }
+                          onChange={(event) => {
+                            setCursorSettings({ clickEffect: event.target.checked });
+                            if (!event.target.checked) setOpenCursorPicker(null);
+                          }}
                         />
 
-                        <Form.Group>
-                          <Form.Label className="small mb-1">
-                            {t("mainpage.cursor.trail_shape")}
-                          </Form.Label>
-                          <Form.Select
-                            size="sm"
-                            value={cursorSettings.trailType}
-                            disabled={!cursorSettings.enabled}
-                            onChange={(event) =>
-                              setCursorSettings({
-                                trailType: event.target.value as (typeof CURSOR_TRAIL_TYPES)[number],
+                        <CursorVisualSelect
+                          id="cursorlab-click-type"
+                          label={t("mainpage.cursor.click_type")}
+                          value={cursorSettings.clickType}
+                          valueLabel={t(`mainpage.cursor.click_types.${cursorSettings.clickType}`)}
+                          description={t(`mainpage.cursor.click_type_descriptions.${cursorSettings.clickType}`)}
+                          preview={<CursorClickTypePreview type={cursorSettings.clickType} />}
+                          options={clickTypeVisualOptions}
+                          expanded={openCursorPicker === "clickType"}
+                          disabled={!cursorSettings.enabled || !cursorSettings.clickEffect}
+                          onToggle={() => toggleCursorPicker("clickType")}
+                          onSelect={(value) => {
+                            setCursorSettings({ clickType: value as CursorClickType });
+                            setOpenCursorPicker(null);
+                          }}
+                        />
+
+                        <CursorVisualSelect
+                          id="cursorlab-click-shape"
+                          label={t("mainpage.cursor.click_shape")}
+                          value={cursorSettings.clickShape}
+                          valueLabel={cursorSettings.clickShape === "cursor"
+                            ? t("mainpage.cursor.follow_cursor_shape")
+                            : t(`mainpage.cursor.trail_types.${cursorSettings.clickShape}`)}
+                          description={cursorSettings.clickShape === "cursor"
+                            ? t("mainpage.cursor.follow_cursor_shape_current", {
+                                shape: t(`mainpage.cursor.trail_types.${cursorSettings.trailType}`),
                               })
-                            }
-                            style={{
-                              backgroundColor: currentPalette.backgroundColor,
-                              color: currentPalette.color2,
-                              borderColor: currentPalette.borderColor,
+                            : t("mainpage.cursor.click_shape_selected", {
+                                shape: t(`mainpage.cursor.trail_types.${cursorSettings.clickShape}`),
+                              })}
+                          preview={<CursorShapePreview
+                            shape={cursorSettings.clickShape === "cursor"
+                              ? cursorSettings.trailType
+                              : cursorSettings.clickShape}
+                          />}
+                          options={clickShapeVisualOptions}
+                          expanded={openCursorPicker === "clickShape"}
+                          disabled={!cursorSettings.enabled || !cursorSettings.clickEffect}
+                          onToggle={() => toggleCursorPicker("clickShape")}
+                          onSelect={(value) => {
+                            setCursorSettings({ clickShape: value as CursorClickShape });
+                            setOpenCursorPicker(null);
+                          }}
+                        />
+
+                        {cursorSettings.clickType === "particles" && (
+                          <CursorVisualSelect
+                            id="cursorlab-click-intensity"
+                            label={t("mainpage.cursor.click_intensity")}
+                            value={cursorSettings.clickIntensity}
+                            valueLabel={t(`mainpage.cursor.click_intensities.${cursorSettings.clickIntensity}`)}
+                            description={t(`mainpage.cursor.click_intensity_descriptions.${cursorSettings.clickIntensity}`)}
+                            preview={<CursorIntensityPreview intensity={cursorSettings.clickIntensity} />}
+                            options={clickIntensityVisualOptions}
+                            expanded={openCursorPicker === "clickIntensity"}
+                            disabled={!cursorSettings.enabled || !cursorSettings.clickEffect}
+                            onToggle={() => toggleCursorPicker("clickIntensity")}
+                            onSelect={(value) => {
+                              setCursorSettings({ clickIntensity: value as CursorClickIntensity });
+                              setOpenCursorPicker(null);
                             }}
-                          >
-                            {cursorTrailOptions.map((item) => (
-                              <option key={item.value} value={item.value}>
-                                {item.label}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
+                          />
+                        )}
 
                         <Form.Group>
                           <div className="d-flex justify-content-between small">
