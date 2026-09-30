@@ -190,6 +190,11 @@ pre code.hljs {
   overflow-x: auto;
   max-height: calc(100dvh - 4rem);
   overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.theme-more-dropdown .dropdown-menu::-webkit-scrollbar {
+  display: none;
 }
 
 .theme-switcher-row > .flex-fill {
@@ -208,7 +213,7 @@ pre code.hljs {
   align-items: center;
   gap: 0.65rem;
   width: 100%;
-  min-height: 3.65rem;
+  min-height: 3.2rem;
   padding: 0.45rem 0.65rem;
   border: 1px solid var(--theme-border);
   border-radius: 0.75rem;
@@ -219,15 +224,13 @@ pre code.hljs {
   transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
 
-.cursorlab-visual-select:hover:not(:disabled),
-.cursorlab-visual-select[aria-expanded="true"] {
+.cursorlab-visual-select:hover:not(:disabled) {
   border-color: var(--theme-accent-2);
   box-shadow: 0 0.45rem 1.1rem color-mix(in srgb, var(--theme-accent) 13%, transparent);
   transform: translateY(-1px);
 }
 
-.cursorlab-visual-select:focus-visible,
-.cursorlab-inline-option:focus-visible {
+.cursorlab-visual-select:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--theme-accent-2) 24%, transparent);
   outline-offset: 2px;
 }
@@ -248,78 +251,19 @@ pre code.hljs {
   background: var(--theme-bg);
 }
 
-.cursorlab-visual-value,
-.cursorlab-option-copy {
+.cursorlab-visual-value {
   display: grid;
   min-width: 0;
   gap: 0.1rem;
 }
 
-.cursorlab-visual-value strong,
-.cursorlab-option-copy strong {
+.cursorlab-visual-value strong {
   font-size: 0.82rem;
-}
-
-.cursorlab-visual-value small,
-.cursorlab-option-copy small {
-  color: var(--theme-fg-2);
-  font-size: 0.7rem;
-  white-space: normal;
-}
-
-.cursorlab-visual-value small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .cursorlab-visual-chevron {
   color: var(--theme-fg-2);
   font-size: 1.2rem;
-}
-
-.cursorlab-inline-options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.45rem;
-  margin-top: 0.4rem;
-  padding: 0.45rem;
-  border: 1px solid color-mix(in srgb, var(--theme-border) 72%, transparent);
-  border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--theme-bg-2) 88%, transparent);
-  animation: cursorlab-options-reveal 180ms ease-out;
-}
-
-.cursorlab-inline-option {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 0.45rem;
-  min-height: 5.8rem;
-  padding: 0.55rem;
-  border: 1px solid color-mix(in srgb, var(--theme-border) 66%, transparent);
-  border-radius: 0.7rem;
-  color: var(--theme-fg);
-  text-align: center;
-  background: var(--theme-bg);
-}
-
-.cursorlab-inline-option:hover,
-.cursorlab-inline-option.is-selected {
-  border-color: var(--theme-accent-2);
-  background: color-mix(in srgb, var(--theme-accent-2) 12%, var(--theme-bg));
-}
-
-.cursorlab-inline-option.is-selected {
-  box-shadow: inset 0 0 0 1px var(--theme-accent-2);
-}
-
-.cursorlab-inline-option.is-wide {
-  grid-column: 1 / -1;
-  grid-template-columns: 3.4rem minmax(0, 1fr);
-  place-items: center start;
-  min-height: 4.7rem;
-  text-align: left;
 }
 
 .cursorlab-preview-shape {
@@ -423,11 +367,6 @@ pre code.hljs {
 .cursorlab-preview-energy i:nth-child(2) { height: 0.9rem; }
 .cursorlab-preview-energy i:nth-child(3) { height: 1.35rem; }
 
-@keyframes cursorlab-options-reveal {
-  from { opacity: 0; transform: translateY(-0.3rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes cursorlab-preview-pulse {
   15% { opacity: 0.8; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(2.2); }
@@ -502,8 +441,7 @@ pre code.hljs {
   .slider-thumb-animated,
   .cursorlab-preview-pulse::before,
   .cursorlab-preview-pulse::after,
-  .cursorlab-preview-particles i,
-  .cursorlab-inline-options {
+  .cursorlab-preview-particles i {
     animation: none;
   }
 }

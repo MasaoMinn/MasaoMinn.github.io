@@ -2,25 +2,14 @@
 
 import type { ReactNode } from "react";
 
-export type CursorVisualOption = {
-  value: string;
-  label: string;
-  description?: string;
-  preview: ReactNode;
-  wide?: boolean;
-};
-
 type CursorVisualSelectProps = {
   id: string;
   label: string;
   value: string;
   valueLabel: string;
-  description: string;
   preview: ReactNode;
-  options: CursorVisualOption[];
-  expanded: boolean;
+  options: readonly string[];
   disabled?: boolean;
-  onToggle: () => void;
   onSelect: (value: string) => void;
 };
 
@@ -29,15 +18,17 @@ export function CursorVisualSelect({
   label,
   value,
   valueLabel,
-  description,
   preview,
   options,
-  expanded,
   disabled = false,
-  onToggle,
   onSelect,
 }: CursorVisualSelectProps) {
-  const optionsId = `${id}-options`;
+  const selectNextOption = () => {
+    const currentIndex = options.indexOf(value);
+    const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % options.length;
+    const nextValue = options[nextIndex];
+    if (nextValue) onSelect(nextValue);
+  };
 
   return (
     <div className="cursorlab-visual-select-wrap">
@@ -46,52 +37,19 @@ export function CursorVisualSelect({
         type="button"
         id={id}
         className="cursorlab-visual-select"
-        aria-expanded={expanded}
-        aria-controls={optionsId}
         disabled={disabled}
-        onClick={onToggle}
+        onClick={selectNextOption}
       >
         <span className="cursorlab-visual-thumb" aria-hidden="true">
           {preview}
         </span>
         <span className="cursorlab-visual-value">
           <strong>{valueLabel}</strong>
-          <small>{description}</small>
         </span>
         <span className="cursorlab-visual-chevron" aria-hidden="true">
-          {expanded ? "⌄" : "›"}
+          ↻
         </span>
       </button>
-
-      {expanded ? (
-        <div
-          id={optionsId}
-          className="cursorlab-inline-options"
-          role="listbox"
-          aria-labelledby={id}
-        >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="option"
-              aria-selected={option.value === value}
-              className={`cursorlab-inline-option${option.wide ? " is-wide" : ""}${
-                option.value === value ? " is-selected" : ""
-              }`}
-              onClick={() => onSelect(option.value)}
-            >
-              <span className="cursorlab-visual-thumb" aria-hidden="true">
-                {option.preview}
-              </span>
-              <span className="cursorlab-option-copy">
-                <strong>{option.label}</strong>
-                {option.description ? <small>{option.description}</small> : null}
-              </span>
-            </button>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }
