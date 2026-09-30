@@ -18,11 +18,15 @@ import {
   likeProject,
   recordPageVisit,
   type LikeResult,
+  type VisitorLocation,
 } from "@/lib/site-metrics-api";
+import { getBrowserLabel } from "@/lib/browser-info";
 import styles from "./SiteMetrics.module.css";
 
 type MetricsContextValue = {
   totalViews: number | null;
+  visitIncrementKey: number;
+  visitorLocation: VisitorLocation | null;
   likes: Record<string, number>;
   likedToday: Set<string>;
   submitLike: (projectId: string) => Promise<LikeResult>;
@@ -37,9 +41,16 @@ const PARTICLE_VECTORS = [
 
 export function SiteMetricsProvider({ children }: { children: ReactNode }) {
   const [totalViews, setTotalViews] = useState<number | null>(null);
+  const [visitIncrementKey, setVisitIncrementKey] = useState(0);
+  const [visitorLocation, setVisitorLocation] = useState<VisitorLocation | null>(null);
   const [likes, setLikes] = useState<Record<string, number>>({});
   const [likedToday, setLikedToday] = useState<Set<string>>(new Set());
   const hasLoaded = useRef(false);
+  const visitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (visitTimer.current) clearTimeout(visitTimer.current);
+  }, []);
 
   useEffect(() => {
     if (hasLoaded.current) {
@@ -54,7 +65,18 @@ export function SiteMetricsProvider({ children }: { children: ReactNode }) {
       ]);
 
       if (visitResult.status === "fulfilled") {
-        setTotalViews(visitResult.value.totalViews);
+        const { totalViews: nextTotalViews, counted } = visitResult.value;
+        setVisitorLocation(visitResult.value.location ?? null);
+        if (counted) {
+          setTotalViews(Math.max(0, nextTotalViews - 1));
+          visitTimer.current = setTimeout(() => {
+            setTotalViews(nextTotalViews);
+            setVisitIncrementKey((current) => current + 1);
+            visitTimer.current = null;
+          }, 450);
+        } else {
+          setTotalViews(nextTotalViews);
+        }
       } else {
         console.error("Unable to record page visit", visitResult.reason);
       }
@@ -78,7 +100,7 @@ export function SiteMetricsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <MetricsContext.Provider value={{ totalViews, likes, likedToday, submitLike }}>
+    <MetricsContext.Provider value={{ totalViews, visitIncrementKey, visitorLocation, likes, likedToday, submitLike }}>
       {children}
     </MetricsContext.Provider>
   );
@@ -92,15 +114,61 @@ function useMetrics() {
   return context;
 }
 
+function formatVisitorLocation(location: VisitorLocation | null, language: string): string | null {
+  if (!location) return null;
+
+  const locale = language.startsWith("jp") ? "ja" : language;
+  const country = location.country && /^[A-Z]{2}$/.test(location.country) && location.country !== "T1"
+    ? new Intl.DisplayNames([locale], { type: "region" }).of(location.country)
+    : null;
+  const region = location.region?.trim();
+  const city = location.city?.trim();
+  const parts = language.startsWith("en")
+    ? [city, region, country]
+    : [country, region, city];
+  const uniqueParts = parts.filter((part, index): part is string =>
+    Boolean(part) && parts.findIndex((item) => item?.toLowerCase() === part?.toLowerCase()) === index,
+  );
+
+  return uniqueParts.length > 0 ? uniqueParts.join(language.startsWith("en") ? ", " : " · ") : null;
+}
+
 export function SiteVisitCounter() {
-  const { t } = useTranslation();
-  const { totalViews } = useMetrics();
+  const { t, i18n } = useTranslation();
+  const { totalViews, visitIncrementKey, visitorLocation } = useMetrics();
+  const [browserLabel, setBrowserLabel] = useState<string | null>(null);
+  const locationLabel = formatVisitorLocation(visitorLocation, i18n.resolvedLanguage ?? i18n.language);
+
+  useEffect(() => {
+    let active = true;
+    void getBrowserLabel().then((label) => {
+      if (active) setBrowserLabel(label);
+    });
+    return () => { active = false; };
+  }, []);
 
   return (
-    <div className={styles.visitCounter} aria-live="polite">
-      <Eye aria-hidden="true" />
-      <span>{t("mainpage.metrics.total_visits")}</span>
-      <strong>{totalViews === null ? "—" : totalViews.toLocaleString()}</strong>
+    <div className={styles.visitSummary}>
+      <div className={styles.visitCounter} aria-live="polite">
+        <Eye aria-hidden="true" />
+        <span>{t("mainpage.metrics.total_visits")}</span>
+        <span className={styles.visitNumber}>
+          <strong className={visitIncrementKey > 0 ? styles.visitCountBump : undefined}>
+            {totalViews === null ? "—" : totalViews.toLocaleString()}
+          </strong>
+          {visitIncrementKey > 0 && (
+            <span className={styles.visitPlusOne} key={visitIncrementKey} aria-hidden="true">+1</span>
+          )}
+        </span>
+      </div>
+      <div className={styles.visitorDetails}>
+        <span>{locationLabel
+          ? t("mainpage.metrics.welcome_from", { location: locationLabel })
+          : t("mainpage.metrics.welcome")}</span>
+        <span>{t("mainpage.metrics.browser", {
+          browser: browserLabel ?? t("mainpage.metrics.unknown_browser"),
+        })}</span>
+      </div>
     </div>
   );
 }

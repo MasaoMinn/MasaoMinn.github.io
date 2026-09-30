@@ -54,6 +54,10 @@ You can find my contact information in the "Contact Me" section below.
             contact: 'Contact Me',
             metrics: {
               total_visits: 'Total visits',
+              welcome_from: 'Welcome, friend from {{location}}',
+              welcome: 'Welcome, friend',
+              browser: 'Browser: {{browser}}',
+              unknown_browser: 'Unknown',
               like_project: 'Like {{project}}',
               liked_project: 'You liked {{project}} today',
               already_liked_today: 'You already liked this project today.',
@@ -247,6 +251,10 @@ You can find my contact information in the "Contact Me" section below.
             contact: '联系我',
             metrics: {
               total_visits: '累计访问',
+              welcome_from: '欢迎来自{{location}}的朋友',
+              welcome: '欢迎访问的朋友',
+              browser: '浏览器型号：{{browser}}',
+              unknown_browser: '无法识别',
               like_project: '为{{project}}点赞',
               liked_project: '今天已为{{project}}点赞',
               already_liked_today: '今天已经为这个项目点过赞了',
@@ -441,6 +449,10 @@ You can find my contact information in the "Contact Me" section below.
             contact: '連絡する',
             metrics: {
               total_visits: '累計アクセス',
+              welcome_from: '{{location}}から来た方、ようこそ',
+              welcome: 'ようこそ',
+              browser: 'ブラウザー：{{browser}}',
+              unknown_browser: '不明',
               like_project: '{{project}}にいいね',
               liked_project: '今日は{{project}}にいいね済み',
               already_liked_today: '今日はすでにこのプロジェクトにいいねしています。',

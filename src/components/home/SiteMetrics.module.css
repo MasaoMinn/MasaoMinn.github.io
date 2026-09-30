@@ -1,9 +1,16 @@
+.visitSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin-top: 1rem;
+}
+
 .visitCounter {
   display: inline-flex;
   align-items: center;
   gap: 0.62rem;
   min-height: 2.65rem;
-  margin-top: 1rem;
   padding: 0.48rem 0.86rem;
   border: 1px solid color-mix(in srgb, var(--theme-accent) 40%, var(--theme-border));
   border-radius: 999px;
@@ -13,16 +20,49 @@
   font-size: 0.88rem;
 }
 
+.visitorDetails {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.9rem;
+  color: var(--theme-fg-2);
+  font-size: 0.86rem;
+}
+
 .visitCounter svg {
   width: 1.08rem;
   height: 1.08rem;
   color: var(--theme-accent);
 }
 
-.visitCounter strong {
+.visitNumber {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1ch;
+}
+
+.visitNumber strong {
   color: var(--foreground);
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
+}
+
+.visitCountBump {
+  animation: visitCountBump 0.5s ease-out both;
+}
+
+.visitPlusOne {
+  position: absolute;
+  bottom: calc(100% + 0.2rem);
+  left: 50%;
+  color: var(--theme-accent);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: visitPlusOne 1.15s ease-out both;
 }
 
 .likeControl {
@@ -151,13 +191,33 @@
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
+@keyframes visitCountBump {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+@keyframes visitPlusOne {
+  0% { opacity: 0; transform: translate(-50%, 0.35rem); }
+  20% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -0.7rem); }
+}
+
+@keyframes visitPlusOneReduced {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .visitCountBump { animation: none; }
+  .visitPlusOne { animation: visitPlusOneReduced 1.15s steps(1, end) both; }
   .particleLayer { display: none; }
   .duplicateToast { animation: none; }
   .likeButton { transition: none; }
 }
 
 @media (max-width: 576px) {
-  .visitCounter { margin-top: 0.8rem; }
+  .visitSummary { margin-top: 0.8rem; }
   .likeControl { right: 0.68rem; bottom: 0.68rem; }
 }

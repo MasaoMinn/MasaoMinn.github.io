@@ -16,6 +16,9 @@ Use Node.js 24 and pnpm 11.16.0, matching the deployment workflow.
 The homepage uses a separate Cloudflare Worker and D1 database in
 `workers/site-metrics`. D1 counts one homepage visit per anonymous browser and
 Shanghai calendar day, and stores one like per project, browser, and day.
+The visit response includes Cloudflare's approximate country, region, and city
+for the homepage greeting. It does not store that location or browser details.
+Deploy the Worker update for location text to appear on the live site.
 
 For local D1 development:
 

@@ -19,6 +19,12 @@ export type LikeResult = {
   duplicate: boolean;
 };
 
+export type VisitorLocation = {
+  country: string | null;
+  region: string | null;
+  city: string | null;
+};
+
 function getVisitorId(): string {
   const existing = window.localStorage.getItem(VISITOR_ID_KEY);
   if (existing) {
@@ -49,7 +55,11 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   return data;
 }
 
-export function recordPageVisit(): Promise<{ totalViews: number; counted: boolean }> {
+export function recordPageVisit(): Promise<{
+  totalViews: number;
+  counted: boolean;
+  location?: VisitorLocation;
+}> {
   return apiRequest("/api/visits", { method: "POST" });
 }
 

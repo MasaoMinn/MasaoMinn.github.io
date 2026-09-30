@@ -147,6 +147,11 @@ async function recordVisit(request: Request, env: Env): Promise<Response> {
   return json({
     totalViews: Number(counter?.total_views ?? 0),
     counted: insert.meta.changes > 0,
+    location: {
+      country: request.cf?.country ?? null,
+      region: request.cf?.region ?? null,
+      city: request.cf?.city ?? null,
+    },
   });
 }
 
