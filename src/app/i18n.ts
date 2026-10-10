@@ -29,21 +29,19 @@ i18n
           mainpage: {
             title: 'Sunny_Tangetsu',
             description: 'This is a static resource website showcasing my various projects.',
-            introduction: `I am **Sunny_Tangetsu**, currently a **senior** majoring in **Software Engineering** at **South China University of Technology**.
+            introduction: `Hi, there! I am **Sunny_Tangetsu**, an undergraduate student in his senior year, major is **software engineering**. Here are some things about me:
 
-In high school, I fell in love with *C++* programming competitions, which is also the reason I chose this major.
+In high school, I fell in love with **C++** programming. I found out that I could operate my computer through code and implement any algorithm I want. This is one of the reasons I chose this major.
 
-I am studying full-stack development with **PERN (PostgreSQL, Express.js, React.js, Node.js)** and Next.js. This page is my first frontend project.
+I am going to become an **AI-assisted full-stack developer and software engineer**. Currently my tech stack is **PERN (PostgreSQL, Express.js, React.js, Node.js)**. I'm also using **Tauri and Rust** to develop apps.
 
-I am currently learning **English** *(TOEFL 100, C1)* and **Japanese** *(JLPT N1)*. In the future, I plan to study other languages, such as Spanish and French.
+I have experience in building apps with simple AI functions (like generating and refining text or code, filtering spam, etc.). Currently these requirements are booming up so quickly. Exploring new software engineering with the assistance of generated AI is so important and I'm currently working on it.
 
-In my free time, I enjoy painting or making practical tools. I find great satisfaction in the sense of achievement after completing a small project.
+I can speak **English** (TOEFL 100, C1) and **Japanese** (JLPT N1). In the future, I plan to study other languages, like **Spanish and French**. I enjoy learning new languages because I find it interesting to interact with people from diverse cultural backgrounds.
 
-The character on the left is my **furry** character. It was my first fursona, which I received in my second year of high school.
+My motto: Stay motivated without pressure, tense without anxiety, act swiftly without panic.
 
-My motto: **Stay motivated without pressure, tense without anxiety, and act swiftly without panic.**
-
-You can find my contact information in the "Contact Me" section below.
+You can find more information about me in the "Contact Me" section below.
 `,
             dropdown: 'More',
             about: 'About Me',
@@ -212,21 +210,19 @@ You can find my contact information in the "Contact Me" section below.
           mainpage: {
             title: 'Sunny_湛月',
             description: '这是一个静态资源网站，用于展示我的各种各样的项目',
-            introduction: `我是 **Sunny_Tangetsu**, 目前是**华南理工大学**软件工程专业的**大四**学生。
+            introduction: `大家好！我是 **Sunny_Tangetsu**，一名软件工程专业的大四本科生。下面是一些关于我的介绍：
 
-高中时我爱上了 *C++* 编程竞赛，这也是我选择这个专业的原因。
+高中时，我喜欢上了 **C++** 编程。我发现自己可以通过代码操控计算机，实现想要的任何算法。这也是我选择这个专业的原因之一。
 
-我正在学习 **PERN ( PostgreSQL, Express.js, React.js, Node.js), Next.js** 为框架的全栈开发，这个页面是我的第一个前端作品。
+我希望成为一名 **AI 辅助的全栈开发者和软件工程师**。目前，我的技术栈是 **PERN（PostgreSQL、Express.js、React.js、Node.js）**。我也在使用 **Tauri 和 Rust** 开发应用。
 
-我正在学习**英语** *(TOEFL 100, C1)* 和**日语** *(JLPT N1)*. 我将来打算学习其他语种，如西班牙语和法语。
+我有开发具备简单 AI 功能的应用的经验，例如生成和润色文本或代码、过滤垃圾信息等。如今，这类需求增长迅速。我认为，在生成式 AI 的辅助下探索新的软件工程实践非常重要，也正在朝这个方向努力。
 
-空闲时，我会画画或制作实用工具。我很享受完成一个小项目后的成就感。
+我会说 **英语**（TOEFL 100，C1）和 **日语**（JLPT N1）。将来，我还计划学习 **西班牙语和法语** 等语言。我喜欢学习新语言，因为与不同文化背景的人交流很有趣。
 
-左边的角色是我的的**furry**兽设. 它是我的第一只兽设, 在我高二时得到。
+我的座右铭：保持动力而不承受压力，保持紧张感而不焦虑，行动迅速而不慌乱。
 
-我的座右铭：**有动力而无压力，紧张而不焦虑, 迅速而不慌乱**。
-
-你可以在下面的"联系我"找到我的联系方式.
+你可以在下方的“联系我”部分了解更多关于我的信息。
 
 `,
             dropdown: '更多',
@@ -398,21 +394,19 @@ You can find my contact information in the "Contact Me" section below.
           mainpage: {
             title: 'Sunny_湛月',
             description: 'これは、私のさまざまなプロジェクトを紹介する静的リソースサイトです。',
-            introduction: `私は**Sunny_Tangetsu**です。現在、**華南理工大学**でソフトウェア工学を専攻する**4年生**です。
+            introduction: `こんにちは！**Sunny_Tangetsu**です。ソフトウェア工学を専攻する学部4年生です。私について少し紹介します。
 
-高校時代に *C++* のプログラミングコンテストに夢中になり、それがこの専攻を選んだ理由でもあります。
+高校時代に **C++** のプログラミングが好きになりました。コードでコンピューターを操作し、作りたいアルゴリズムを実装できると気づいたことが、この専攻を選んだ理由の一つです。
 
-私は **PERN（PostgreSQL, Express.js, React.js, Node.js）** とNext.jsを使ったフルスタック開発を学んでいます。このページは私の最初のフロントエンド作品です。
+私は **AI を活用するフルスタック開発者兼ソフトウェアエンジニア** を目指しています。現在の技術スタックは **PERN（PostgreSQL、Express.js、React.js、Node.js）** です。また、**Tauri と Rust** を使ってアプリも開発しています。
 
-私は現在、**英語**（TOEFL 100、C1）と**日本語**（JLPT N1）を学んでいます。将来はスペイン語やフランス語など、ほかの言語も学ぶ予定です。
+文章やコードの生成・推敲、スパムの除去など、基本的な AI 機能を備えたアプリを開発した経験があります。こうした機能への需要は急速に高まっています。生成 AI の支援を受けながら新しいソフトウェアエンジニアリングを探究することは重要だと考え、現在取り組んでいます。
 
-暇なときは、絵を描いたり実用的なツールを作ったりしています。小さなプロジェクトを完成させたときの達成感が好きです。
+私は **英語**（TOEFL 100、C1）と **日本語**（JLPT N1）を話せます。将来は **スペイン語とフランス語** なども学びたいと思っています。さまざまな文化的背景を持つ人と交流するのが楽しいので、新しい言語を学ぶことが好きです。
 
-左側のキャラクターは私の**ファーソナ**です。高校2年生のときに迎えた、私にとって最初のファーソナです。
+私のモットー：プレッシャーを感じずに意欲を保ち、不安にならずに緊張感を持ち、慌てずに素早く行動する。
 
-私の座右の銘：**プレッシャーなく意欲を持ち、不安なく緊張感を保ち、慌てず素早く行動する。**
-
-下の「連絡する」から私の連絡先をご確認いただけます。
+詳しくは下の「連絡する」セクションをご覧ください。
 `,
             dropdown: 'その他',
             about: '私について',
